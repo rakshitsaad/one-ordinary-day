@@ -231,7 +231,9 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 ### Deploying (Vercel)
 
 - **Live at https://one-ordinary-day.vercel.app** (Vercel project `rakshit-23cd/one-ordinary-day`, Hobby plan, first published 16 Oct 2026). On the live site, mobile Lighthouse scored 95 / 96 / 100 / 100.
-- There's no Git repository, so nothing deploys automatically. To publish changes, run `npm run deploy`. That's `vercel deploy --prod`: it uploads the source and Vercel runs `npm run build` in the cloud. This computer's Vercel CLI is signed in, and `.vercel/project.json` links the folder to the project. Never commit `.vercel/`.
+- **Code on GitHub: https://github.com/rakshitsaad/one-ordinary-day** (public, branch `main`, pushed over HTTPS; Git Credential Manager on this computer is already signed in). Commit and push changes as usual (`git push`). The Vercel project isn't connected to the repository, so a push doesn't deploy.
+- To publish changes, run `npm run deploy`. That's `vercel deploy --prod`: it uploads the source and Vercel runs `npm run build` in the cloud. This computer's Vercel CLI is signed in, and `.vercel/project.json` links the folder to the project. Never commit `.vercel/`.
+- The repository is public, so never commit secrets. `.env.production` holds only the public `SITE_URL`; anything private goes in `.env.local`, which is ignored.
 - [vercel.json](vercel.json) holds the build settings (Vite, `dist`) and headers. Hashed `/assets/*` files are cached for a year (`immutable`); every page gets `nosniff`, a strict referrer policy, and camera / microphone / location switched off. HTML is revalidated on every visit, so a new deploy shows straight away.
 - `.vercelignore` keeps `node_modules`, `dist`, `reference`, `design` and `.claude` out of the upload.
 - Deployment Protection (Vercel Authentication) is on by default, but only for preview and per-deployment URLs. The production domain is public (checked with a signed-out request).
