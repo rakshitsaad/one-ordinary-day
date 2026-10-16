@@ -231,8 +231,11 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 ### Deploying (Vercel)
 
 - **Live at https://one-ordinary-day.vercel.app** (Vercel project `rakshit-23cd/one-ordinary-day`, Hobby plan, first published 16 Oct 2026). On the live site, mobile Lighthouse scored 95 / 96 / 100 / 100.
-- **Code on GitHub: https://github.com/rakshitsaad/one-ordinary-day** (public, branch `main`, pushed over HTTPS; Git Credential Manager on this computer is already signed in). Commit and push changes as usual (`git push`). The Vercel project isn't connected to the repository, so a push doesn't deploy.
-- To publish changes, run `npm run deploy`. That's `vercel deploy --prod`: it uploads the source and Vercel runs `npm run build` in the cloud. This computer's Vercel CLI is signed in, and `.vercel/project.json` links the folder to the project. Never commit `.vercel/`.
+- **Code on GitHub: https://github.com/rakshitsaad/one-ordinary-day** (public, branch `main`, pushed over HTTPS; Git Credential Manager on this computer is already signed in).
+- **Vercel is connected to the repository, so pushing is publishing.** Every push to `main` builds and replaces the live site (about a minute). A push to any other branch gets its own preview URL and leaves the live site alone. So test locally (`npm run build && npm run preview`) before pushing to `main`, or work on a branch.
+  - The Vercel GitHub App can see only this one repository ("Only select repositories"). Change that in GitHub › Settings › Applications › Vercel.
+  - Git deployments clone the whole repository, so `.vercelignore` only applies to CLI uploads.
+- `npm run deploy` (`vercel deploy --prod`) still works for publishing straight from this folder without a commit. The CLI is signed in on this computer, and `.vercel/project.json` links the folder to the project. Never commit `.vercel/`.
 - The repository is public, so never commit secrets. `.env.production` holds only the public `SITE_URL`; anything private goes in `.env.local`, which is ignored.
 - [vercel.json](vercel.json) holds the build settings (Vite, `dist`) and headers. Hashed `/assets/*` files are cached for a year (`immutable`); every page gets `nosniff`, a strict referrer policy, and camera / microphone / location switched off. HTML is revalidated on every visit, so a new deploy shows straight away.
 - `.vercelignore` keeps `node_modules`, `dist`, `reference`, `design` and `.claude` out of the upload.
