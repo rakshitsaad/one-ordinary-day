@@ -1,0 +1,139 @@
+/*
+  Fonts, served from this site (no Google Fonts request blocking the first paint).
+  Latin subsets from Fontsource 5.3.0, SIL Open Font License (see src/assets/fonts/).
+
+  Text never waits for a font, and nothing jumps when one arrives:
+  - The fallback faces below are local system fonts resized to the same average
+    letter width and line metrics as the real font (generated with
+    @capsizecss/core). Each is tried in turn: Arial (Windows, macOS), Helvetica
+    Neue (Apple), Roboto (Android).
+  - Headings and notes use font-display: swap. With the matched fallbacks their
+    heights don't change when the real font swaps in (measured).
+  - Body text (Figtree) uses font-display: optional. Paragraphs can still wrap
+    one line differently in Arial, which would push everything below down. So
+    Figtree is preloaded, and if it isn't ready by the first paint the page keeps
+    the matched fallback for this visit instead of reflowing (it's cached for
+    the next page).
+
+  index.html and talk.html preload Figtree and Instrument Serif (regular), the
+  two faces on the first screen; the italic and Caveat load when first used.
+*/
+
+@font-face {
+  font-family: "Figtree";
+  src: url("../assets/fonts/figtree-latin-variable.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: optional;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../assets/fonts/instrument-serif-latin-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../assets/fonts/instrument-serif-latin-400-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Caveat";
+  src: url("../assets/fonts/caveat-latin-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ---- Size-matched fallbacks ------------------------------------------------ */
+
+@font-face {
+  font-family: "Figtree Fallback: Arial";
+  src: local("Arial"), local("ArialMT");
+  ascent-override: 94.3231%;
+  descent-override: 24.8219%;
+  line-gap-override: 0%;
+  size-adjust: 100.7176%;
+}
+
+@font-face {
+  font-family: "Figtree Fallback: Helvetica Neue";
+  src: local("Helvetica Neue"), local("HelveticaNeue");
+  ascent-override: 95.2116%;
+  descent-override: 25.0557%;
+  line-gap-override: 0%;
+  size-adjust: 99.7778%;
+}
+
+@font-face {
+  font-family: "Figtree Fallback: Roboto";
+  src: local("Roboto Regular"), local("Roboto-Regular");
+  ascent-override: 94.1165%;
+  descent-override: 24.7675%;
+  line-gap-override: 0%;
+  size-adjust: 100.9387%;
+}
+
+@font-face {
+  font-family: "Instrument Serif Fallback: Times New Roman";
+  src: local("Times New Roman"), local("TimesNewRomanPSMT");
+  ascent-override: 117.9435%;
+  descent-override: 36.9318%;
+  line-gap-override: 0%;
+  size-adjust: 83.9385%;
+}
+
+@font-face {
+  font-family: "Instrument Serif Fallback: Georgia";
+  src: local("Georgia");
+  ascent-override: 129.426%;
+  descent-override: 40.5273%;
+  line-gap-override: 0%;
+  size-adjust: 76.4916%;
+}
+
+@font-face {
+  font-family: "Instrument Serif Fallback: Noto Serif";
+  src: local("Noto Serif Regular"), local("NotoSerif-Regular");
+  ascent-override: 139.6452%;
+  descent-override: 43.7273%;
+  line-gap-override: 0%;
+  size-adjust: 70.894%;
+}
+
+@font-face {
+  font-family: "Caveat Fallback: Arial";
+  src: local("Arial"), local("ArialMT");
+  ascent-override: 124.7722%;
+  descent-override: 38.9913%;
+  line-gap-override: 0%;
+  size-adjust: 76.9402%;
+}
+
+@font-face {
+  font-family: "Caveat Fallback: Helvetica Neue";
+  src: local("Helvetica Neue"), local("HelveticaNeue");
+  ascent-override: 125.9475%;
+  descent-override: 39.3586%;
+  line-gap-override: 0%;
+  size-adjust: 76.2222%;
+}
+
+@font-face {
+  font-family: "Caveat Fallback: Roboto";
+  src: local("Roboto Regular"), local("Roboto-Regular");
+  ascent-override: 124.4989%;
+  descent-override: 38.9059%;
+  line-gap-override: 0%;
+  size-adjust: 77.1091%;
+}

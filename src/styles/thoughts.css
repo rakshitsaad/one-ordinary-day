@@ -1,0 +1,307 @@
+/*
+  4:50 pm thoughts (src/sections/thoughts.js).
+  Without JS: a readable list of worries → calmer reframes.
+  With JS (.is-live): a crowded box of drifting, tappable thoughts.
+*/
+
+.thoughts {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.thoughts__box {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---- No-JS list ---------------------------------------------------------- */
+
+.thought__worry {
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  line-height: 1.15;
+  color: var(--fg);
+}
+
+.thought__calm {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: var(--fg);
+}
+
+.thoughts:not(.is-live) .thought__calm::before {
+  content: "→ ";
+  font-style: normal;
+  color: var(--accent);
+}
+
+/* ---- Interactive box ----------------------------------------------------- */
+
+.thoughts .thoughts__hint {
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  line-height: 1.2;
+  color: var(--fg);
+}
+
+.thoughts.is-live .thoughts__stage {
+  position: relative;
+  height: clamp(330px, 88vw, 390px);
+  border: 1.5px dashed color-mix(in srgb, var(--fg) 30%, transparent);
+  border-radius: 14px 26px 18px 30px;
+}
+
+.thoughts.is-live .thoughts__box {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.thoughts.is-live .thought {
+  position: absolute;
+  z-index: 2;
+  max-width: 72%;
+  rotate: var(--tilt, 0deg);
+  animation: thought-drift 7s var(--drift-delay, 0s) ease-in-out infinite alternate;
+
+  /* Appearing: from soft and blurry into focus. */
+  opacity: 1;
+  filter: blur(0);
+  scale: 1;
+  transition:
+    opacity 1.2s var(--ease-out),
+    filter 1.2s var(--ease-out),
+    scale 1.2s var(--ease-out),
+    rotate 1.2s var(--ease-out);
+}
+
+@keyframes thought-drift {
+  to {
+    translate: var(--drift-x, 4px) var(--drift-y, -6px);
+  }
+}
+
+.thoughts.is-live .thought[data-state="waiting"],
+.thoughts.is-live .thought[data-state="gone"] {
+  visibility: hidden;
+  opacity: 0;
+  filter: blur(6px);
+  scale: 0.96;
+}
+
+.thoughts.is-live .thought[data-state="waiting"] {
+  transition: none;
+}
+
+/* Breathing out: each one fades on its own beat (--fade-delay). */
+.thoughts.is-live .thought[data-state="gone"] {
+  transition:
+    opacity 1.4s var(--ease-out) var(--fade-delay, 0s),
+    filter 1.4s var(--ease-out) var(--fade-delay, 0s),
+    scale 1.4s var(--ease-out) var(--fade-delay, 0s),
+    visibility 0s linear calc(var(--fade-delay, 0s) + 1.4s);
+}
+
+/* Softened thoughts sink below the ones still waiting to be tapped. */
+.thoughts.is-live .thought[data-state="calm"] {
+  z-index: 1;
+  rotate: calc(var(--tilt, 0deg) / 3);
+}
+
+/* The thought itself is a button: no tap flash, no double-tap zoom, no
+   text-selection on long press. Only the text currently showing takes taps,
+   so a hidden reframe never steals a tap from the thought underneath it. */
+.thought__btn {
+  display: grid;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--fg);
+  /* A soft halo in the page colour keeps overlapping thoughts legible. */
+  text-shadow:
+    0 0 2px var(--bg),
+    0 0 6px var(--bg),
+    0 0 12px var(--bg);
+  text-align: left;
+  pointer-events: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+.thought__btn:focus-visible {
+  outline: none;
+}
+
+/* Worry and reframe share one spot, so nothing jumps when they swap.
+   The padding makes each one a thumb-sized target (44px tall). */
+.thoughts.is-live .thought__worry,
+.thoughts.is-live .thought__calm {
+  grid-area: 1 / 1;
+  align-self: center;
+  justify-self: start; /* hug the text, so the tap area is just the words */
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  transition:
+    opacity 0.8s var(--ease-out),
+    filter 0.8s var(--ease-out),
+    scale 0.8s var(--ease-out),
+    background-color 0.8s var(--ease-out);
+}
+
+.thoughts.is-live .thought[data-state="anxious"] .thought__worry {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.thoughts.is-live .thought[data-state="anxious"] .thought__btn:active .thought__worry {
+  background: color-mix(in srgb, var(--fg) 10%, var(--bg));
+}
+
+@media (hover: hover) {
+  .thoughts.is-live .thought[data-state="anxious"] .thought__worry:hover {
+    background: color-mix(in srgb, var(--fg) 8%, var(--bg));
+  }
+}
+
+/* Keyboard focus ring goes around the visible text, not the whole button. */
+.thoughts.is-live .thought[data-state="anxious"] .thought__btn:focus-visible .thought__worry,
+.thoughts.is-live .thought[data-state="calm"] .thought__btn:focus-visible .thought__calm {
+  outline: 2px solid var(--accent-text);
+  outline-offset: -2px;
+}
+
+.thoughts.is-live .thought__calm {
+  opacity: 0;
+  filter: blur(6px);
+  scale: 0.97;
+}
+
+.thoughts.is-live .thought[data-state="calm"] .thought__worry {
+  opacity: 0;
+  filter: blur(6px);
+  scale: 1.08;
+}
+
+.thoughts.is-live .thought[data-state="calm"] .thought__calm {
+  opacity: 1;
+  filter: blur(0);
+  scale: 1;
+  transition-delay: 0.35s;
+  transition-duration: 1.1s;
+}
+
+/* The soft "pop": a faint ring that swells and fades. */
+.thoughts.is-live .thought.is-popping {
+  z-index: 3;
+}
+
+.thoughts.is-live .thought.is-popping::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1.5px solid var(--accent);
+  border-radius: 999px;
+  pointer-events: none;
+  animation: thought-pop 0.9s var(--ease-out) forwards;
+}
+
+@keyframes thought-pop {
+  from {
+    opacity: 0.8;
+    scale: 0.8;
+  }
+  to {
+    opacity: 0;
+    scale: 1.25;
+  }
+}
+
+/* Breathing guide and the calm message, in the middle of the box. */
+.thoughts .thoughts__message {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  max-width: none;
+  padding: 1rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.6rem, 6vw, 2.3rem);
+  line-height: 1.1;
+  text-align: center;
+  color: var(--accent-text);
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-out);
+  pointer-events: none;
+}
+
+.thoughts .thoughts__message.is-shown {
+  opacity: 1;
+}
+
+/* ---- Breathe button ------------------------------------------------------ */
+
+.breathe {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 48px;
+  padding: 0.75rem 1.35rem 0.75rem 1.1rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.breathe[aria-disabled="true"] {
+  cursor: default;
+}
+
+.breathe__orb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: orb-idle 8s ease-in-out infinite;
+}
+
+@keyframes orb-idle {
+  0%, 100% { scale: 0.75; }
+  50% { scale: 1.2; }
+}
+
+/* One guided breath: 4s in, 6s out. */
+.breathe.is-guiding .breathe__orb {
+  animation: orb-guide 10s ease-in-out 1 forwards;
+}
+
+@keyframes orb-guide {
+  0% { scale: 0.75; }
+  40% { scale: 1.7; }
+  100% { scale: 0.75; }
+}
+
+@media (min-width: 48rem) {
+  .thoughts.is-live .thought__worry {
+    font-size: 1.55rem;
+  }
+
+  .thoughts.is-live .thought__calm {
+    font-size: 1.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thoughts.is-live .thought,
+  .breathe__orb {
+    animation: none;
+  }
+}

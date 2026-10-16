@@ -1,0 +1,68 @@
+/*
+  Hand-drawn ink: <span class="mark"> (underline) and <span class="circle">.
+  Without JS, a finished static stroke is drawn with a CSS mask. When
+  src/scripts/ink.js takes over it adds .has-ink and an SVG that can draw itself.
+*/
+.mark,
+.circle {
+  position: relative;
+  white-space: nowrap;
+}
+
+.mark::after,
+.circle::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--accent);
+  pointer-events: none;
+  -webkit-mask: var(--ink-shape) center / 100% 100% no-repeat;
+  mask: var(--ink-shape) center / 100% 100% no-repeat;
+}
+
+.mark::after {
+  --ink-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M2 7 C 25 2, 55 10, 98 4' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+  left: -4%;
+  right: -4%;
+  bottom: -0.2em;
+  height: 0.45em;
+}
+
+.circle::after {
+  --ink-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 80' preserveAspectRatio='none'%3E%3Cpath d='M70 6 C 30 8, 4 24, 6 44 C 8 66, 60 76, 110 74 C 160 72, 196 58, 194 36 C 192 14, 150 4, 96 5 C 80 6, 66 9, 56 13' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+  inset: -0.3em -0.45em;
+}
+
+.has-ink::after {
+  content: none;
+}
+
+.ink {
+  position: absolute;
+  z-index: -1;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: clamp(2px, 0.075em, 4.5px);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ink path {
+  /* pathLength is 1000 (see ink.js). The gap is longer than the path, so an
+     undrawn stroke leaves no round-cap dot. */
+  stroke-dasharray: 1000 2000;
+  stroke-dashoffset: 0;
+}
+
+.ink--mark {
+  left: -4%;
+  width: 108%;
+  bottom: -0.2em;
+  height: 0.45em;
+}
+
+.ink--circle {
+  inset: -0.3em -0.45em;
+}

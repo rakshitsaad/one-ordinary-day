@@ -1,0 +1,274 @@
+/* "Myths we grew up with" (src/sections/myths.js). */
+
+.myths__deck {
+  --card-w: min(78vw, 19rem);
+  display: grid;
+  gap: 0.75rem;
+}
+
+/* A full-width strip of notes, so they spill across the screen like a desk.
+   Native scroll-snap: swipe on touch, trackpad on desktop, arrows below.
+   Full width is measured from the section (a size container), not 100vw:
+   on desktop 100vw includes the scrollbar and overflowed the page by ~15px. */
+.myths {
+  container-type: inline-size;
+}
+
+.myths__track {
+  --full: calc(100cqw + var(--gutter-left) + var(--gutter-right));
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: clamp(1rem, 4vw, 2rem);
+  width: var(--full);
+  margin: 0 0 0 calc((100% - 100cqw) / 2 - var(--gutter-left));
+  padding: 1.6rem calc(var(--full) / 2 - var(--card-w) / 2) 2.2rem;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.myths__track::-webkit-scrollbar {
+  display: none;
+}
+
+.myth {
+  flex: 0 0 var(--card-w);
+  scroll-snap-align: center;
+  perspective: 1400px;
+  rotate: var(--tilt, -1.5deg);
+  transition: rotate 1s var(--ease-out);
+}
+
+/* Each note sits a little differently, like they were stuck up by hand. */
+.myth:nth-child(8n + 1) { --tilt: -2.2deg; }
+.myth:nth-child(8n + 2) { --tilt: 1.6deg; }
+.myth:nth-child(8n + 3) { --tilt: -1.2deg; }
+.myth:nth-child(8n + 4) { --tilt: 2.3deg; }
+.myth:nth-child(8n + 5) { --tilt: -1.8deg; }
+.myth:nth-child(8n + 6) { --tilt: 1.2deg; }
+.myth:nth-child(8n + 7) { --tilt: -2.5deg; }
+.myth:nth-child(8n + 8) { --tilt: 1.9deg; }
+
+/* The one in the middle straightens up slightly, as if you'd picked it up. */
+.myths__deck.is-live .myth.is-centred {
+  rotate: calc(var(--tilt, 0deg) * 0.4);
+}
+
+.myth__note {
+  position: relative;
+  display: grid;
+  gap: 0.9rem;
+  height: 100%;
+}
+
+/* ---- Paper ---------------------------------------------------------------- */
+
+.myth__face {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-height: 15rem;
+  padding: 1.6rem 1.35rem 1.3rem;
+  /* One corner slightly lifted. */
+  border-radius: 2px 3px 14px 3px;
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--paper) 75%, var(--night-particle)), var(--paper) 45%),
+    var(--paper);
+  color: var(--ink);
+  box-shadow:
+    0 1px 1px rgb(8 12 22 / 0.18),
+    0 16px 26px -16px rgb(8 12 22 / 0.6);
+}
+
+/* A strip of washi tape holding the note up. */
+.myth__face::before {
+  content: "";
+  position: absolute;
+  top: -0.7rem;
+  left: 50%;
+  width: 4.6rem;
+  height: 1.4rem;
+  translate: -50% 0;
+  rotate: -4deg;
+  background: color-mix(in srgb, var(--tape) 55%, transparent);
+  border-radius: 1px;
+}
+
+/* A soft shadow under the lifted corner. */
+.myth__face::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0 0 14px 0;
+  background: linear-gradient(135deg, transparent 55%, color-mix(in srgb, var(--ink) 10%, transparent));
+  pointer-events: none;
+}
+
+.myth__tag {
+  font-family: var(--font-hand);
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.chapter .myth__text {
+  max-width: none;
+  font-family: var(--font-hand);
+  font-size: 1.9rem;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.chapter .myth__fact {
+  max-width: none;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.myth__fact a {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.myth__hint {
+  margin-top: auto;
+  font-family: var(--font-hand);
+  font-size: 1.1rem;
+  color: var(--ink);
+  opacity: 0.75;
+}
+
+/* ---- Flipping (with JS) --------------------------------------------------- */
+
+.myths__deck.is-live .myth__note {
+  transform-style: preserve-3d;
+  transition: transform 0.9s var(--ease-out);
+}
+
+.myths__deck.is-live .myth__face {
+  grid-area: 1 / 1;
+  backface-visibility: hidden;
+}
+
+.myths__deck.is-live .myth__face--back {
+  transform: rotateY(180deg);
+}
+
+.myths__deck.is-live .myth.is-flipped .myth__note {
+  transform: rotateY(180deg);
+}
+
+/* With JS the front of the note is a button (the whole note is tappable). */
+button.myth__face {
+  width: 100%;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button.myth__face > span:not(.visually-hidden) {
+  display: block;
+}
+
+.myth__face--back {
+  cursor: pointer;
+}
+
+.myth__again {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.35rem 0;
+  min-height: 44px;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-family: var(--font-hand);
+  font-size: 1.15rem;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.myth .myth__face:focus-visible,
+.myth .myth__again:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 5px;
+}
+
+.myth .myth__again:focus-visible {
+  outline-color: var(--ink);
+  outline-offset: 2px;
+}
+
+/* Without JS there's no flip: the fact sits under the myth on the same note. */
+.myths__deck:not(.is-live) .myth__face--front .myth__hint {
+  display: none;
+}
+
+/* ---- Controls ------------------------------------------------------------- */
+
+.myths__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.myths__arrow {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  background: transparent; /* the hand-drawn ring is in buttons.css */
+  color: var(--fg);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.8s var(--ease-out);
+}
+
+.myths__arrow svg {
+  width: 24px;
+  height: 16px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.myths__arrow[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.myths__count {
+  min-width: 3.2em;
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.myths__swipe {
+  display: none;
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+}
+
+@media (pointer: coarse) {
+  .myths__swipe {
+    display: inline;
+  }
+}

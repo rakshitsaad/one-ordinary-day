@@ -1,0 +1,259 @@
+/* 5-4-3-2-1 notebook (src/sections/grounding.js). */
+
+.notebook {
+  --paper: color-mix(in srgb, var(--bg) 92%, var(--fg));
+  position: relative;
+  display: grid;
+  gap: 1.25rem; /* without JS the pages simply stack */
+  margin-top: 0.5rem;
+}
+
+/* With JS: one stack of pages that turn around the left (bound) edge. */
+.notebook.is-live {
+  gap: 0;
+  isolation: isolate;
+  perspective: 2200px;
+}
+
+/* A couple of page edges peeking out underneath, like a real notebook. */
+.notebook.is-live::before,
+.notebook.is-live::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 4px 18px 18px 4px;
+  background: color-mix(in srgb, var(--paper) 80%, var(--bg));
+  translate: 5px 6px;
+}
+
+.notebook.is-live::after {
+  z-index: -2;
+  background: color-mix(in srgb, var(--paper) 55%, var(--bg));
+  translate: 10px 12px;
+}
+
+.page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  min-width: 0;
+  padding: 1.2rem 1.2rem 1.2rem 2.8rem;
+  border-radius: 4px 18px 18px 4px;
+  background: var(--paper);
+  color: var(--fg);
+  box-shadow: 0 22px 36px -26px rgb(8 12 22 / 0.55);
+}
+
+/* Margin line. */
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2.05rem;
+  width: 1.5px;
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* Binding holes down the left edge. */
+.page::after {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  left: 0.65rem;
+  width: 10px;
+  background:
+    radial-gradient(circle, var(--bg) 0 3.5px, color-mix(in srgb, var(--fg) 28%, transparent) 3.5px 4.5px, transparent 5px)
+    center top / 10px 1.9rem repeat-y;
+}
+
+.notebook.is-live .page {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  transform-origin: left center;
+  backface-visibility: hidden;
+}
+
+.notebook.is-live .page.is-revealed {
+  visibility: visible;
+  z-index: 1;
+}
+
+.notebook.is-live .page.is-current {
+  visibility: visible;
+  z-index: 2;
+}
+
+.notebook.is-live .page.is-on-top {
+  z-index: 3;
+}
+
+/* ---- Page contents -------------------------------------------------------- */
+
+.page__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.page__count {
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  line-height: 1.2;
+  color: var(--fg);
+}
+
+.page__doodle {
+  flex: none;
+  width: clamp(78px, 22vw, 112px);
+  height: auto;
+  aspect-ratio: 4 / 3;
+  overflow: visible;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  rotate: -3deg;
+}
+
+/* Doodles draw themselves each time their page opens (paths get
+   pathLength="1000" from grounding.js; without JS they're simply drawn). */
+.page__doodle path {
+  stroke-dasharray: 1000 2000;
+  stroke-dashoffset: 0;
+}
+
+.notebook.is-live .page:not(.is-current) .page__doodle path {
+  stroke-dashoffset: 1000;
+}
+
+.notebook.is-live .page.is-current .page__doodle path {
+  transition: stroke-dashoffset 1.3s var(--ease-out) calc(0.2s + var(--i, 0) * 0.18s);
+}
+
+.page h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 5.5vw, 2.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.page h3 em {
+  font-style: italic;
+  color: var(--accent-text);
+}
+
+/* The paper is a touch lighter than the page, so body text uses --fg here. */
+.chapter .page p {
+  max-width: 52ch;
+  color: var(--fg);
+}
+
+.chapter .page .page__privacy {
+  padding-left: 0.8rem;
+  border-left: 2px solid var(--accent);
+  font-size: 0.92rem;
+}
+
+/* ---- Writing lines -------------------------------------------------------- */
+
+.page__lines {
+  display: grid;
+  padding: 0;
+  list-style: none;
+  counter-reset: line;
+}
+
+.page__lines li {
+  counter-increment: line;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  /* 50% keeps the writing line at 3:1+ against the paper (WCAG 1.4.11). */
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 50%, transparent);
+  transition:
+    border-color 0.8s var(--ease-out),
+    box-shadow 0.8s var(--ease-out);
+}
+
+.page__lines li::before {
+  content: counter(line);
+  width: 1rem;
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  text-align: right;
+  color: var(--accent-text);
+}
+
+.page__lines li:focus-within {
+  border-bottom-color: var(--accent-text);
+  box-shadow: 0 1px 0 var(--accent-text);
+}
+
+.page__lines label {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.page__lines input {
+  flex: 1;
+  min-width: 0;
+  min-height: 46px;
+  padding: 0.2rem 0.25rem;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-hand);
+  font-size: 1.45rem;
+  color: var(--fg);
+  caret-color: var(--accent);
+}
+
+.page__lines input::placeholder {
+  color: color-mix(in srgb, var(--fg) 55%, transparent);
+  opacity: 1;
+}
+
+.page__lines input:focus-visible {
+  outline: none; /* the line under it lights up instead */
+}
+
+/* ---- Turning pages -------------------------------------------------------- */
+
+.page__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: auto; /* same spot on every page, so tapping through is easy */
+  padding-top: 0.5rem;
+}
+
+.page__btn {
+  min-height: 46px;
+  padding: 0.65rem 1.35rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The pen-loop outlines and highlighter fill are in buttons.css. */
+
+@media (min-width: 48rem) {
+  .page {
+    padding: 1.6rem 1.75rem 1.5rem 3.4rem;
+  }
+
+  .page::before {
+    left: 2.5rem;
+  }
+
+  .page::after {
+    left: 0.9rem;
+  }
+}

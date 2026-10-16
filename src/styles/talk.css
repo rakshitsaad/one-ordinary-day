@@ -1,0 +1,458 @@
+/*
+  "Talk to someone" page (talk.html). Calm and still: the dawn palette from
+  tokens.css, no motion beyond a gentle smooth scroll for in-page links.
+*/
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.talk-page) {
+    scroll-behavior: smooth;
+  }
+}
+
+.talk-page main {
+  display: grid;
+  gap: 0;
+  width: min(40rem, calc(100% - var(--gutter-left) - var(--gutter-right)));
+  margin-inline: auto;
+}
+
+/* ---- Top bar: always a clear way back ------------------------------------- */
+
+.talk-top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-left: var(--gutter-left);
+  padding-right: var(--gutter-right);
+  background: var(--bg); /* solid, so nothing scrolls visibly underneath */
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+}
+
+.talk-top__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 52px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--fg);
+}
+
+/* Anything linked to (the floating button, the "back" links) clears the bar. */
+.talk-page [id] {
+  scroll-margin-top: 5rem;
+}
+
+/* ---- Hero ----------------------------------------------------------------- */
+
+.talk-hero {
+  display: grid;
+  gap: 1.1rem;
+  padding-block: clamp(3rem, 10vh, 6rem) 2.5rem;
+}
+
+.talk-page p {
+  max-width: var(--measure);
+}
+
+.talk-hero > p:not(.talk-danger) {
+  font-size: 1.1rem;
+  color: var(--soft);
+}
+
+.talk-danger {
+  justify-self: start;
+  padding: 0.7rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
+  border-radius: 0 12px 12px 0;
+  color: var(--fg);
+}
+
+.talk-danger a {
+  font-weight: 600;
+  /* A bigger tap area for the emergency number, without moving the text. */
+  display: inline-block;
+  margin: -0.75rem -0.4rem;
+  padding: 0.75rem 0.4rem;
+}
+
+/* ---- Sections ------------------------------------------------------------- */
+
+.talk-section {
+  display: grid;
+  gap: 1rem;
+  padding-block: 2.5rem;
+  border-top: 1px dashed color-mix(in srgb, var(--fg) 22%, transparent);
+}
+
+.talk-section > p {
+  color: var(--soft);
+}
+
+.talk-section h2 em,
+.talk-hero h1 em {
+  font-style: italic;
+  color: var(--accent-text);
+}
+
+.talk-page h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+
+/* ---- Helplines: a directory, not a stack of cards ------------------------- */
+/* Tele-MANAS leads under a heavy rule, its number set big in the display face.
+   The rest are a ruled list; from 48rem a dotted leader runs from each name to
+   its number, like a printed directory. No tints, no rounded boxes. */
+
+.lines {
+  display: grid;
+  margin-top: 0.75rem;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--fg);
+  border-bottom: 1px solid var(--fg);
+}
+
+.line {
+  display: grid;
+  gap: 0.3rem;
+  padding-block: 1.15rem 1.25rem;
+}
+
+.line + .line {
+  border-top: 1px solid color-mix(in srgb, var(--fg) 18%, transparent);
+}
+
+.line__head {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.talk-page .line p {
+  color: var(--fg);
+}
+
+.line__about {
+  font-size: 0.98rem;
+}
+
+.line__numbers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.7rem;
+}
+
+.line__number {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+}
+
+.line__number:hover {
+  text-decoration-style: solid;
+}
+
+.line__number--long {
+  font-size: 1.2rem;
+}
+
+.line__or {
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+}
+
+.line__meta {
+  font-size: 0.92rem;
+}
+
+.talk-page .line .line__source {
+  font-size: 0.8rem;
+  color: var(--soft);
+}
+
+/* The lead entry: first, largest, and a friend's scribble pointing at it. */
+.line--main {
+  gap: 0.4rem;
+  padding-block: 1.5rem 1.9rem;
+}
+
+.talk-page .line--main .line__name {
+  font-size: clamp(2.1rem, 8vw, 2.7rem);
+  line-height: 1;
+}
+
+.line--main .line__about {
+  font-size: 1.05rem;
+}
+
+.talk-page .line__pick {
+  margin-block: 0.2rem 0.1rem;
+  font-size: 1.4rem;
+}
+
+.line--main .line__number {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3.6rem, 16vw, 5.4rem);
+  line-height: 1;
+  letter-spacing: 0;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.12em;
+}
+
+.line--main .line__number--long {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.35rem;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+}
+
+.line--main .line__or {
+  font-size: 1.5rem;
+}
+
+.talk-note {
+  font-size: 0.9rem;
+}
+
+/* Part of the directory's back matter, so no box around it either. */
+.talk-abroad {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.talk-abroad p {
+  color: var(--fg);
+}
+
+.talk-checked {
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+
+.talk-section > .talk-checked {
+  color: var(--fg);
+}
+
+/* ---- Telling someone ------------------------------------------------------ */
+
+.people {
+  display: grid;
+  gap: 1.75rem;
+  margin-block: 0.5rem;
+}
+
+.person {
+  display: grid;
+  gap: 0.5rem;
+  padding-left: 1rem;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.person p {
+  color: var(--fg);
+}
+
+/* What you could actually say, in a soft speech bubble. */
+.talk-page .person__line {
+  justify-self: start;
+  margin-top: 0.3rem;
+  padding: 0.6rem 0.95rem;
+  border: 1.5px solid color-mix(in srgb, var(--fg) 25%, transparent);
+  border-radius: 18px 18px 18px 4px;
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  line-height: 1.3;
+}
+
+/* ---- Helping a friend ----------------------------------------------------- */
+
+.steps {
+  display: grid;
+  gap: 1.5rem;
+  margin-block: 0.5rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  min-height: 2.6rem;
+  padding-left: 3.4rem;
+  counter-increment: step;
+}
+
+/* Hand-written number with a hand-drawn circle around it. */
+.steps li::before {
+  content: counter(step);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  color: var(--fg);
+}
+
+.steps li::after {
+  content: "";
+  position: absolute;
+  top: -0.2rem;
+  left: -0.25rem;
+  width: 2.9rem;
+  height: 2.8rem;
+  background: var(--accent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M52 8 C 24 8, 8 28, 9 52 C 10 78, 32 93, 54 91 C 78 89, 93 70, 92 48 C 91 24, 72 9, 46 11 C 40 12, 34 14, 30 17' fill='none' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M52 8 C 24 8, 8 28, 9 52 C 10 78, 32 93, 54 91 C 78 89, 93 70, 92 48 C 91 24, 72 9, 46 11 C 40 12, 34 14, 30 17' fill='none' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+.steps h3 {
+  padding-top: 0.35rem;
+  font-size: 1.3rem;
+}
+
+.steps p {
+  color: var(--fg);
+}
+
+/* ---- The way back --------------------------------------------------------- */
+
+.talk-end {
+  padding-bottom: 5rem;
+}
+
+.talk-end__line {
+  font-family: var(--font-hand);
+  font-size: 1.6rem;
+}
+
+.talk-section > .talk-end__line {
+  color: var(--fg);
+}
+
+.talk-end__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+}
+
+.talk-end__home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.7rem 1.4rem;
+  text-decoration: none;
+}
+
+.talk-end__breathe {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  color: var(--fg);
+}
+
+/* This page is one column, so its footer stays in it at every width. */
+.talk-page .site-footer__inner {
+  grid-template-columns: none;
+  max-width: 40rem;
+}
+
+.talk-page .site-footer__text {
+  grid-column: auto;
+}
+
+@media (min-width: 48rem) {
+  /* Directory rows: name ····· number on one line (the grid lines up their
+     baselines), the details full width underneath. */
+  .line:not(.line--main) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 0.9rem;
+    align-items: baseline;
+  }
+
+  /* The name joins the row; its description runs full width below. */
+  .line:not(.line--main) .line__head {
+    display: contents;
+  }
+
+  .line:not(.line--main) > *,
+  .line:not(.line--main) .line__about {
+    grid-column: 1 / -1;
+  }
+
+  .line:not(.line--main) .line__name {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .line:not(.line--main) .line__numbers {
+    grid-column: 2;
+    grid-row: 1;
+    justify-content: flex-end;
+  }
+
+  .line:not(.line--main) .line__name {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .line:not(.line--main) .line__name::after {
+    content: "";
+    flex: 1;
+    min-width: 2rem;
+    border-bottom: 2px dotted color-mix(in srgb, var(--fg) 35%, transparent);
+  }
+
+  /* The lead's scribble hangs to the right of its name. */
+  .line--main {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 1.5rem;
+  }
+
+  .line--main > * {
+    grid-column: 1 / -1;
+  }
+
+  .line--main .line__head {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .talk-page .line--main .line__pick {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    max-width: 13rem;
+    margin: 0.3rem 0 0;
+    rotate: 2deg;
+  }
+}

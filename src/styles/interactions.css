@@ -1,0 +1,144 @@
+/*
+  Finishing micro-interactions (imported last, so these transition lists
+  replace the components' own; keep the components' properties in them).
+  Everything uses --ease-out: front-loaded, so it responds at once, and it
+  never overshoots. Nothing bounces, nothing flashes.
+*/
+
+/* ---- Buttons: lift gently on hover, compress on press ------------------- */
+
+/* Never transition background-color or color here: these buttons follow the
+   day's colours as you scroll, and a lagging background under instantly
+   changing text would dip below AA contrast mid-blend (found in the a11y
+   review). Only movement, shadow, decorative border and opacity ease. */
+:is(.talk, .breathe, .breath__go, .page__btn, .myths__arrow, .dial__button, .garden__button, .talk-end__home) {
+  transition:
+    translate var(--dur-base) var(--ease-out),
+    scale var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    opacity var(--dur-base) var(--ease-out);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :is(.talk, .breathe, .breath__go, .page__btn, .myths__arrow, .dial__button, .garden__button, .talk-end__home):not([aria-disabled="true"]):hover {
+    translate: 0 -2px;
+  }
+
+  /* Only the solid pills cast a shadow; the hand-drawn buttons (buttons.css)
+     have no box for one to follow, so their highlighter swells instead. */
+  :is(.talk, .dial__button, .garden__button):hover {
+    box-shadow: 0 10px 18px -14px color-mix(in srgb, var(--fg) 60%, transparent);
+  }
+}
+
+/* The press settles in a quarter of a second so it registers under the finger
+   (the one place shorter than 0.8s); letting go eases back at the usual pace. */
+:is(.talk, .breathe, .breath__go, .page__btn, .myths__arrow, .dial__button, .garden__button, .talk-end__home):not([aria-disabled="true"]):active {
+  translate: 0 0;
+  scale: 0.97;
+  box-shadow: none;
+  transition-duration: 0.25s;
+}
+
+/* Choice pills only compress; they sit in rows, so lifting would look jumpy. */
+.pills label > span {
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    scale var(--dur-base) var(--ease-out);
+}
+
+.pills:not(:disabled) label:active > span {
+  scale: 0.96;
+  transition-duration: 0.25s;
+}
+
+/* Myth notes rise a touch when you hover them, as if picked up. */
+.myth {
+  transition:
+    rotate 1s var(--ease-out),
+    translate var(--dur-base) var(--ease-out);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .myth:hover {
+    translate: 0 -4px;
+  }
+}
+
+/* ---- Text links: a faint underline that draws in solid on hover ---------- */
+
+:is(a:not([class]), a.note, .talk-top__back, .talk-end__breathe, .myth__again, .garden__clear) {
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1.5px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition:
+    background-size var(--dur-base) var(--ease-out),
+    text-decoration-color var(--dur-base) var(--ease-out);
+}
+
+@media (hover: hover) {
+  :is(a:not([class]), a.note, .talk-top__back, .talk-end__breathe, .myth__again, .garden__clear):hover {
+    background-size: 100% 1.5px;
+    text-decoration-color: transparent;
+  }
+}
+
+:is(a:not([class]), a.note, .talk-top__back, .talk-end__breathe, .myth__again, .garden__clear):focus-visible {
+  background-size: 100% 1.5px;
+}
+
+/* ---- A soft ripple where you click (src/scripts/interactions.js) -------- */
+
+.ripples {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ripple {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border: 1.5px solid var(--accent-text);
+  border-radius: 50%;
+  opacity: 0;
+  animation: ripple 0.9s var(--ease-out) forwards;
+}
+
+@keyframes ripple {
+  from {
+    opacity: 0.4;
+    scale: 0.2;
+  }
+  to {
+    opacity: 0;
+    scale: 1;
+  }
+}
+
+/* ---- Leaving a page: fade to the current background colour -------------- */
+/* (Arriving is handled by the small inline style + script in each page's <head>.) */
+
+.page-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.page-veil.is-showing {
+  opacity: 1;
+}

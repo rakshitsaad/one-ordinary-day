@@ -1,0 +1,629 @@
+/* Story sections: one per time of day. Mobile first. */
+.chapter {
+  display: flex;
+  align-items: center;
+  min-height: 92vh;
+  min-height: 92svh;
+  padding-block: 14vh;
+  padding-left: var(--gutter-left);
+  padding-right: var(--gutter-right);
+}
+
+.chapter__inner {
+  display: grid;
+  gap: 1.1rem;
+  width: 100%;
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.time {
+  font-family: var(--font-hand);
+  font-weight: 500;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--accent-text);
+}
+
+h1,
+h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: clamp(2.8rem, 9vw, 5.2rem);
+}
+
+h2 {
+  font-size: clamp(2.1rem, 6.5vw, 3.6rem);
+}
+
+h1 em,
+h2 em {
+  font-style: italic;
+  color: var(--accent-text);
+}
+
+.chapter p {
+  max-width: var(--measure);
+  color: var(--soft);
+}
+
+.note {
+  justify-self: start;
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  line-height: 1.3;
+  color: var(--fg);
+  rotate: -1.5deg;
+}
+
+/* Notes that are links get a full-size tap target. */
+a.note {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* A small pen mark before each note, so they don't all start with the same
+   dash: a short arrow (the default), .note--tick or .note--squiggle. Like the
+   buttons, it's an SVG mask in currentColor, so it follows the day. Pick the
+   one that suits the line and differs from the notes either side; link notes
+   that already end in ↓ don't take the arrow. */
+.note {
+  --note-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 24'%3E%3Cpath d='M3 15C12 11 23 10 35 12M27 5C30 8 33 10 36 12C33 14 31 16 28 19' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+}
+
+.note--tick {
+  --note-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 24'%3E%3Cpath d='M7 12C10 14 13 17 15 21C20 13 27 6 36 2' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+}
+
+.note--squiggle {
+  --note-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 24'%3E%3Cpath d='M2 14C6 6 10 6 13 13C16 20 21 20 24 12C27 5 32 5 35 12C36 15 37 16 39 15' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+}
+
+.note::before {
+  content: "";
+  display: inline-block;
+  flex: none;
+  width: 1.15em;
+  height: 0.7em;
+  margin-right: 0.45rem;
+  vertical-align: middle;
+  background: currentColor;
+  -webkit-mask: var(--note-mark) center / contain no-repeat;
+  mask: var(--note-mark) center / contain no-repeat;
+}
+
+/* High contrast mode replaces backgrounds, which would erase the mark. */
+@media (forced-colors: active) {
+  .note::before {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+}
+
+/* Empty evening sky between sunset and dusk (see the comment in index.html).
+   On phones and short screens the two chapters' text is taller than their
+   min-height, so only their 14vh padding adds to the gap. A full screen of sky
+   keeps both paragraphs off screen while the text is below 4.5:1. Roomy screens
+   centre shorter text in taller chapters, and 70svh is enough there. */
+.interlude {
+  height: 100vh;
+  height: 100svh;
+}
+
+@media (min-width: 48rem) and (min-height: 50rem) {
+  .interlude {
+    height: 70vh;
+    height: 70svh;
+  }
+}
+
+/* ---- Desktop: an editorial page, not a centred column -------------------------
+   A 12-column grid. Each chapter sets where its text sits (--col) and where its
+   margin note hangs (--note-col / --note-row), so the reading line wanders
+   left and right down the day instead of stacking the same block seven times.
+   Spacing varies too. Sunset and dusk keep their full height: the empty sky
+   between them is what keeps text readable through the colour flip. */
+@media (min-width: 64rem) {
+  .chapter {
+    align-items: var(--align, center);
+    min-height: 0;
+    padding-block: var(--pad, 16vh);
+  }
+
+  .chapter__inner {
+    --col: 2 / span 7;
+    --note-col: 10 / span 3;
+    --note-row: 3 / span 2;
+    max-width: 72rem;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 2rem;
+    align-items: start;
+  }
+
+  .chapter__inner > * {
+    grid-column: var(--col);
+  }
+
+  .chapter__inner > .note {
+    grid-column: var(--note-col);
+    grid-row: var(--note-row);
+    align-self: center;
+    rotate: var(--note-tilt, -2deg);
+  }
+
+  /* 6:40 am: a cover. Big title low on the page, the note up in the corner. */
+  #dawn {
+    --align: end;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-block: 18vh 12vh;
+  }
+
+  #dawn .chapter__inner {
+    --col: 1 / span 8;
+    --note-col: 10 / span 3;
+    --note-row: 1 / span 2;
+    --note-tilt: 3deg;
+  }
+
+  #dawn .note {
+    align-self: start;
+  }
+
+  #dawn h1 {
+    font-size: clamp(5.2rem, 9vw, 8rem);
+    line-height: 0.95;
+  }
+
+  #morning {
+    --pad: 12vh 20vh;
+  }
+
+  #morning .chapter__inner {
+    --col: 5 / span 7;
+    --note-col: 1 / span 3;
+    --note-tilt: -3deg;
+  }
+
+  #midday {
+    --pad: 20vh 12vh;
+  }
+
+  #midday .chapter__inner {
+    --col: 2 / span 6;
+    --note-col: 9 / span 3;
+    --note-tilt: 2deg;
+  }
+
+  /* The thoughts get more room; the note sits beside the crowd. */
+  #afternoon {
+    --pad: 14vh 18vh;
+  }
+
+  #afternoon .chapter__inner {
+    --col: 1 / span 7;
+    --note-col: 10 / span 3;
+    --note-row: 5;
+  }
+
+  #afternoon .thoughts {
+    grid-column: 1 / span 9;
+  }
+
+  #sunset,
+  #dusk {
+    min-height: 92vh;
+    min-height: 92svh;
+    padding-block: 14vh;
+  }
+
+  #sunset .chapter__inner {
+    --col: 4 / span 7;
+  }
+
+  #dusk .chapter__inner {
+    --col: 6 / span 7;
+    --note-col: 2 / span 3;
+    --note-tilt: -1deg;
+  }
+
+  #night {
+    --pad: 18vh 14vh;
+  }
+
+  #night .chapter__inner {
+    --col: 2 / span 7;
+  }
+
+  /* The night chapter's note is a link onward, so it stays in the reading line. */
+  #night .note {
+    grid-column: var(--col);
+    grid-row: auto;
+    rotate: -1.5deg;
+  }
+
+  /* Tools: text on one side, the thing itself on the other. The last row
+     soaks up the height of the tall side, so the text doesn't spread out. */
+  .minute,
+  .grounding {
+    --pad: 14vh;
+  }
+
+  .minute .chapter__inner,
+  .grounding .chapter__inner {
+    grid-template-rows: auto auto auto 1fr;
+  }
+
+  .minute .chapter__inner {
+    --col: 1 / span 5;
+  }
+
+  .minute .breath {
+    grid-column: 7 / -1;
+    grid-row: 1 / -1;
+  }
+
+  .minute .note {
+    grid-column: var(--col);
+    grid-row: auto;
+    align-self: start;
+    rotate: -1.5deg;
+  }
+
+  .grounding .chapter__inner {
+    --col: 9 / -1;
+  }
+
+  .grounding .notebook {
+    grid-column: 1 / span 7;
+    grid-row: 1 / -1;
+    margin-top: 0;
+  }
+
+  /* The notes run edge to edge; only the heading keeps to a column. */
+  .myths .chapter__inner {
+    --col: 1 / span 7;
+  }
+
+  .myths .myths__deck {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Facts between chapters. The number leads, set inside the sentence so it
+   still reads as one line without CSS. Each of the four has its own layout
+   (--hang, --aside, --big, --compare) so they don't stamp out the same block.
+   Never place one between sunset and dusk, where the text colour flips. */
+.fact {
+  display: grid;
+  gap: 0.6rem;
+  width: min(72rem, calc(100% - var(--gutter-left) - var(--gutter-right)));
+  margin-inline: auto;
+  padding-block: 2.5rem;
+}
+
+.fact__text {
+  max-width: 36ch;
+  font-size: 1.08rem;
+  line-height: 1.55;
+  color: var(--fg);
+}
+
+/* Instrument Serif italic at 3rem+: large text, so --accent-text's 3:1 is enough. */
+.fact__figure {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(3rem, 12vw, 4.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--accent-text);
+}
+
+.fact__source {
+  max-width: 46ch;
+  font-size: 0.85rem;
+  color: var(--soft);
+}
+
+/* Leans right, with a pencil rule down its side, like a clipping in the margin. */
+.fact--aside {
+  justify-items: start;
+  padding-left: max(18%, 3rem);
+}
+
+.fact--aside > * {
+  padding-left: 1rem;
+  border-left: 2px solid var(--accent);
+}
+
+.fact--aside .fact__source {
+  border-left-color: transparent;
+}
+
+.fact--big .fact__figure {
+  font-size: clamp(4.6rem, 22vw, 9rem);
+  line-height: 0.85;
+}
+
+/* 41% against 83%, as two hand-drawn bars. Screen readers get the sentence. */
+.fact__bars {
+  display: grid;
+  gap: 1rem;
+  max-width: 30rem;
+  margin-bottom: 0.4rem;
+}
+
+.fact__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.6rem;
+}
+
+.fact__bar .fact__figure {
+  margin: 0;
+  font-size: 2.6rem;
+}
+
+.fact__who {
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  color: var(--fg);
+}
+
+.fact__bar::after {
+  content: "";
+  flex: 0 0 100%;
+  height: 0.55rem;
+  margin-top: 0.3rem;
+  border-radius: 40% 60% 55% 45% / 70% 40% 60% 30%;
+  background: linear-gradient(to right, var(--accent) calc(var(--v) * 1%), color-mix(in srgb, var(--fg) 10%, transparent) 0);
+  rotate: -0.6deg;
+}
+
+.fact__bar + .fact__bar::after {
+  rotate: 0.4deg;
+}
+
+@media (min-width: 64rem) {
+  .fact {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 2rem;
+    padding-block: 4rem;
+  }
+
+  .fact > * {
+    grid-column: 2 / span 7;
+  }
+
+  /* The number hangs in its own column, the sentence beside it. */
+  .fact--hang .fact__text {
+    grid-column: 2 / span 8;
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 32ch);
+    column-gap: 2rem;
+    align-items: baseline;
+    max-width: none;
+  }
+
+  .fact--hang .fact__figure {
+    margin: 0;
+    text-align: right;
+  }
+
+  .fact--hang .fact__source {
+    grid-column: 2 / span 8;
+    margin-left: 17rem;
+  }
+
+  .fact--aside {
+    padding-left: 0;
+  }
+
+  .fact--aside > * {
+    grid-column: 8 / span 4;
+  }
+
+  /* Huge number on the left, the sentence tucked under its shoulder. */
+  .fact--big {
+    padding-block: 5rem;
+  }
+
+  .fact--big .fact__text {
+    grid-column: 3 / span 9;
+    display: grid;
+    grid-template-columns: auto minmax(0, 19rem);
+    justify-content: space-between;
+    column-gap: 2.5rem;
+    align-items: end;
+    max-width: none;
+  }
+
+  .fact--big .fact__figure {
+    margin: 0;
+  }
+
+  .fact--big .fact__source {
+    grid-column: 3 / span 9;
+    justify-self: end;
+    width: 19rem;
+  }
+
+  .fact--compare > * {
+    grid-column: 4 / span 6;
+  }
+}
+
+/* Helpline */
+.helpline {
+  display: grid;
+  gap: 0.4rem;
+  justify-self: start;
+  padding: 1.25rem 1.4rem;
+  border-radius: 6px 22px 6px 22px;
+  border: 1px solid color-mix(in srgb, var(--fg) 22%, transparent);
+  background: color-mix(in srgb, var(--fg) 7%, transparent);
+}
+
+/* The card's tint lowers contrast slightly, so its text uses --fg throughout. */
+.chapter .helpline p {
+  max-width: none;
+  color: var(--fg);
+}
+
+.helpline__name {
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.helpline__name span {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.helpline__numbers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.6rem;
+}
+
+.helpline__number {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* a comfortable tap target, even for the long number */
+  font-size: 1.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.helpline__number--long {
+  font-size: 1.25rem;
+}
+
+.helpline__or {
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+}
+
+.helpline__meta {
+  font-size: 0.95rem;
+}
+
+.chapter .helpline .helpline__source {
+  font-size: 0.8rem;
+}
+
+.chapter .more-help a {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.emergency a[href^="tel:"] {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+/* "Talk to someone": always on screen. */
+.talk {
+  position: fixed;
+  z-index: 10;
+  left: calc(14px + env(safe-area-inset-left, 0px));
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.talk:focus-visible {
+  outline-offset: 4px;
+}
+
+@media (min-width: 48rem) {
+  .talk {
+    left: calc(24px + env(safe-area-inset-left, 0px));
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Footer: a sign-off in the margin hand, then a short colophon. Lines up with
+   the chapter column on phones and tablets; on desktop it sits on the same
+   12-column grid, starting at the left edge. The bottom padding clears the
+   Talk and garden pills. */
+.site-footer {
+  position: relative;
+  z-index: 2;
+  padding-block: 2rem 7rem;
+  padding-left: var(--gutter-left);
+  padding-right: var(--gutter-right);
+  font-size: 0.95rem;
+  color: var(--soft);
+}
+
+.site-footer__inner {
+  display: grid;
+  gap: 1.1rem;
+  max-width: 40rem;
+  margin-inline: auto;
+  padding-top: 2rem;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 22%, transparent);
+}
+
+.site-footer__text {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.site-footer p {
+  max-width: 58ch;
+}
+
+.site-footer__sign {
+  justify-self: start;
+  font-family: var(--font-hand);
+  font-size: 1.7rem;
+  line-height: 1.2;
+  color: var(--fg);
+  rotate: -1.5deg;
+}
+
+.site-footer a {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+@media (min-width: 64rem) {
+  .site-footer__inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 2rem;
+    max-width: 72rem;
+    padding-top: 3rem;
+  }
+
+  .site-footer__sign {
+    grid-column: 1 / span 4;
+    font-size: 2rem;
+  }
+
+  .site-footer__text {
+    grid-column: 6 / span 6;
+  }
+}

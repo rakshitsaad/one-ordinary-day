@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Talk to someone · One Ordinary Day</title>
+    <meta name="description" content="Free helplines in India, and gentle ways to talk to someone about how you’re feeling." />
+    <meta name="theme-color" content="#F3E6DA" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Link previews (see the note in index.html). -->
+    <link rel="canonical" href="%SITE_URL%/talk.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="One Ordinary Day" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:title" content="Talk to someone" />
+    <meta property="og:description" content="Free helplines in India, and gentle ways to talk to someone about how you’re feeling." />
+    <meta property="og:url" content="%SITE_URL%/talk.html" />
+    <meta property="og:image" content="%SITE_URL%/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="One ordinary day. Spend one ordinary day with a 17-year-old, from the inside." />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Page transition, arriving half (src/scripts/page-transition.js fades it).
+         Inline so the veil exists on the very first paint; its own timer means
+         the page can never stay hidden, even if the scripts fail to load. -->
+    <style>
+      html[data-arriving]::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 2147483647;
+        background: var(--arrive-bg);
+        pointer-events: none;
+        transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      html.is-arrived::after {
+        opacity: 0;
+      }
+    </style>
+    <script>
+      try {
+        var fade = sessionStorage.getItem("ood-page-fade");
+        sessionStorage.removeItem("ood-page-fade");
+        if (fade && /^(rgb|color)\([\w\s.,%/-]*\)$/.test(fade) && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          var root = document.documentElement;
+          root.setAttribute("data-arriving", "");
+          root.style.setProperty("--arrive-bg", fade);
+          setTimeout(function () { root.classList.add("is-arrived"); }, 1500);
+          setTimeout(function () { root.removeAttribute("data-arriving"); }, 2600);
+        }
+      } catch (e) {}
+    </script>
+
+    <!-- The two fonts on the first screen (src/styles/fonts.css has the rest). -->
+    <link rel="preload" href="/src/assets/fonts/figtree-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/src/assets/fonts/instrument-serif-latin-400.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body class="talk-page">
+    <header class="talk-top">
+      <a class="talk-top__back" href="./"><span aria-hidden="true">←</span> back to the story</a>
+      <a class="talk" href="#helplines">Talk to someone</a>
+    </header>
+
+    <main id="talk">
+      <section class="talk-hero" aria-labelledby="talk-title">
+        <h1 id="talk-title">Talk to someone.</h1>
+        <p>You don’t need to be in a crisis to call. If you’ve felt off for a while and can’t shake it, that’s reason enough. Below are free helplines, and some ways to bring it up with people you already know.</p>
+        <p class="talk-danger">If you or someone else is in danger right now, call <a href="tel:112">112</a>.</p>
+      </section>
+
+      <!-- Every number below was checked on 16 Oct 2026 against the service's
+           official site or a Government of India press release (linked as
+           "source" on each line). Re-check before launch and after long gaps. -->
+      <section class="talk-section" id="helplines" aria-labelledby="helplines-title">
+        <h2 id="helplines-title">Free helplines in India</h2>
+        <p>All of these are free to use. You can share as little or as much as you like, and if one line is busy, it’s okay to try another.</p>
+
+        <ul class="lines">
+          <li class="line line--main">
+            <div class="line__head">
+              <h3 class="line__name">Tele-MANAS</h3>
+              <p class="line__about">The Government of India’s mental health helpline.</p>
+            </div>
+            <p class="note line__pick">not sure which one to call? start here.</p>
+            <p class="line__numbers">
+              <a class="line__number" href="tel:14416">14416</a>
+              <span class="line__or">or</span>
+              <a class="line__number line__number--long" href="tel:18008914416">1-800-891-4416</a>
+            </p>
+            <p class="line__meta">Toll-free · 24×7 · choose your language</p>
+            <p class="line__source">Sources: <a href="https://telemanas.mohfw.gov.in/home" target="_blank" rel="noopener">Tele-MANAS website<span class="visually-hidden"> (opens in a new tab)</span></a>, <a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=1866498" target="_blank" rel="noopener">launch, PIB 2022<span class="visually-hidden"> (opens in a new tab)</span></a>, <a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2022057" target="_blank" rel="noopener">PIB 2024<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+          </li>
+
+          <li class="line">
+            <div class="line__head">
+              <h3 class="line__name">Vandrevala Foundation</h3>
+              <p class="line__about">Trained counsellors. Call or WhatsApp, from anywhere in India.</p>
+            </div>
+            <p class="line__numbers">
+              <a class="line__number" href="tel:+919999666555">+91 9999 666 555</a>
+            </p>
+            <p class="line__meta">Free · 24×7 · private and confidential · call or WhatsApp</p>
+            <p class="line__source">Source: <a href="https://www.vandrevalafoundation.com/free-counseling" target="_blank" rel="noopener">vandrevalafoundation.com<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+          </li>
+
+          <li class="line">
+            <div class="line__head">
+              <h3 class="line__name">iCALL</h3>
+              <p class="line__about">Professional counsellors from TISS, Mumbai. You can stay anonymous.</p>
+            </div>
+            <p class="line__numbers">
+              <a class="line__number" href="tel:+919152987821">9152987821</a>
+            </p>
+            <p class="line__meta">Free · Monday to Saturday, 10 am to 8 pm · also by email: <a href="mailto:icall@tiss.edu">icall@tiss.edu</a></p>
+            <p class="line__source">Source: <a href="https://tiss.ac.in/view/11/projects/icall-telephonic-counselling-service-for-individua/" target="_blank" rel="noopener">TISS iCALL page<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+          </li>
+
+          <li class="line">
+            <div class="line__head">
+              <h3 class="line__name">AASRA</h3>
+              <p class="line__about">For anyone in emotional crisis. Calls aren’t recorded and your identity is never shared.</p>
+            </div>
+            <p class="line__numbers">
+              <a class="line__number" href="tel:+912227546669">022 2754 6669</a>
+            </p>
+            <p class="line__meta">Free · 24×7 · English and Hindi</p>
+            <p class="line__source">Source: <a href="https://aasra.info/helpline.html" target="_blank" rel="noopener">aasra.info<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+          </li>
+
+          <li class="line">
+            <div class="line__head">
+              <h3 class="line__name">Child Helpline</h3>
+              <p class="line__about">If you’re under 18 and unsafe, at home or anywhere else.</p>
+            </div>
+            <p class="line__numbers">
+              <a class="line__number" href="tel:1098">1098</a>
+            </p>
+            <p class="line__meta">Toll-free · 24×7 · connected to 112</p>
+            <p class="line__source">Source: <a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2153028" target="_blank" rel="noopener">Ministry of Women and Child Development, PIB 2025<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+          </li>
+        </ul>
+
+        <p class="talk-note">Toll-free numbers cost nothing to call. The other services are free, but your phone plan’s usual call or data charges may apply.</p>
+
+        <div class="talk-abroad">
+          <h3>Not in India?</h3>
+          <p><a href="https://findahelpline.com/" target="_blank" rel="noopener">Find A Helpline<span class="visually-hidden"> (opens in a new tab)</span></a> lists free, confidential helplines in more than 175 countries. You can also search for “mental health helpline” with the name of your country or city, or ask a school counsellor or doctor what’s available near you.</p>
+        </div>
+
+        <p class="talk-checked">Numbers checked on 16 October 2026. Services sometimes change; if a number doesn’t connect, try another one or call 112.</p>
+      </section>
+
+      <section class="talk-section" id="telling-someone" aria-labelledby="telling-title">
+        <h2 id="telling-title">Telling someone you know</h2>
+        <p>You don’t need a speech. A text, a note left on their desk, or bringing it up in the car, where nobody has to make eye contact: all of these count.</p>
+
+        <div class="people">
+          <article class="person">
+            <h3>A parent</h3>
+            <p>Pick a calm moment, not right before an exam or in the middle of an argument. They might not have perfect words, and that’s okay. Most parents would much rather know.</p>
+            <p class="person__line">“Can I talk to you about something? I’ve been finding things really hard lately, and it’s not just about marks.”</p>
+          </article>
+
+          <article class="person">
+            <h3>A friend</h3>
+            <p>You don’t need a big reason. Friends often feel the same way and are relieved someone said it first.</p>
+            <p class="person__line">“Honestly, I haven’t been okay. Can we talk later?”</p>
+          </article>
+
+          <article class="person">
+            <h3>A teacher or counsellor</h3>
+            <p>Choose someone you feel safe with. A school counsellor is there exactly for this, and it isn’t only for “serious” problems.</p>
+            <p class="person__line">“Could I talk to you after class? Something’s been bothering me and I don’t know who else to ask.”</p>
+          </article>
+        </div>
+
+        <p>If the first person brushes it off, try someone else, or one of the numbers above. A bad first reaction doesn’t mean you were wrong to say it.</p>
+      </section>
+
+      <section class="talk-section" id="helping-a-friend" aria-labelledby="friend-title">
+        <h2 id="friend-title">If a friend is struggling</h2>
+        <p>You don’t have to fix anything. Taking them seriously is most of it.</p>
+
+        <ol class="steps">
+          <li>
+            <h3>Reach out</h3>
+            <p>If they seem quiet or not like themselves, say something simple. “You seemed off today. You okay?” And if they say “fine”, ask twice.</p>
+          </li>
+          <li>
+            <h3>Listen more than you talk</h3>
+            <p>Let them finish. You don’t need advice or a story of your own. “That sounds really hard. I’m glad you told me” goes a long way.</p>
+          </li>
+          <li>
+            <h3>Help them find support</h3>
+            <p>Gently suggest talking to a trusted adult, a counsellor or a helpline. Offer to sit with them while they call, or go with them to talk to someone.</p>
+          </li>
+          <li>
+            <h3>Don’t keep it a secret if they’re unsafe</h3>
+            <p>If they talk about not wanting to be alive or about hurting themselves, take it seriously. Stay with them if you can, and tell a trusted adult or call one of the numbers above. You can be a good friend and still tell an adult.</p>
+          </li>
+          <li>
+            <h3>Look after yourself too</h3>
+            <p>Supporting someone can feel heavy. It’s okay to talk to someone about how you’re feeling as well.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="talk-section talk-end" aria-label="Back to the story">
+        <p class="talk-end__line">Whenever you’re ready.</p>
+        <div class="talk-end__links">
+          <a class="talk-end__home" href="./"><span aria-hidden="true">←</span> Back to One Ordinary Day</a>
+          <a class="talk-end__breathe" href="./#take-a-minute">or take a minute to breathe</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <div class="site-footer__text">
+          <p>This page is part of <a href="./">One Ordinary Day</a>, a small project about youth mental health that spends one school day with Aarav, 17, from his third snooze to lights out.</p>
+        </div>
+      </div>
+    </footer>
+    <script type="module" src="/src/talk.js"></script>
+  </body>
+</html>

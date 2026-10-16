@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- One Ordinary Day: the sky dial's sun on its dotted arc, over a hand-drawn horizon. Dawn palette. -->
+  <rect width="32" height="32" rx="7" fill="#F3E6DA"/>
+  <path d="M5.5 22.5 A10.5 10.5 0 0 1 26.5 22.5" fill="none" stroke="#3A2E2A" stroke-width="1.7" stroke-linecap="round" stroke-dasharray="0 3.3"/>
+  <circle cx="22.6" cy="14" r="4.7" fill="#D99A7A"/>
+  <path d="M4.2 24.6 C 10.5 23.5, 20 25.4, 27.8 24" fill="none" stroke="#3A2E2A" stroke-width="2.1" stroke-linecap="round"/>
+</svg>

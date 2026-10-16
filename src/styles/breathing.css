@@ -1,0 +1,241 @@
+/* "Take a minute" (src/sections/breathing.js). */
+
+.breath,
+.breath__app {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.breath__fallback {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.breath__fallback strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* ---- Pill choices (rhythm, sound) ---------------------------------------- */
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+.pills legend {
+  float: left; /* lets the legend sit inline with the pills */
+  margin-right: 0.35rem;
+  padding: 0;
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--fg);
+}
+
+.pills label {
+  position: relative;
+  display: inline-flex;
+}
+
+.pills input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.pills label > span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  min-height: 44px;
+  align-items: center;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--fg) 25%, transparent);
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--fg);
+  transition:
+    background-color 0.8s var(--ease-out),
+    border-color 0.8s var(--ease-out);
+}
+
+.pills small {
+  font-size: 0.8rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.pills input:checked + span {
+  border-color: color-mix(in srgb, var(--fg) 60%, transparent);
+  background: color-mix(in srgb, var(--fg) 12%, transparent);
+}
+
+.pills input:focus-visible + span {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+}
+
+.pills:disabled label > span {
+  opacity: 0.55;
+}
+
+.pills:disabled input {
+  cursor: default;
+}
+
+/* ---- Blob and ring -------------------------------------------------------- */
+
+.breath__stage {
+  justify-self: center;
+  width: min(78vw, 300px);
+  aspect-ratio: 1;
+}
+
+.breath__art {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.breath__fill-core {
+  stop-color: var(--accent);
+  stop-opacity: 0.95;
+}
+
+.breath__fill-edge {
+  stop-color: var(--particle);
+  stop-opacity: 0.55;
+}
+
+.breath__blob {
+  fill: url(#breath-fill);
+}
+
+.breath__halo {
+  fill: var(--particle);
+  opacity: 0.1;
+}
+
+.breath__track {
+  fill: none;
+  stroke: color-mix(in srgb, var(--fg) 14%, transparent);
+  stroke-width: 3;
+}
+
+.breath__progress {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 1000 2000; /* gap longer than the ring: no stray cap dot at 0 */
+  stroke-dashoffset: 1000;
+  opacity: 0.9;
+  /* Eases back gently when stopped; follows every frame while running. */
+  transition: stroke-dashoffset 1.2s var(--ease-out);
+}
+
+.breath__progress.is-live {
+  transition: none;
+}
+
+.breath__marks circle {
+  fill: color-mix(in srgb, var(--fg) 45%, transparent);
+}
+
+/* ---- Cue, rounds, controls ------------------------------------------------ */
+
+.chapter .breath__cue {
+  justify-self: center;
+  max-width: none;
+  min-height: 1.3em;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.7rem, 6vw, 2.2rem);
+  line-height: 1.1;
+  text-align: center;
+  color: var(--fg);
+}
+
+.breath__cue.is-new {
+  animation: cue-in 1s var(--ease-out);
+}
+
+@keyframes cue-in {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+
+.breath__rounds {
+  justify-self: center;
+  display: flex;
+  gap: 0.55rem;
+}
+
+.breath__dot {
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid color-mix(in srgb, var(--fg) 45%, transparent);
+  border-radius: 50%;
+  transition:
+    background-color 0.8s var(--ease-out),
+    border-color 0.8s var(--ease-out);
+}
+
+.breath__dot.is-current {
+  border-color: var(--accent);
+}
+
+.breath__dot.is-done {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.breath__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem 1.25rem;
+}
+
+.breath__go {
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.breath__done {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1rem 1.2rem;
+  border-left: 2px solid var(--accent);
+  animation: cue-in 1.4s var(--ease-out);
+}
+
+.chapter .breath__done p {
+  color: var(--fg);
+}
+
+.chapter .breath__done p:first-child {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.35rem;
+  line-height: 1.3;
+}
+
+.chapter .breath__tip {
+  font-size: 0.9rem;
+}
