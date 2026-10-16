@@ -2,6 +2,10 @@
 
 A youth mental health awareness website. The visual reference is [reference/one-day.html](reference/one-day.html), a single-file prototype. Use it as the source of truth for look, feel and tone. Rebuild it properly in the stack below rather than copying it wholesale.
 
+## Git rule
+
+- **Never commit or push to git without asking me first and waiting for my yes.** A push to `main` also publishes the live site (see Deploying). Ask again each time: a yes covers that one commit or push, not later ones.
+
 ## Concept
 
 The site follows a 17-year-old student through one day, from **6:40 am to 11:45 pm**. As the user scrolls, the colours of the whole site blend smoothly from dawn to night. That colour change is the progress bar.
