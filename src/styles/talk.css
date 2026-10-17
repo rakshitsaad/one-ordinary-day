@@ -97,6 +97,34 @@
   color: var(--accent-text);
 }
 
+/* "Your privacy": short plain lines, each with a small pen dash. */
+.privacy-list {
+  display: grid;
+  gap: 0.7rem;
+  max-width: 46ch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.privacy-list li {
+  position: relative;
+  padding-left: 1.6rem;
+  line-height: 1.55;
+}
+
+.privacy-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.75em;
+  width: 0.9rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  rotate: -4deg;
+}
+
 .talk-page h3 {
   font-family: var(--font-display);
   font-weight: 400;

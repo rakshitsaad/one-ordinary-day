@@ -162,28 +162,28 @@
           <h2>Then the thoughts get <em>loud.</em></h2>
           <p>In the auto to coaching, he opens Instagram. A cousin’s IIT admit letter. A classmate’s 5 am “study with me” reel. In the family group, Papa has forwarded a topper’s interview with the caption “Very inspiring!!”</p>
           <p><em>What if I don’t get in. Everyone’s so far ahead. They’ve spent so much on my coaching.</em> Think a worry enough times and it starts to sound like a fact. Half an hour of reels into an auto ride, it’s hard to tell the two apart.</p>
-          <!-- Without JS this is a plain list of worries and calmer reframes.
-               src/sections/thoughts.js turns it into the interactive crowd. -->
+          <!-- Without JS this is a plain list of worries, each with a calmer way to
+               put it. src/sections/thoughts.js turns each one into a small moment:
+               open it, read the calmer version, write your own, reflect, close.
+               Anything typed stays in the browser; see the privacy notes in
+               thoughts.js and CLAUDE.md before changing how notes are kept. -->
           <div class="thoughts" data-thoughts>
-            <p class="thoughts__hint" hidden>tap a thought to soften it</p>
-            <div class="thoughts__stage">
-              <ul class="thoughts__box" aria-label="Aarav’s thoughts">
-                <li class="thought"><span class="thought__worry">I’m so behind</span> <span class="thought__calm">make the list. it’s shorter on paper</span></li>
-                <li class="thought"><span class="thought__worry">what if I don’t get in?</span> <span class="thought__calm">then I’ll find a plan B. that’s allowed</span></li>
-                <li class="thought"><span class="thought__worry">everyone’s ahead of me</span> <span class="thought__calm">I only see what they choose to post</span></li>
-                <li class="thought"><span class="thought__worry">they’ve spent so much on coaching</span> <span class="thought__calm">they spent it on me, not on a rank</span></li>
-                <li class="thought"><span class="thought__worry">Sharma uncle’s son got 98%</span> <span class="thought__calm">his 98% doesn’t change mine</span></li>
-                <li class="thought"><span class="thought__worry">mock test rank: 214</span> <span class="thought__calm">214 tells me which chapters to redo</span></li>
-                <li class="thought"><span class="thought__worry">I wasted the whole day</span> <span class="thought__calm">I did less than I planned. not zero</span></li>
-                <li class="thought"><span class="thought__worry">why can’t I just focus?</span> <span class="thought__calm">I slept at 2:10. of course it’s hard</span></li>
-                <li class="thought"><span class="thought__worry">nobody gets it</span> <span class="thought__calm">Kabir might. I haven’t asked</span></li>
-                <li class="thought"><span class="thought__worry">I should be happier than this</span> <span class="thought__calm">four months to boards. that’s heavy</span></li>
-                <li class="thought"><span class="thought__worry">what will Papa say?</span> <span class="thought__calm">I could tell him it’s not just marks</span></li>
-              </ul>
-              <p class="thoughts__message" aria-hidden="true" hidden></p>
-            </div>
+            <p class="thoughts__intro" hidden>You can try this, or just keep scrolling. Both are fine. <a class="thoughts__skip" href="#sunset">Skip this part</a></p>
+            <p class="thoughts__hint" hidden>Pick a thought to look at it another way.</p>
+            <ul class="thoughts__box" aria-label="Aarav’s thoughts">
+              <li class="thought"><span class="thought__worry">I’m so behind</span> <span class="thought__calm">I’m behind on some things right now. That’s fixable, and it doesn’t say anything about who I am.</span></li>
+              <li class="thought"><span class="thought__worry">what if I don’t get in?</span> <span class="thought__calm">I might not, and that would really hurt. It still wouldn’t be the only way into the life I want.</span></li>
+              <li class="thought"><span class="thought__worry">everyone’s ahead of me</span> <span class="thought__calm">It looks that way from here. I’m comparing my worst day with the best bits of theirs, and I can’t see their bad days.</span></li>
+              <li class="thought"><span class="thought__worry">they’ve spent so much on coaching</span> <span class="thought__calm">They have, and I feel that. They did it because they care about me, and they’d probably rather know I’m struggling than have a rank.</span></li>
+              <li class="thought"><span class="thought__worry">Sharma uncle’s son got 98%</span> <span class="thought__calm">Good for him. His marks don’t take anything away from mine, and I don’t have to run his race.</span></li>
+              <li class="thought"><span class="thought__worry">mock test rank: 214</span> <span class="thought__calm">That stings. It’s one practice test, and it shows me which chapters need another look before the real one.</span></li>
+              <li class="thought"><span class="thought__worry">I wasted the whole day</span> <span class="thought__calm">I did less than I hoped, on four hours of sleep. Tomorrow I can start smaller.</span></li>
+              <li class="thought"><span class="thought__worry">why can’t I just focus?</span> <span class="thought__calm">I fell asleep at 2:10. A tired brain finds it hard to focus. That’s tiredness, and sleep helps more than shouting at myself.</span></li>
+              <li class="thought"><span class="thought__worry">nobody gets it</span> <span class="thought__calm">It feels that way right now, but I haven’t really told anyone yet. Kabir might get more of it than I think.</span></li>
+              <li class="thought"><span class="thought__worry">I should be happier than this</span> <span class="thought__calm">I’m carrying a lot: boards, coaching, everyone’s hopes. It makes sense that I don’t feel great, and I can go easier on myself about it.</span></li>
+              <li class="thought"><span class="thought__worry">what will Papa say?</span> <span class="thought__calm">He might be disappointed for a while. He might also surprise me. Either way, he’d want to know how I’m really doing.</span></li>
+            </ul>
             <p class="visually-hidden" aria-live="polite" data-thoughts-status></p>
-            <button class="breathe" type="button" hidden><span class="breathe__orb" aria-hidden="true"></span><span class="breathe__label">Breathe with me</span></button>
           </div>
           <span class="note note--squiggle">nobody posts their bad mock test.</span>
         </div>

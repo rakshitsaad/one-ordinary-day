@@ -11,7 +11,7 @@
    day's colours as you scroll, and a lagging background under instantly
    changing text would dip below AA contrast mid-blend (found in the a11y
    review). Only movement, shadow, decorative border and opacity ease. */
-:is(.talk, .breathe, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home) {
+:is(.talk, .thought__open, .moment__btn, .moment__choice, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home) {
   transition:
     translate var(--dur-base) var(--ease-out),
     scale var(--dur-base) var(--ease-out),
@@ -21,7 +21,7 @@
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  :is(.talk, .breathe, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home):not([aria-disabled="true"]):hover {
+  :is(.talk, .thought__open, .moment__btn, .moment__choice, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home):not([aria-disabled="true"]):hover {
     translate: 0 -2px;
   }
 
@@ -34,7 +34,7 @@
 
 /* The press settles in a quarter of a second so it registers under the finger
    (the one place shorter than 0.8s); letting go eases back at the usual pace. */
-:is(.talk, .breathe, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home):not([aria-disabled="true"]):active {
+:is(.talk, .thought__open, .moment__btn, .moment__choice, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home):not([aria-disabled="true"]):active {
   translate: 0 0;
   scale: 0.97;
   box-shadow: none;

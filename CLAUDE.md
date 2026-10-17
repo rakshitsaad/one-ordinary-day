@@ -74,7 +74,7 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 - No bouncy springs, no fast parallax, no scroll-jacking, no autoplay sound, no flashing.
 - Every curve is an ease-out that never overshoots: `--ease-out` (cubic-bezier(0.22, 1, 0.36, 1)), GSAP `power2.out` / `power3.out`, Lenis easeOutCubic. Never use back, elastic, bounce or spring eases, or any cubic-bezier with a y value above 1.
 - **Micro-interactions** ([interactions.css](src/styles/interactions.css), imported last; [interactions.js](src/scripts/interactions.js); [page-transition.js](src/scripts/page-transition.js)):
-  - Buttons (`.talk`, `.breathe`, `.breath__go`, `.page__btn`, `.myths__arrow`, `.garden__button`, `.talk-end__home`) lift 2px on hover (fine pointers, motion allowed; only the solid pills `.talk` and `.garden__button` also get a soft shadow, and the hand-drawn buttons swell their highlighter instead) and compress to `scale: 0.97` on press. Pills only compress; myth notes rise 4px on hover. These use the individual `translate` / `scale` properties so they compose with existing transforms. interactions.css replaces each component's `transition` list, so add a component's own transitioned properties there too.
+  - Buttons (`.talk`, `.thought__open`, `.moment__btn`, `.moment__choice`, `.breath__go`, `.page__btn`, `.myths__arrow`, `.garden__button`, `.talk-end__home`) lift 2px on hover (fine pointers, motion allowed; only the solid pills `.talk` and `.garden__button` also get a soft shadow, and the hand-drawn buttons swell their highlighter instead) and compress to `scale: 0.97` on press. Pills only compress; myth notes rise 4px on hover. These use the individual `translate` / `scale` properties so they compose with existing transforms. interactions.css replaces each component's `transition` list, so add a component's own transitioned properties there too.
   - Exceptions to the 0.8–1.4s rule, on purpose: the press compresses in 0.25s so it registers under the finger, and leaving a page fades out in 0.5s so getting to help never feels delayed.
   - Text links (`a:not([class])`, `a.note`, `.talk-top__back`, `.talk-end__breathe`, `.myth__again`, `.garden__clear`) keep a faint resting underline (so they read as links without hover); on hover or keyboard focus a solid 1.5px line draws in from the left.
   - A soft ring (64px, at most 40% opacity, 0.9s) spreads where you click or tap. Not for keyboard clicks (`event.detail === 0`), not in text inputs, and off with reduced motion.
@@ -90,7 +90,7 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 - Full-width strips: measure from a size container (`container-type: inline-size`, `100cqw`), never `100vw`, which includes the desktop scrollbar and overflows the page.
 - A button's accessible name must contain its visible text (voice control). Put extra hints in a `.visually-hidden` span, not an `aria-label` that rewords the visible words.
 - Reduced motion, as verified: no Lenis, a still particle frame, no reveals or hidden states, no drift, sway, orb, ripple, hover lift or page fade, all transitions effectively instant, and no CSS animation left running. The only motion is the breathing ring while an exercise the user started is running, plus the scroll-driven colour change.
-- Every interactive element has a visible `:focus-visible` indicator (`--accent-text`, 3:1 against the page), or a documented custom one: the thought text outline, and the notebook writing line, which is 50% `--fg` at rest so it meets 3:1.
+- Every interactive element has a visible `:focus-visible` indicator (`--accent-text`, 3:1 against the page), or a documented custom one: the notebook writing line, which is 50% `--fg` at rest so it meets 3:1.
 
 ## Design rules (from the design review)
 
@@ -176,13 +176,28 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 
 ### 4:50 pm thoughts ([thoughts.js](src/sections/thoughts.js), [thoughts.css](src/styles/thoughts.css))
 
-- The markup in index.html is a `<ul>` of `<li class="thought">` items, each holding `.thought__worry` and `.thought__calm`. Without JS it reads as a list of worry → reframe. To add or edit a thought, just edit that list; keep worries short and reframes kind and realistic, never "everything will be fine".
-  - Reframes are what Aarav could actually say to himself today, not poster slogans ("everyone moves at their own pace", "resting isn't wasting"). Tie them to his day where you can (asleep at 2:10, Kabir, boards in four months, rank 214) and don't stack the tidy "X, not Y" contrast; one in the list is plenty.
-  - Length: keep each reframe to one line on a phone (about 35 characters, 222px of Instrument Serif italic at 375px). A reframe that wraps makes its thought taller and covers the worry underneath. Today only "then I’ll find a plan B…" and "four months to boards…" wrap.
-- With JS, thoughts come into focus one at a time (every 0.9–1.5s), only while the box is on screen. They overlap and drift on a 7s loop. Tapping one softly pops it (a faint ring) into its reframe, which then sinks below the remaining worries. "Breathe with me" guides one breath (4s in, 6s out) while every thought fades on its own beat, then shows "one breath at a time." and offers "Start over".
-- Touch: only the visible text takes taps (`pointer-events`), so a hidden reframe never blocks a thought underneath. Every target is at least 44px tall, with `touch-action: manipulation` and no tap highlight or long-press menu. Boxes under 480px wide use a staggered one-per-band layout (`NARROW_SPOTS`), because side-by-side spots collide on a phone. Measured with every thought on screen (drift paused): at least 64% of every worry stays free to tap on a 375px phone, and at least 80% on desktop. Re-measure after changing any thought's text.
-- Accessibility: each thought is a real `<button>`. After softening, the reframe becomes its name, the button is `aria-disabled`, and a polite live region announces the reframe and the breathing steps.
-- Reduced motion: all thoughts appear at once, nothing drifts, and taps and the breath clear instantly.
+- The markup in index.html is a `<ul>` of `<li class="thought">` items, each holding `.thought__worry` and `.thought__calm`. Without JS it reads as a list of worry → calmer version. To add or edit a thought, just edit that list.
+  - Calmer versions sound like a kind friend talking to themselves: realistic, never "everything will be fine", and never dismissing the feeling ("That stings.", "that would really hurt"). Tie them to Aarav's day where you can (asleep at 2:10, four hours of sleep, Kabir, rank 214), one or two sentences each. No poster lines, and don't stack the tidy "X, not Y" contrast.
+- **With JS, each thought is a small moment** (the drifting crowd and "Breathe with me" were replaced; the full breathing exercise is in Take a minute):
+  - Before the thoughts sits one calm line ("You can try this, or just keep scrolling. Both are fine."), with "Skip this part", a link to `#sunset` (centred, focus on its heading).
+  - The thoughts are hand-circled notes in Caveat, wrapped and slightly tilted like a crowded head (the pen loop from buttons.css at 40%).
+  - Each thought is a disclosure `<button aria-expanded aria-controls>`. It opens in place into a card that takes the whole row: the worry stays above, and the calmer version is written out below, word by word (55ms apart, 0.9s each), in handwriting. Only one card is open at a time: opening another closes the last. Escape stops writing first, then closes the card and returns focus to the thought.
+  - Inside each card: "Write it in your own words" opens a 200-character box labelled "How would you say this to a friend who felt this way?", with a quiet "n of 200" counter (spoken only at 20 left and at the limit). "Use my words" shows their text in the handwritten font, labelled "in your words", with "Change my words" and "Show the suggestion again". There's always a Close.
+  - **Gentle reflection, never recorded:** once a calmer version is showing, "Does this feel more manageable?" offers "A little", "Not really" and "Not sure" (`aria-pressed` buttons in a labelled group). Each gets a short warm reply in a status region; "Not really" links to talk.html. Answers live only in the open card and reset when it closes. No numbers, no progress, no tracking.
+  - "Add a thought of my own" closes the list: a thought (120 characters) and an optional calmer version. It joins the list as a moment of its own, with "Remove this thought".
+  - **Never** use the words diagnosis, score, result or level anywhere in this interaction.
+- **Privacy (must stay true):**
+  - What the reader writes never leaves the browser: no network calls, no analytics, no form submission (there's no `<form>`).
+  - The text is never read, analysed or judged: no keyword detection and no automatic responses. Their words only ever go into the page as `textContent`.
+  - Fields use `autocomplete="off"` and `spellcheck="false"` (some browsers send spellcheck text to a server).
+  - Nothing is stored unless they tick "Keep my notes on this device" (unchecked by default; one in each writing area and one under "Your notes" at the end, kept in sync). Then their words and their own thoughts go in `localStorage['ood-thought-notes']` = `{ v: 1, words: { t1: "…" }, own: [{ worry, words }] }`. Unticking removes it at once.
+  - "Delete my notes" clears the page and the device and confirms on the page (a status line that takes focus; no browser dialogs).
+  - Unkept notes are cleared on `pagehide`, so the back/forward cache can't bring them back.
+  - Every storage call is in try/catch. If storage is blocked, "keep" un-ticks itself and says notes will go when they leave.
+  - Each writing area always shows the privacy note ("What you write stays on this device…") and the safety line ("If what you're feeling is about hurting yourself, please talk to someone right now", linking talk.html).
+- Accessibility: the calmer version is announced through a polite live region ("Another way to put it: …" / "In your words: …"). The text box and fields have real labels. Every target is at least 44px tall (the checkbox's whole label row toggles it). Text inside the card uses `--fg`, because the card's 6% tint would take `--soft` below 4.5:1; measured at 7:1 or better across the 4:50 pm blend.
+- Opening a card changes the chapter's height. day-timeline.js re-measures when `<main>` resizes, so the colours settle again after a moment. If a card's bottom lands under the Talk pill, it is gently scrolled up with `scrollToY` (never locked). On phones, a focused field is scrolled above the on-screen keyboard (`visualViewport`).
+- Reduced motion: the calmer version and the question appear at once, and cards open without moving.
 
 ### Take a minute ([breathing.js](src/sections/breathing.js), [breathing.css](src/styles/breathing.css), [ambient-sound.js](src/scripts/ambient-sound.js))
 
@@ -222,7 +237,8 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 ### Talk to someone page ([talk.html](talk.html), [talk.js](src/talk.js), [talk.css](src/styles/talk.css))
 
 - A separate, deliberately still page in the static dawn palette: no Lenis, GSAP, reveals, particles, sky, day line or garden. talk.js only imports CSS, so in the production build the page needs no JavaScript at all. A solid sticky top bar always shows "← back to the story", and the page ends with a big "Back to One Ordinary Day" button and a link to `./#take-a-minute`.
-- Sections: hero (with "in danger right now? call 112"), **Free helplines in India** (`#helplines`), "Telling someone you know" (a parent / a friend / a teacher or counsellor, each with something you could actually say in a speech bubble), "If a friend is struggling" (five steps; the fourth covers taking talk of not wanting to be alive seriously and not keeping it secret, per safe messaging), then the way back.
+- Sections: hero (with "in danger right now? call 112"), **Free helplines in India** (`#helplines`), "Telling someone you know" (a parent / a friend / a teacher or counsellor, each with something you could actually say in a speech bubble), "If a friend is struggling" (five steps; the fourth covers taking talk of not wanting to be alive seriously and not keeping it secret, per safe messaging), **"Your privacy"** (`#privacy`), then the way back.
+- "Your privacy" says in plain words: no accounts, ads, analytics or tracking code; anything written stays on the device and is never sent; nothing is saved unless "Keep my notes on this device" is chosen (and "Delete my notes" removes it); the notebook never saves; reflection answers aren’t kept; the garden only remembers that an exercise was finished, and when; don’t save on a shared or school computer. Keep it true whenever storage changes anywhere on the site.
 - `#helplines` is laid out as a printed directory, not a stack of cards: no tints, no rounded boxes. A heavy `--fg` rule opens the list. Tele-MANAS leads (`.line--main`): a bigger name, its 14416 set huge in Instrument Serif, and a Caveat `.note.line__pick` ("not sure which one to call? start here."), which hangs to the right of the name from 48rem. The other lines are hairline-ruled rows; from 48rem each row is name ····· number on one baseline (a dotted leader, `.line__name::after`), with the description, hours and source full width below. "Not in India?" sits after the list without a box.
 - Every helpline has a `tel:` link (48px tall), when it's open, what it costs, and a **source link**. Only describe a line as confidential or anonymous if its own site says so. Toll-free numbers are labelled toll-free; for the rest, the page notes that normal call or data charges may apply. People outside India are pointed to Find A Helpline (findahelpline.com, ThroughLine, 175+ countries).
 - Not listed on purpose: KIRAN 1800-599-0019 (reported merged into Tele-MANAS, current status unconfirmed) and SNEHA (official site unreachable behind a bot check, and its hours conflict between sources). Add them only after verifying on their official pages.
@@ -323,7 +339,7 @@ src/scripts/          color.js (maths + WCAG contrast), smooth-scroll.js (Lenis 
                       day-colors.js (colour blend + sky tones), particles.js, in-page-links.js,
                       ink.js (hand-drawn SVG strokes), text-reveal.js
                       Init order in main.js matters: day-colors before particles.
-src/sections/         per-section behaviour: thoughts.js (4:50 pm crowd), breathing.js
+src/sections/         per-section behaviour: thoughts.js (4:50 pm moments), breathing.js
                       (Take a minute), grounding.js (5-4-3-2-1 notebook), myths.js (myth
                       notes). Story markup stays in index.html so it reads without JS
 src/styles/myths.css          myth notes: paper, tape, tilt, flip, snap strip
@@ -338,7 +354,7 @@ src/styles/buttons.css        hand-drawn pen-loop buttons + highlighter (before 
 src/styles/grounding.css      5-4-3-2-1 notebook: paper, binding, lines, page turns
 src/scripts/ambient-sound.js  generated rain / waves (Web Audio), off by default
 src/styles/breathing.css      Take a minute: blob, ring, pills, kind note
-src/styles/thoughts.css  the 4:50 pm crowd, pop, breathing orb
+src/styles/thoughts.css  the 4:50 pm circled thoughts, moment cards, writing area, notes
 public/sounds/        optional audio, never autoplayed
 ```
 
