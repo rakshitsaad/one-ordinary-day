@@ -616,6 +616,74 @@
           </div>
         </div>
       </section>
+
+      <!-- A note for tonight: the quiet end of the day. No data-stop, night
+           palette. Without JS: the notes simply read as a list. With JS
+           (src/sections/tonight.js) each note is a button: pick one, copy it,
+           or keep it pinned in the corner until the page is closed. Nothing
+           is saved or sent anywhere. -->
+      <section class="chapter tonight" id="tonight" aria-labelledby="tonight-title">
+        <div class="chapter__inner">
+          <h2 id="tonight-title">A note for <span class="mark">tonight</span></h2>
+          <p class="tonight__intro">Pick one to keep with you. You don’t have to do anything with it.</p>
+
+          <div class="tonight__desk" data-tonight>
+            <ul class="tonight__notes" aria-label="Notes for tonight">
+              <li class="tonight__note tonight__note--pin" style="--paper: var(--dawn-bg); --ink: var(--dawn-fg); --pin: var(--dawn-accent)">
+                <p class="tonight__text">I don’t have to solve everything tonight.</p>
+              </li>
+              <li class="tonight__note tonight__note--tape" style="--paper: var(--midday-bg); --ink: var(--midday-fg); --pin: var(--midday-accent)">
+                <p class="tonight__text">Today was hard. I still got through it.</p>
+              </li>
+              <li class="tonight__note tonight__note--fold" style="--paper: var(--afternoon-bg); --ink: var(--afternoon-fg); --pin: var(--afternoon-accent)">
+                <p class="tonight__text">Resting isn’t the same as giving up.</p>
+              </li>
+              <li class="tonight__note tonight__note--clip" style="--paper: var(--morning-bg); --ink: var(--morning-fg); --pin: var(--morning-accent)">
+                <p class="tonight__text">One bad test doesn’t decide my whole life.</p>
+              </li>
+              <li class="tonight__note tonight__note--pin" style="--paper: var(--sunset-bg); --ink: var(--sunset-fg); --pin: var(--sunset-accent)">
+                <p class="tonight__text">Marks matter. They’re just not all of me.</p>
+              </li>
+              <li class="tonight__note tonight__note--tape" style="--paper: var(--dawn-bg); --ink: var(--dawn-fg); --pin: var(--dawn-accent)">
+                <p class="tonight__text">It’s okay to feel like this. It won’t always feel this heavy.</p>
+              </li>
+              <li class="tonight__note tonight__note--fold" style="--paper: var(--midday-bg); --ink: var(--midday-fg); --pin: var(--midday-accent)">
+                <p class="tonight__text">I can ask for help tomorrow. Or tonight.</p>
+              </li>
+              <li class="tonight__note tonight__note--clip" style="--paper: var(--afternoon-bg); --ink: var(--afternoon-fg); --pin: var(--afternoon-accent)">
+                <p class="tonight__text"><span lang="hi-Latn">Kal ki tension kal.</span> Sleep first.</p>
+              </li>
+              <li class="tonight__note tonight__note--own" style="--paper: var(--night-particle); --ink: var(--night-bg); --pin: var(--night-accent)" data-own hidden>
+                <button class="tonight__pick" type="button">Write my own</button>
+                <p class="tonight__text" tabindex="-1" aria-hidden="true" hidden><span class="visually-hidden">Your note for tonight: </span><span class="tonight__words"></span></p>
+              </li>
+            </ul>
+
+            <div class="tonight__actions" data-actions hidden>
+              <div class="tonight__write" data-write hidden>
+                <label class="tonight__label" for="tonight-own">Your note for tonight</label>
+                <textarea class="tonight__field" id="tonight-own" maxlength="120" rows="3" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-describedby="tonight-own-hint"></textarea>
+                <p class="tonight__hint" id="tonight-own-hint">A line or two, up to 120 characters. Say it the way you’d say it to a friend.</p>
+                <button class="tonight__btn tonight__btn--main" type="button" data-act="use">Keep this note</button>
+              </div>
+              <div class="tonight__options" data-options>
+                <button class="tonight__btn tonight__btn--main" type="button" data-act="copy">Copy</button>
+                <button class="tonight__btn" type="button" data-act="pin">Keep it on screen</button>
+              </div>
+              <button class="tonight__btn tonight__btn--quiet" type="button" data-act="another">Choose another</button>
+            </div>
+            <p class="visually-hidden" role="status" data-tonight-status></p>
+          </div>
+
+          <p class="tonight__private">Nothing here is saved or sent anywhere. Your note stays only until you close this page.</p>
+
+          <div class="tonight__end">
+            <p class="tonight__goodnight">Goodnight, Aarav. Goodnight to you too.</p>
+            <p class="tonight__help">If tonight feels heavy, you don’t have to wait for morning. <a href="talk.html">Talk to someone</a>, or call Tele-MANAS on <a href="tel:14416"><span aria-hidden="true">14416</span><span class="visually-hidden">1 4 4 1 6</span></a>: it’s free, any time of night.</p>
+            <a class="note note--tick" href="#dawn">start the day again ↑</a>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">

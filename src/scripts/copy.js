@@ -1,13 +1,32 @@
-// "Copy number" and "Copy message" on the help page (talk.html).
-// The buttons are hidden in the HTML and only shown here, so without JS the
-// page is plain, selectable text and tel: links. Copying puts the text on the
-// clipboard and nowhere else: nothing is sent, counted or recorded.
-// If the browser won't copy (no permission, an old browser, an insecure page),
-// the text is selected instead, so the reader can copy it themselves.
+// Copying text for the reader: "Copy number" and "Copy message" on the help
+// page (talk.html), and "Copy" in A note for tonight (src/sections/tonight.js).
+// The text goes on the clipboard and nowhere else: nothing is sent, counted or
+// recorded. If the browser won't copy (no permission, an old browser, an
+// insecure page), the text is selected instead, so the reader can copy it
+// themselves.
 
 const COPIED_FOR = 2500; // ms the button says "Copied"
 const SELECTED_FOR = 5000;
 
+// Resolves to 'copied', or 'selected' when it fell back to selecting `node`.
+export async function copyText(text, node) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return 'copied';
+  } catch {
+    if (node) {
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+    return 'selected';
+  }
+}
+
+// The help page's buttons. They're hidden in the HTML and only shown here, so
+// without JS the page is plain, selectable text and tel: links.
 export function initCopy(root = document) {
   const status = document.getElementById('copy-status');
 
@@ -37,18 +56,10 @@ export function initCopy(root = document) {
       const text = (button.dataset.copy || visible?.textContent || '').trim();
       if (!text) return;
 
-      try {
-        await navigator.clipboard.writeText(text);
+      if (await copyText(text, visible) === 'copied') {
         show('Copied', COPIED_FOR);
         say(isNumber ? 'Number copied.' : 'Message copied.');
-      } catch {
-        if (visible) {
-          const range = document.createRange();
-          range.selectNodeContents(visible);
-          const selection = window.getSelection();
-          selection.removeAllRanges();
-          selection.addRange(range);
-        }
+      } else {
         show('Selected', SELECTED_FOR);
         say('Couldn’t copy automatically. The text is selected: use your phone’s Copy, or press Control C.');
       }

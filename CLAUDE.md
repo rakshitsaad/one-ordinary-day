@@ -75,7 +75,7 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 - Every curve is an ease-out that never overshoots: `--ease-out` (cubic-bezier(0.22, 1, 0.36, 1)), GSAP `power2.out` / `power3.out`, Lenis easeOutCubic. Never use back, elastic, bounce or spring eases, or any cubic-bezier with a y value above 1.
 - **Micro-interactions** ([interactions.css](src/styles/interactions.css), imported last; [interactions.js](src/scripts/interactions.js); [page-transition.js](src/scripts/page-transition.js)):
   - On talk.html all of this is switched off except the page fade (talk.css, `body.talk-page`): the help page is still on purpose. No ripple, lift, press, drawn underline or link transitions.
-  - Buttons (`.talk`, `.thought__open`, `.moment__btn`, `.moment__choice`, `.breath__go`, `.page__btn`, `.myths__arrow`, `.garden__button`, `.talk-end__home`) lift 2px on hover (fine pointers, motion allowed; only the solid pills `.talk` and `.garden__button` also get a soft shadow, and the hand-drawn buttons swell their highlighter instead) and compress to `scale: 0.97` on press. Pills only compress; myth notes rise 4px on hover. These use the individual `translate` / `scale` properties so they compose with existing transforms. interactions.css replaces each component's `transition` list, so add a component's own transitioned properties there too.
+  - Buttons (`.talk`, `.thought__open`, `.moment__btn`, `.moment__choice`, `.breath__go`, `.page__btn`, `.myths__arrow`, `.garden__button`, `.talk-end__home`, `.tonight__btn`) lift 2px on hover (fine pointers, motion allowed; only the solid pills `.talk` and `.garden__button` also get a soft shadow, and the hand-drawn buttons swell their highlighter instead) and compress to `scale: 0.97` on press. Pills only compress; myth notes rise 4px on hover, and so do the notes for tonight (not while one is picked). These use the individual `translate` / `scale` properties so they compose with existing transforms. interactions.css replaces each component's `transition` list, so add a component's own transitioned properties there too.
   - Exceptions to the 0.8–1.4s rule, on purpose: the press compresses in 0.25s so it registers under the finger, and leaving a page fades out in 0.5s so getting to help never feels delayed.
   - Text links (`a:not([class])`, `a.note`, `.talk-top__back`, `.talk-end__breathe`, `.myth__again`, `.garden__clear`) keep a faint resting underline (so they read as links without hover); on hover or keyboard focus a solid 1.5px line draws in from the left.
   - A soft ring (64px, at most 40% opacity, 0.9s) spreads where you click or tap. Not for keyboard clicks (`event.detail === 0`), not in text inputs, and off with reduced motion.
@@ -139,7 +139,8 @@ Don't add colours outside this palette except tints made by mixing these (for ex
   - **"Skip to help"** is the very first focusable item on both pages (`.skip-link`, off screen until focused, then a solid 44px pill at the top left). It goes to `talk.html#right-now` from the story, and to `#right-now` on talk.html.
   - **"Talk to someone"** (`.talk`) sits at the left of a fixed top bar on every page, visible on load, solid `--fg` on `--bg`, 44px tall, never behind a menu. It's the only help button: the old floating bottom-left pill became this, so there are never two. On the story it opens `talk.html`; on `talk.html` it jumps to `#right-now`.
   - The story's bar (`--bar-h`: 56px, 64px from 48rem, plus the top safe-area inset) is solid `--ui-bg` with a 14px fade below, and reads `--ui-*` colours, so the Talk link holds 6.89:1 or better at every scroll position (scanned through the whole day, sunset→dusk flip included). It sits at the top, so it never covers story text, the garden, the 4:50 pm writing box (thoughts.js scrolls a focused field 16px below the bar and above the on-screen keyboard) or the keyboard itself. No pulse, bounce or attention animation, ever.
-  - Help links in the story: the top bar, the skip link, the night chapter (talk.html and `#start-the-conversation`), the "Not really" reply at 4:50 pm, the safety line under every writing box, and the footer.
+  - Help links in the story: the top bar, the skip link, the night chapter (talk.html and `#start-the-conversation`), the "Not really" reply at 4:50 pm, the safety line under every writing box, the goodnight in A note for tonight, and the footer.
+  - A pinned note (A note for tonight) may sit in the bar beside "Talk to someone" from 48rem; it never covers or replaces the help link.
 
 ## Sections and features
 
@@ -223,11 +224,22 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 
 ### Myths we grew up with ([myths.js](src/sections/myths.js), [myths.css](src/styles/myths.css))
 
-- The last section (`#myths`, no `data-stop`, night palette). Eight paper notes in a `<ul>`; each `<li class="myth">` sets `--paper`, `--ink` and `--tape` from one *daytime* stop (dawn, morning, midday, afternoon, sunset), so ink on paper always has the designed 9:1+ contrast. Notes are tilted (`--tilt` per nth-child), held up with washi tape, with one corner lifted. The centred note straightens slightly.
+- After 5-4-3-2-1 (`#myths`, no `data-stop`, night palette). Eight paper notes in a `<ul>`; each `<li class="myth">` sets `--paper`, `--ink` and `--tape` from one *daytime* stop (dawn, morning, midday, afternoon, sunset), so ink on paper always has the designed 9:1+ contrast. Notes are tilted (`--tilt` per nth-child), held up with washi tape, with one corner lifted. The centred note straightens slightly.
 - The row is a native, full-width `scroll-snap` strip: swiping on phones is real native scrolling (momentum, vertical page scroll still works). Arrow buttons with hand-drawn arrows, ←/→ keys, and a "3 / 8" counter step through it. Don't replace this with custom pointer dragging.
 - Flip: with JS the front of each note becomes one big `<button>` (labelled "Myth: … Flip to see what's actually true"). The back gets its own "see the myth again" button, and tapping the back (not a link) also flips it back. The hidden side is `inert`; focus moves to the visible side's button; a polite live region announces the fact. Don't put an overlay button over the note: in a `preserve-3d` flip, z-index is ignored and it would cover the source links on the back.
 - Copy: myths are things loving family say, never mocking. Facts are warm, about 40 words, with no unsourced statistics; the two with numbers link WHO (1 in 7, aged 10–19) and CDC (8–10h sleep).
 - Without JS each note shows the myth with the fact underneath, and the row still scrolls.
+
+### A note for tonight ([tonight.js](src/sections/tonight.js), [tonight.css](src/styles/tonight.css))
+
+- The quiet end of the day: the last section, after the myths and before the footer (`#tonight`, no `data-stop`, night palette). Heading "A note for tonight" (ink underline on "tonight"), "Pick one to keep with you. You don’t have to do anything with it.", a desk of notes under a soft lamp glow (12% `--night-accent`), the privacy line, then "Goodnight, Aarav. Goodnight to you too." in Caveat, a quiet help line (talk.html and Tele-MANAS 14416, free, any time of night) and a "start the day again ↑" note linking `#dawn`.
+- **The notes** (a `<ul>` in index.html; edit the list to change them): eight reminders in Aarav’s voice, honest rather than cheerful, no slogans. Each `<li class="tonight__note tonight__note--<kind>">` borrows a daytime stop's `--paper` / `--ink` / `--pin` like the myth notes (9.35:1 or better), and is held differently: `--pin` (a round pin), `--tape`, `--fold` (a folded corner, drawn with a gradient, not clip-path, which would clip the focus ring) and `--clip` (a ruled index card with a paper clip). Kinds and papers are arranged so no two neighbours match in the 2- or 3-column grid. Tilts and small nudges per nth-child. Different from the myths on purpose: smaller, loose on a desk, no flip.
+  - The last note, "Write my own" (`[data-own]`, moonlight paper with a pencil-dashed edge), is `hidden` without JS.
+- **Picking** (tonight.js): each note becomes a `<button>` ("Pick this note: …", containing the visible words). Picking holds the desk's height (so nothing below moves and the page can't jump), fades the others (0.7s), and glides the note to the middle of the desk, 14% bigger and straighter (FLIP with the individual `translate` / `rotate` / `scale` properties, 1.1s ease-out; `.is-moving` switches CSS transitions off while it plays). Its options fade in under it: **Copy** (copy.js `copyText`: "Copied" on the button, or the words selected and "Selected" if the clipboard refuses), **Keep it on screen** and **Choose another**. Focus moves to the picked words (a plain `<p tabindex="-1">`, read out as "Your note for tonight: …"), Escape or "Choose another" goes back and returns focus to that note's button. Taps work again as soon as the layout changes; a newer pick or return takes over a glide in progress. With reduced motion it simply appears there.
+  - "Write my own" opens a 120-character box (`autocomplete="off"`, `spellcheck="false"`); the words appear on the note as they're typed, and "Keep this note" (or Enter) makes it the picked note. The draft stays in the box (in memory only) if they choose another and come back.
+- **Kept on screen** (`.pinned-note`, appended to `.site-header`, `role="note"`, "Your note for tonight"): from 48rem it sits in the top bar itself, right after "Talk to someone" (two lines at most, clear of the clock pill), so it covers nothing. On phones the bar is full, so it's a small fixed note in the bottom-left corner, opposite the garden, which tucks away while a text box has focus on a touch screen (`html.is-typing`) and pushes the footer and `scroll-padding-bottom` clear of itself (`--pinned-h`). One at a time; a small × ("Take the note off the screen") removes it and returns focus where it came from. The button reads "On screen now" while that note is pinned. Pinning and removing are announced in the section's polite status.
+- **Privacy (must stay true; the page says "Nothing here is saved or sent anywhere. Your note stays only until you close this page."):** no localStorage, sessionStorage, cookies, network calls or analytics; their words only ever go into the page as `textContent`. On `pagehide` the box, their note and the pinned note are cleared and the desk resets, so even the back/forward cache doesn't keep them (so leaving for talk.html clears it too).
+- Without JS: the eight notes read as a plain list on the desk, with no buttons.
 
 ### Garden ([garden.js](src/scripts/garden.js), [garden.css](src/styles/garden.css), [care.js](src/scripts/care.js))
 
@@ -305,7 +317,7 @@ Don't add colours outside this palette except tints made by mixing these (for ex
   - Story page before the launch pass: 92 / 96 / 96 / 91.
   - The one accessibility flag is `color-contrast` on headings and paragraphs further down the page. Lighthouse catches them in their pre-reveal state (20% opacity, offscreen, see Text reveals). Readers never see them like that.
   - To re-run: `npx lighthouse http://localhost:4173/ --chrome-flags="--headless=new"` (mobile is the default).
-- **Lazy sections** ([lazy.js](src/scripts/lazy.js)): `whenNear(el, load)` imports a section's code when it comes within 1.5 screens (IntersectionObserver), or straight away if a link lands on it. Until then the no-JS version shows. Take a minute (with ambient sound), 5-4-3-2-1 and the myths load this way, as separate chunks.
+- **Lazy sections** ([lazy.js](src/scripts/lazy.js)): `whenNear(el, load)` imports a section's code when it comes within 1.5 screens (IntersectionObserver), or straight away if a link lands on it. Until then the no-JS version shows. Take a minute (with ambient sound), 5-4-3-2-1, the myths and A note for tonight load this way, as separate chunks.
   - **Only lazy-load sections after the 11:45 pm chapter.** A section's height changes when it comes alive. Above night, that would move the colour timeline's anchors under a day-line jump in progress. So the 4:50 pm thoughts load with the page, and the garden starts before the lazy sections so their "took care" signals have a listener.
 - **Images:** the site uses none, apart from the link-preview image and icons in `public/`.
 - **Head tags** (both pages): a specific `<title>`, a meta description of 160 characters or fewer, `theme-color`, and icons: favicon.svg (the old sky dial's sun on its dotted arc over a hand-drawn horizon, dawn palette), favicon.ico (16 and 32px inside) and apple-touch-icon.png (180px, opaque). Plus Open Graph and `twitter:card` tags and `public/robots.txt`.
@@ -332,7 +344,8 @@ index.html            the story (entry page): head tags, font preloads
 talk.html             "Talk to someone" page (second entry; see vite.config.js build.rollupOptions.input)
 src/talk.js           its entry: CSS (fonts, tokens, reset, base, sections, talk.css, buttons,
                       interactions), copy.js and the page fade
-src/scripts/copy.js   "Copy number" / "Copy message" buttons on talk.html (select-text fallback)
+src/scripts/copy.js   copyText() (select-text fallback) + the talk.html Copy buttons; also used
+                      by A note for tonight
 src/styles/fonts.css  self-hosted @font-face + size-matched fallbacks
 src/assets/fonts/     latin woff2 files + OFL licences
 src/scripts/lazy.js   whenNear(): load a section's code as the reader nears it
@@ -359,8 +372,10 @@ src/scripts/          color.js (maths + WCAG contrast), smooth-scroll.js (Lenis 
                       Init order in main.js matters: day-colors before particles.
 src/sections/         per-section behaviour: thoughts.js (4:50 pm moments), breathing.js
                       (Take a minute), grounding.js (5-4-3-2-1 notebook), myths.js (myth
-                      notes). Story markup stays in index.html so it reads without JS
+                      notes), tonight.js (A note for tonight). Story markup stays in
+                      index.html so it reads without JS
 src/styles/myths.css          myth notes: paper, tape, tilt, flip, snap strip
+src/styles/tonight.css        A note for tonight: desk, lamp glow, notes, picked state, pinned note
 src/scripts/motion.js         prefersReducedMotion (light; smooth-scroll.js re-exports it)
 src/scripts/interactions.js   click ripple
 src/scripts/page-transition.js  fade-through-background page changes (leaving half)

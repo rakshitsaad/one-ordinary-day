@@ -32,12 +32,14 @@ initThoughts(document.querySelector('[data-thoughts]'));
 // Before the exercises below, so every "took care" signal has a listener.
 initGarden(timeline, document.querySelector('.site-header'));
 
-// The three exercises after the story load when the reader gets near them.
+// The sections after the story load when the reader gets near them.
 const breath = document.querySelector('[data-breath]');
 whenNear(breath, () => import('./sections/breathing.js').then((m) => m.initBreathing(breath)));
 const notebook = document.querySelector('[data-notebook]');
 whenNear(notebook, () => import('./sections/grounding.js').then((m) => m.initGrounding(notebook)));
 const myths = document.querySelector('[data-myths]');
 whenNear(myths, () => import('./sections/myths.js').then((m) => m.initMyths(myths)));
+const tonight = document.querySelector('[data-tonight]');
+whenNear(tonight, () => import('./sections/tonight.js').then((m) => m.initTonight(tonight)));
 initRipples();
 initPageTransitions(); // after in-page links, so #links are already handled

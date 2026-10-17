@@ -1,0 +1,504 @@
+/*
+  "A note for tonight" (src/sections/tonight.js): the quiet end of the day.
+  No data-stop, so it always sits in the night palette, like the tools above.
+
+  Small paper notes on a desk under a lamp. Each borrows a daytime stop's paper
+  and ink (--paper, --ink, --pin set inline in index.html), so the writing keeps
+  its designed contrast (9:1 or better) on the dark night page. Each note is
+  held differently (a pin, tape, a folded corner, a paper clip on a ruled card)
+  and tilted its own way, so they don't stamp out the same card. The myth notes
+  above are bigger, taped at the top and flip; these stay small and loose.
+
+  Picking one fades the others back and glides it to the middle of the desk
+  (JS sets the timing; only transform and opacity move). With reduced motion it
+  simply appears there.
+*/
+
+/* A soft, warm pool of lamp light behind the notes. 12% of the night accent
+   keeps --fg and --soft far above their floors on it. */
+.tonight__desk {
+  position: relative;
+  isolation: isolate;
+  margin-block: 0.4rem;
+}
+
+.tonight__desk::before {
+  content: "";
+  position: absolute;
+  inset: -2rem 0;
+  z-index: -1;
+  background: radial-gradient(ellipse 65% 55% at 50% 42%, color-mix(in srgb, var(--night-accent) 12%, transparent), transparent);
+  pointer-events: none;
+}
+
+.tonight__notes {
+  --note-size: 1.32rem;
+  --note-line: calc(var(--note-size) * 1.2);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.7rem 0.9rem;
+  align-items: start;
+  margin: 0;
+  padding: 1.1rem 0 0.6rem;
+  list-style: none;
+}
+
+/* ---- Paper ------------------------------------------------------------------ */
+
+.tonight__note {
+  --tilt: -1.5deg;
+  --nudge: 0rem;
+  --chosen-scale: 1.14;
+  position: relative;
+  rotate: var(--tilt);
+  translate: 0 var(--nudge);
+  border-radius: 2px 3px 4px 2px;
+  background: linear-gradient(170deg, color-mix(in srgb, var(--paper) 78%, var(--night-particle)), var(--paper) 55%);
+  color: var(--ink);
+  box-shadow:
+    0 1px 1px rgb(8 12 22 / 0.2),
+    0 14px 22px -14px rgb(8 12 22 / 0.65);
+}
+
+/* Each sits a little differently, as if dropped on the desk. */
+.tonight__note:nth-child(1) { --tilt: -2.4deg; }
+.tonight__note:nth-child(2) { --tilt: 1.8deg; --nudge: 0.9rem; }
+.tonight__note:nth-child(3) { --tilt: -1.1deg; --nudge: 0.2rem; }
+.tonight__note:nth-child(4) { --tilt: 2.2deg; --nudge: 0.6rem; }
+.tonight__note:nth-child(5) { --tilt: -1.8deg; --nudge: 0.3rem; }
+.tonight__note:nth-child(6) { --tilt: 1.3deg; --nudge: 0.8rem; }
+.tonight__note:nth-child(7) { --tilt: -2.6deg; --nudge: 0.1rem; }
+.tonight__note:nth-child(8) { --tilt: 1.6deg; --nudge: 0.7rem; }
+.tonight__note:nth-child(9) { --tilt: -0.6deg; --nudge: 0.4rem; }
+
+/* The words: a button to pick it, or (once picked, and without JS) plain text.
+   Both look the same, so swapping one for the other doesn't move anything. */
+.tonight__pick,
+.tonight .tonight__text {
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 1.45rem 0.95rem 1.1rem;
+  font-family: var(--font-hand);
+  font-size: var(--note-size);
+  line-height: 1.2;
+  text-align: left;
+  color: var(--ink);
+}
+
+.tonight__pick {
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tonight__pick:focus-visible,
+.tonight .tonight__text:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 6px;
+}
+
+/* A round pin at the top. */
+.tonight__note--pin::before {
+  content: "";
+  position: absolute;
+  top: -0.4rem;
+  left: 50%;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-left: -0.45rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, color-mix(in srgb, var(--pin) 35%, var(--night-particle)) 0 22%, var(--pin) 62%);
+  box-shadow: 0 2px 3px rgb(8 12 22 / 0.4);
+  pointer-events: none;
+}
+
+/* A strip of tape across the top-left corner. */
+.tonight__note--tape::before {
+  content: "";
+  position: absolute;
+  top: -0.3rem;
+  left: -0.75rem;
+  width: 3.4rem;
+  height: 1.1rem;
+  rotate: -32deg;
+  background: color-mix(in srgb, var(--pin) 55%, transparent);
+  pointer-events: none;
+}
+
+/* A folded top-right corner: the paper is cut away there, and the flap lies
+   over it. (Not clip-path: that would also clip the focus ring.) */
+.tonight__note--fold {
+  background: linear-gradient(225deg, transparent 0.95rem, color-mix(in srgb, var(--paper) 90%, var(--night-particle)) 0.95rem);
+}
+
+.tonight__note--fold::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 0 0 0 3px;
+  background: linear-gradient(45deg, color-mix(in srgb, var(--ink) 16%, var(--paper)) 50%, transparent 50%);
+  pointer-events: none;
+}
+
+/* A ruled index card with a paper clip. The red line sits above the first line
+   of writing; the faint rules fall just under each line. */
+.tonight__note--clip {
+  background:
+    linear-gradient(to bottom, transparent calc(1.45rem - 1.5px), color-mix(in srgb, var(--pin) 70%, transparent) calc(1.45rem - 1.5px) 1.45rem, transparent 1.45rem),
+    linear-gradient(to bottom, transparent calc(100% - 1px), color-mix(in srgb, var(--ink) 13%, transparent) calc(100% - 1px)) 0 calc(1.45rem - var(--note-line)) / 100% var(--note-line) repeat-y,
+    var(--paper);
+}
+
+.tonight__note--clip::before {
+  content: "";
+  position: absolute;
+  top: -0.8rem;
+  right: 1.1rem;
+  width: 0.85rem;
+  height: 2.5rem;
+  background: color-mix(in srgb, var(--night-fg) 60%, var(--night-bg));
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 40'%3E%3Cpath d='M9.5 13V31a3.5 3.5 0 0 1-7 0V7a4.5 4.5 0 0 1 9 0v22a1.8 1.8 0 0 1-3.6 0V12' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 40'%3E%3Cpath d='M9.5 13V31a3.5 3.5 0 0 1-7 0V7a4.5 4.5 0 0 1 9 0v22a1.8 1.8 0 0 1-3.6 0V12' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  pointer-events: none;
+}
+
+/* "Write my own": a blank slip in moonlight paper, outlined in pencil. On
+   phones it runs the width of the desk, so it stays its own size when picked. */
+.tonight__note--own {
+  --chosen-scale: 1;
+  grid-column: 1 / -1;
+  border: 1.5px dashed color-mix(in srgb, var(--ink) 40%, transparent);
+  background: var(--paper);
+}
+
+.tonight__words:empty::before {
+  content: "your words go here";
+  opacity: 0.7;
+}
+
+/* ---- One note picked -------------------------------------------------------- */
+
+.tonight__note.is-lifting {
+  translate: 0 calc(var(--nudge) - 6px);
+  box-shadow:
+    0 2px 2px rgb(8 12 22 / 0.2),
+    0 22px 30px -16px rgb(8 12 22 / 0.7);
+}
+
+.tonight__desk.has-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+}
+
+.tonight__desk.has-choice .tonight__notes {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 1.4rem;
+}
+
+.tonight__note.is-chosen {
+  z-index: 2;
+  translate: 0 0;
+  rotate: calc(var(--tilt) * 0.35);
+  scale: var(--chosen-scale);
+  box-shadow:
+    0 2px 2px rgb(8 12 22 / 0.2),
+    0 26px 34px -18px rgb(8 12 22 / 0.75);
+}
+
+.tonight__actions {
+  display: grid;
+  justify-items: center;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.tonight__options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 0.8rem;
+}
+
+/* Pen-loop buttons (buttons.css); sizes here. */
+.tonight__btn {
+  min-height: 46px;
+  padding: 0.6rem 1.3rem;
+  font: inherit;
+  font-size: 0.98rem;
+  touch-action: manipulation;
+}
+
+/* Room for "Copied" and "Selected" without the row shifting. */
+.tonight__btn[data-act="copy"] {
+  min-width: 7rem;
+}
+
+.tonight__btn--quiet {
+  font-weight: 500;
+}
+
+/* Writing their own. */
+.tonight__write {
+  display: grid;
+  gap: 0.5rem;
+  width: min(100%, 24rem);
+}
+
+.tonight__label {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.tonight__field {
+  width: 100%;
+  min-height: 5.5rem;
+  padding: 0.45rem 0.7rem;
+  border: 1.5px solid color-mix(in srgb, var(--fg) 55%, transparent);
+  border-radius: 4px 12px 6px 10px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-hand);
+  font-size: 1.4rem;
+  line-height: 1.3;
+  caret-color: var(--accent-text);
+  resize: vertical;
+}
+
+.tonight__field:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+
+.tonight .tonight__hint {
+  max-width: none;
+  font-size: 0.88rem;
+}
+
+.tonight__write .tonight__btn {
+  justify-self: start;
+}
+
+/* ---- Privacy line and goodnight ---------------------------------------------- */
+
+.tonight .tonight__private {
+  font-size: 0.92rem;
+}
+
+.tonight__end {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.6rem;
+}
+
+.tonight .tonight__goodnight {
+  justify-self: start;
+  font-family: var(--font-hand);
+  font-size: clamp(1.9rem, 7vw, 2.6rem);
+  line-height: 1.15;
+  color: var(--fg);
+  rotate: -1.2deg;
+}
+
+.tonight__help a {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+@media (min-width: 48rem) {
+  .tonight__notes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem 1.3rem;
+  }
+
+  .tonight__note--own {
+    --chosen-scale: 1.14;
+    grid-column: auto;
+  }
+}
+
+/* Desktop: the words on the left, the desk on the right, goodnight below. */
+@media (min-width: 64rem) {
+  .tonight {
+    --pad: 16vh 18vh;
+  }
+
+  .tonight .chapter__inner {
+    --col: 1 / span 4;
+    grid-template-rows: auto auto auto 1fr auto;
+  }
+
+  .tonight .tonight__desk {
+    grid-column: 6 / -1;
+    grid-row: 1 / span 4;
+    margin: 0;
+  }
+
+  .tonight .tonight__end {
+    grid-column: 1 / span 7;
+    grid-row: 5;
+    margin-top: 3.5rem;
+  }
+
+  .tonight__notes {
+    --note-size: 1.42rem;
+  }
+}
+
+/* ---- Kept on screen ------------------------------------------------------------
+   The picked note, pinned while the reader looks around. tonight.js puts it in
+   the top bar (.site-header). From 48rem it sits in the bar itself, beside
+   "Talk to someone": that strip is always kept clear, so the note covers
+   nothing. On phones the bar is full (the help link and the day line's dots),
+   so it's a small note in the bottom-left corner, opposite the garden, which
+   tucks away while a text box has focus (never over the box or the keyboard).
+   It lives only in the page: nothing is stored, and it goes when the page is
+   closed or left. */
+.pinned-note {
+  position: fixed;
+  z-index: 9;
+  left: calc(14px + env(safe-area-inset-left, 0px));
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  width: max-content;
+  /* Leaves room for the garden (104px) in the other corner. */
+  max-width: min(12rem, calc(100% - 28px - 104px - 14px));
+  padding: 0.8rem 2.6rem 0.7rem 0.85rem;
+  border-radius: 2px 3px 4px 2px;
+  background: linear-gradient(170deg, color-mix(in srgb, var(--paper) 78%, var(--night-particle)), var(--paper) 55%);
+  color: var(--ink);
+  rotate: -1.5deg;
+  box-shadow:
+    0 1px 1px rgb(8 12 22 / 0.2),
+    0 14px 22px -12px rgb(8 12 22 / 0.6);
+  transition: opacity var(--dur-base) var(--ease-out), visibility var(--dur-base);
+}
+
+.pinned-note::before {
+  content: "";
+  position: absolute;
+  top: -0.35rem;
+  left: 1.4rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, color-mix(in srgb, var(--pin) 35%, var(--night-particle)) 0 22%, var(--pin) 62%);
+  box-shadow: 0 2px 3px rgb(8 12 22 / 0.4);
+}
+
+.pinned-note__text {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-size: 1.12rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.pinned-note__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pinned-note__close svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.pinned-note__close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -8px;
+  border-radius: 50%;
+}
+
+/* Phones only: the corner note. */
+@media (max-width: 47.99rem) {
+  html.is-typing .pinned-note {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Keep focused things and the end of the page clear of it (WCAG 2.4.11). */
+  html.has-pinned-note {
+    scroll-padding-bottom: max(6rem, calc(var(--pinned-h, 0px) + 2rem));
+  }
+
+  html.has-pinned-note .site-footer {
+    padding-bottom: max(7rem, calc(var(--pinned-h, 0px) + 3rem));
+  }
+}
+
+/* 48rem and up: in the top bar, right after "Talk to someone" (the day line's
+   clock is fixed at the right end, out of the bar's flow). Two lines at most,
+   so it fits the 64px bar; the full words stay in the section and are all
+   still read out. */
+@media (min-width: 48rem) {
+  .pinned-note {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    flex: 0 1 auto;
+    min-width: 0;
+    /* Clear of the clock pill at the bar's right end. */
+    max-width: min(34rem, calc(100% - 15rem));
+    padding: 0.35rem 2.7rem 0.35rem 0.9rem;
+    rotate: -0.8deg;
+  }
+
+  .pinned-note::before {
+    top: -0.3rem;
+    left: 1rem;
+  }
+
+  .pinned-note__text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: 1.05rem;
+    line-height: 1.1;
+  }
+
+  .pinned-note__close {
+    top: 50%;
+    translate: 0 -50%;
+  }
+}
+
+@media print {
+  .pinned-note {
+    display: none;
+  }
+}
+
+/* High contrast mode drops the paper; a border keeps each note a shape. */
+@media (forced-colors: active) {
+  .tonight__note,
+  .pinned-note {
+    border: 1px solid CanvasText;
+  }
+}
