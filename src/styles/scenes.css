@@ -1,0 +1,276 @@
+/*
+  Ambient details for each chapter (src/scripts/scenes.js).
+  Each chapter's top padding band (14vh on phones, its --pad on desktop) holds
+  one or two small drawings, never anything near the text. They fade in over
+  1.6s when the chapter reaches the middle of the screen (.is-present) and out
+  as it leaves. Loops are 8s or slower, transform and opacity only, and pause
+  while the chapter is away. Reduced motion (reset.css) leaves them still.
+*/
+
+.chapter[data-stop] {
+  position: relative; /* the scene band is placed inside the chapter */
+}
+
+.scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 14vh;
+  overflow: hidden; /* drifting clouds and the lamp's glow reach the edge: never widen the page */
+  color: color-mix(in srgb, var(--fg) 55%, transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.6s var(--ease-out);
+}
+
+.chapter.is-present > .scene {
+  opacity: 1;
+}
+
+.chapter:not(.is-present) > .scene * {
+  animation-play-state: paused;
+}
+
+.scene__detail {
+  position: absolute;
+  top: clamp(0.6rem, 2.5vh, 1.75rem);
+  height: min(8vh, 3.75rem);
+}
+
+.scene__detail svg {
+  display: block;
+  width: auto;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ---- Strokes and fills (all tints of the live palette) ---------------------- */
+
+.scene__ink {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.scene__ink--thin {
+  stroke-width: 1.2;
+}
+
+.scene__steam {
+  fill: none;
+  stroke: color-mix(in srgb, var(--fg) 35%, transparent);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  animation: scene-steam 9s ease-in-out infinite;
+}
+
+.scene__steam + .scene__steam {
+  animation-delay: -4.5s;
+}
+
+.scene__fill {
+  fill: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.scene__milk {
+  fill: color-mix(in srgb, var(--night-accent) 60%, transparent);
+}
+
+.scene__shadow {
+  fill: color-mix(in srgb, var(--fg) 13%, transparent);
+}
+
+.scene__cloud {
+  fill: color-mix(in srgb, var(--fg) 8%, transparent);
+  stroke: color-mix(in srgb, var(--fg) 30%, transparent);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.scene__cloud--back {
+  opacity: 0.7;
+}
+
+.scene__glow-fill {
+  fill: color-mix(in srgb, var(--night-accent) 55%, transparent);
+  animation: scene-glow 9s ease-in-out infinite alternate;
+}
+
+.scene__lit {
+  fill: color-mix(in srgb, var(--night-accent) 70%, transparent);
+}
+
+.scene__charge {
+  fill: var(--night-accent);
+  animation: scene-breathe 8s ease-in-out infinite alternate;
+}
+
+/* ---- Each detail ------------------------------------------------------------ */
+
+/* 8:15 am */
+.scene__detail--birds {
+  left: calc(var(--gutter-left) + 8%);
+  height: min(4.5vh, 2.2rem);
+  animation: scene-drift 30s ease-in-out infinite alternate;
+}
+
+.scene__bird {
+  transform-box: fill-box;
+  animation: scene-bob 9s ease-in-out infinite;
+}
+
+.scene__bird:nth-child(2) { animation-delay: -3s; }
+.scene__bird:nth-child(3) { animation-delay: -6s; }
+
+.scene__detail--chai {
+  right: var(--gutter-right);
+}
+
+/* 1:30 pm */
+.scene__detail--fan {
+  right: calc(var(--gutter-right) + 4%);
+  height: min(10vh, 4.75rem);
+}
+
+.scene__blades {
+  transform-origin: 0 0;
+  animation: scene-turn 18s linear infinite;
+}
+
+/* 4:50 pm */
+.scene__detail--clouds {
+  right: var(--gutter-right);
+  animation: scene-cloud 34s ease-in-out infinite alternate;
+}
+
+/* 7:10 pm: the lamp comes on a moment after the scene arrives. */
+.scene__detail--lamp {
+  top: clamp(0.4rem, 1.5vh, 1rem);
+  right: var(--gutter-right);
+  height: min(11vh, 5rem);
+}
+
+.scene__lamp-glow {
+  position: absolute;
+  left: 60%;
+  top: 14%;
+  width: 150%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--night-accent) 80%, transparent) 0 9%,
+    color-mix(in srgb, var(--night-accent) 28%, transparent) 26%,
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 3s var(--ease-out) 0.8s;
+}
+
+.chapter.is-present .scene__lamp-glow {
+  opacity: 1;
+}
+
+.scene__detail--phone {
+  left: var(--gutter-left);
+  height: min(6.5vh, 3rem);
+}
+
+/* 9:30 pm */
+.scene__detail--doodh {
+  right: var(--gutter-right);
+  height: min(7vh, 3.25rem);
+}
+
+/* 11:45 pm: the screen is off; only the charging light breathes. */
+.scene__detail--window {
+  right: calc(var(--gutter-right) + 3.75rem);
+  height: min(8vh, 3.75rem);
+}
+
+.scene__detail--charging {
+  right: var(--gutter-right);
+  height: min(6.5vh, 3rem);
+}
+
+.scene__detail--charging .scene__glow-fill {
+  fill: color-mix(in srgb, var(--fg) 8%, transparent);
+  animation: none;
+}
+
+/* ---- Desktop: the details sit on the side the text isn't ------------------ */
+
+@media (min-width: 64rem) {
+  .scene {
+    height: var(--pad-top, 14vh);
+  }
+
+  #morning { --pad-top: 12vh; }
+  #midday { --pad-top: 20vh; }
+  #night { --pad-top: 18vh; }
+
+  #sunset .scene__detail--lamp {
+    left: calc(var(--gutter-left) + 6%);
+    right: auto;
+  }
+
+  #sunset .scene__detail--phone {
+    left: auto;
+    right: var(--gutter-right);
+  }
+
+  #dusk .scene__detail--doodh {
+    left: calc(var(--gutter-left) + 6%);
+    right: auto;
+  }
+}
+
+/* ---- Motion ----------------------------------------------------------------- */
+
+@keyframes scene-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(26px); }
+}
+
+@keyframes scene-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes scene-steam {
+  0% { opacity: 0; transform: translateY(4px); }
+  40% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-6px); }
+}
+
+@keyframes scene-turn {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes scene-cloud {
+  from { transform: translateX(16px); }
+  to { transform: translateX(-12px); }
+}
+
+@keyframes scene-glow {
+  from { opacity: 0.3; }
+  to { opacity: 0.95; }
+}
+
+@keyframes scene-breathe {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+@media (forced-colors: active) {
+  .scene {
+    display: none;
+  }
+}

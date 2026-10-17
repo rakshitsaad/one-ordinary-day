@@ -3,7 +3,10 @@
 @import './tokens.css';
 @import './reset.css';
 @import './base.css';
+@import './sky.css';
 @import './sections.css';
+@import './opening.css';
+@import './scenes.css';
 @import './ink.css';
 @import './thoughts.css';
 @import './breathing.css';
@@ -12,4 +15,4 @@
 @import './garden.css';
 @import './buttons.css';
 @import './interactions.css'; /* last: finishing hover / press / link states */
-@import './dial.css';
+@import './day-line.css';

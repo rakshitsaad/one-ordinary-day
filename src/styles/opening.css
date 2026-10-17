@@ -1,0 +1,346 @@
+/*
+  The opening screen (6:40 am, #dawn): Aarav's window, the slow clock and the
+  scroll cue. src/scripts/opening.js runs the clock and the cue.
+
+  - Everything is readable on the first paint. The heading isn't revealed
+    (data-no-reveal), and the cue is visible until the reader scrolls.
+  - The scene is decoration (aria-hidden, no pointer events), drawn in SVG and
+    CSS from the palette: a window with an Indian-style grill, rooftops and a
+    low sun outside, a sheer curtain, and sunlight thrown on the wall.
+  - Motion is two slow loops, both 9 s or longer: the sunlight drifts across the
+    wall (26 s) and brightens and dims (14 s), and the curtain sways (11 s).
+    Only transform and opacity animate, so it's cheap. The loops pause while the
+    opening is off screen, and stop with reduced motion.
+  - Text never sits on anything darker than the wall: the sunlight is lighter
+    than --bg, so the heading, intro and cue keep their contrast.
+*/
+
+.opening {
+  /* Below the day line's bar on phones (44px), near the top from 48rem. */
+  --window-top: calc(3.6rem + env(safe-area-inset-top, 0px));
+  --window-w: min(40vw, 15rem);
+  position: relative;
+  align-items: flex-end;
+  min-height: 100vh;
+  min-height: 100svh;
+  /* Room above for the window, and below for the Talk pill. */
+  padding-top: calc(var(--window-top) + var(--window-w) * 4 / 3 + 1.5rem);
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+.opening > .chapter__inner {
+  position: relative; /* above the scene */
+}
+
+/* ---- Words ------------------------------------------------------------------ */
+
+.opening h1 {
+  font-size: clamp(3.4rem, 16vw, 7rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+
+.opening .opening__intro {
+  max-width: 30ch;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: var(--fg); /* not --soft: a margin of contrast over the sunlight */
+}
+
+.opening .opening__cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  justify-self: start;
+  margin-top: 0.6rem;
+  font-family: var(--font-hand);
+  font-size: 1.45rem;
+  line-height: 1.2;
+  color: var(--fg);
+  transition:
+    opacity 0.9s var(--ease-out),
+    visibility 0s linear 0.9s;
+}
+
+/* Fades out once the reader starts scrolling (opening.js), and stays gone. */
+.opening.is-scrolled .opening__cue {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.opening__arrow {
+  flex: none;
+  width: 0.9em;
+  height: 1.5em;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: opening-arrow 8s ease-in-out infinite;
+}
+
+/* ---- The scene -------------------------------------------------------------- */
+
+.opening__scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* The sunlight belongs to 6:40 am. It's a fixed warm colour, which is lighter
+   than the dawn wall but darker than the 8:15 one, so it fades out once the
+   reader scrolls on (.is-leaving, opening.js) instead of sitting behind text
+   while the colours blend towards morning. */
+.opening__sunlit {
+  position: absolute;
+  inset: 0;
+  transition: opacity 1.2s var(--ease-out);
+}
+
+.opening.is-leaving .opening__sunlit {
+  opacity: 0;
+}
+
+/* Sunlight through the window, thrown on the wall: two leaning panes split by
+   the grill's shadows (a blurred SVG mask), in a warm light that's lighter
+   than the wall. On phones the window is top left, so the light leans right. */
+.opening__light {
+  --sunlight: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='f' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-opacity='.95'/%3E%3Cstop offset='1' stop-opacity='.3'/%3E%3C/linearGradient%3E%3Cfilter id='s' x='-10%25' y='-10%25' width='120%25' height='120%25'%3E%3CfeGaussianBlur stdDeviation='1.5'/%3E%3C/filter%3E%3C/defs%3E%3Cpath fill='url(%23f)' filter='url(%23s)' d='M36 4L53 4L47.1 31L28.4 31ZM27.2 35L32 35L16.1 96L10 96ZM34.4 35L39.1 35L24.5 96L18.5 96ZM41.5 35L46.3 35L33 96L26.9 96ZM56 4L73 4L68.9 31L50.1 31ZM49.3 35L54 35L42.1 96L36 96ZM56.4 35L61.1 35L50.5 96L44.5 96ZM63.5 35L68.3 35L59 96L52.9 96Z'/%3E%3C/svg%3E");
+  position: absolute;
+  left: 8%;
+  top: 22%;
+  width: 98%;
+  height: 78%;
+  /* 80/20 keeps the light brighter than the wall (luminance 0.83 against 0.81
+     at dawn) until the colours are ~30% of the way to 8:15, long after it has
+     faded (.is-leaving), so text on it never has less contrast than on --bg.
+     75/25 measured 2.99:1 for "ordinary" at 360×640: don't go warmer. */
+  background: color-mix(in srgb, var(--night-particle) 80%, var(--night-accent));
+  -webkit-mask: var(--sunlight) center / 100% 100% no-repeat;
+  mask: var(--sunlight) center / 100% 100% no-repeat;
+  scale: -1 1;
+  animation:
+    opening-sun 26s ease-in-out infinite alternate,
+    opening-glow 14s ease-in-out infinite alternate;
+}
+
+.opening__window {
+  position: absolute;
+  top: var(--window-top);
+  left: var(--gutter-left);
+  width: var(--window-w);
+  aspect-ratio: 3 / 4;
+}
+
+.opening__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.opening__sky-high { stop-color: color-mix(in srgb, var(--particle) 30%, var(--bg)); }
+.opening__sky-low { stop-color: color-mix(in srgb, var(--accent) 45%, var(--bg)); }
+.opening__glow-in { stop-color: color-mix(in srgb, var(--accent) 70%, var(--bg)); stop-opacity: 0.6; }
+.opening__glow-out { stop-color: color-mix(in srgb, var(--accent) 70%, var(--bg)); stop-opacity: 0; }
+
+.opening__sun {
+  fill: color-mix(in srgb, var(--accent) 80%, var(--bg));
+}
+
+.opening__roofs {
+  fill: color-mix(in srgb, var(--fg) 20%, var(--bg));
+}
+
+.opening__rod,
+.opening__wood,
+.opening__grill {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.opening__rod {
+  stroke: color-mix(in srgb, var(--fg) 45%, transparent);
+  stroke-width: 3.5;
+}
+
+.opening__wood {
+  stroke: color-mix(in srgb, var(--fg) 55%, transparent);
+  stroke-width: 7;
+}
+
+.opening__wood--thin {
+  stroke-width: 4.5;
+}
+
+.opening__grill {
+  stroke: color-mix(in srgb, var(--fg) 42%, transparent);
+  stroke-width: 2.4;
+}
+
+/* A sheer curtain on the left of the window, swaying from the rod. */
+.opening__curtain {
+  position: absolute;
+  left: 4%;
+  top: 1.5%;
+  width: 40%;
+  height: 96%;
+  transform-origin: 50% 0;
+  animation: opening-curtain 11s ease-in-out infinite alternate;
+}
+
+.opening__curtain svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.opening__cloth {
+  fill: color-mix(in srgb, var(--accent) 24%, var(--bg));
+  opacity: 0.88;
+}
+
+.opening__folds {
+  fill: none;
+  stroke: color-mix(in srgb, var(--accent) 45%, var(--bg));
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+/* The snoozed alarm: a phone propped on the sill, its screen glowing on a slow
+   8s breath (not a flash). */
+.opening__phone {
+  position: absolute;
+  right: 7%;
+  bottom: 3.5%;
+  width: 9%;
+  aspect-ratio: 3 / 5;
+}
+
+.opening__phone svg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.opening__phone-case {
+  fill: none;
+  stroke: color-mix(in srgb, var(--fg) 60%, transparent);
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+}
+
+.opening__phone-screen {
+  fill: color-mix(in srgb, var(--night-accent) 70%, var(--bg));
+}
+
+.opening__phone-glow {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: 360%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--night-accent) 55%, transparent) 0 12%, transparent 58%);
+  animation: opening-alarm 8s ease-in-out infinite alternate;
+}
+
+/* ---- Motion ----------------------------------------------------------------- */
+
+@keyframes opening-alarm {
+  from { opacity: 0.25; }
+  to { opacity: 0.9; }
+}
+
+@keyframes opening-sun {
+  from { transform: translate3d(-3%, -1%, 0) skewX(2deg); }
+  to { transform: translate3d(4%, 1.5%, 0) skewX(-4deg); }
+}
+
+@keyframes opening-glow {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+@keyframes opening-curtain {
+  from { transform: rotate(-1.2deg) skewX(1.5deg); }
+  to { transform: rotate(0.9deg) skewX(-1.5deg); }
+}
+
+@keyframes opening-arrow {
+  0%, 100% { transform: translateY(-2px); }
+  50% { transform: translateY(5px); }
+}
+
+/* Off screen: hold still (opening.js toggles .is-away). */
+.opening.is-away :is(.opening__light, .opening__curtain, .opening__arrow, .opening__phone-glow) {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opening__light,
+  .opening__curtain,
+  .opening__arrow,
+  .opening__phone-glow {
+    animation: none;
+  }
+
+  .opening__light {
+    opacity: 0.85;
+  }
+}
+
+/* High contrast mode would turn the scene into hard outlines: leave it out. */
+@media (forced-colors: active) {
+  .opening__scene {
+    display: none;
+  }
+}
+
+@media (min-width: 48rem) {
+  .opening {
+    --window-top: calc(1.25rem + env(safe-area-inset-top, 0px));
+  }
+}
+
+/* ---- Desktop: a cover. Title low on the left, the window up on the right. --- */
+
+@media (min-width: 64rem) {
+  .opening {
+    --align: end;
+    --window-top: 13vh;
+    --window-w: clamp(15rem, 24vw, 22rem);
+    padding-block: 18vh 12vh;
+  }
+
+  .opening .chapter__inner {
+    --col: 1 / span 8;
+  }
+
+  .opening h1 {
+    font-size: clamp(6rem, 13.5vw, 9.5rem);
+  }
+
+  .opening__window {
+    left: auto;
+    right: max(var(--gutter-right), calc((100% - 72rem) / 2));
+  }
+
+  /* Leaning down and left from just below the window. */
+  .opening__light {
+    left: 30%;
+    top: 36%;
+    width: 58%;
+    height: 64%;
+    scale: none;
+  }
+}

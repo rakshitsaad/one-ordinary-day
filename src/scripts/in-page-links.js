@@ -6,7 +6,7 @@ import { scrollToY } from './smooth-scroll.js';
 export function initInPageLinks(timeline) {
   const jumpTo = (target) => {
     const chapter = target.closest('section[data-stop]');
-    // Anything else lands a little below the top, clear of the fixed sky dial.
+    // Anything else lands a little below the top, clear of the fixed day line.
     const y = chapter
       ? timeline.anchorOf(chapter)
       : Math.max(0, target.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.08);

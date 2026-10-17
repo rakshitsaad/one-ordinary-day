@@ -1,0 +1,78 @@
+/* One sky behind the page (src/scripts/sky.js). Below the particles and the
+   grain, so dust, stars and paper texture sit on top of it. Colours come from
+   the colour engine as --sky-low / --sky-sun / --sky-moon. */
+
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Light along the horizon, fading out about halfway up: peach at dawn, gold in
+   the afternoon, deep orange at sunset, the last light at dusk. */
+.sky__glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--sky-low), color-mix(in srgb, var(--sky-low) 0%, transparent) 55%);
+}
+
+/* A soft sun: a bright core fading into a halo, no hard edge. */
+.sky__sun {
+  --size: clamp(150px, 34vmin, 300px);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--size);
+  height: var(--size);
+  margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--sky-sun) 0 24%,
+    color-mix(in srgb, var(--sky-sun) 55%, transparent) 36%,
+    color-mix(in srgb, var(--sky-sun) 18%, transparent) 52%,
+    transparent 70%
+  );
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* A faint crescent moon with a little halo. */
+.sky__moon {
+  --size: clamp(28px, 6.5vmin, 54px);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--size);
+  height: var(--size);
+  margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.sky__moon::before,
+.sky__moon::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+}
+
+.sky__moon::before {
+  inset: -100%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--sky-moon) 60%, transparent) 0 18%, transparent 50%);
+}
+
+.sky__moon::after {
+  inset: 0;
+  background: var(--sky-moon);
+  -webkit-mask: radial-gradient(circle at 72% 32%, transparent 0 47%, #000 49%);
+  mask: radial-gradient(circle at 72% 32%, transparent 0 47%, #000 49%);
+}
+
+@media (forced-colors: active) {
+  .sky {
+    display: none;
+  }
+}

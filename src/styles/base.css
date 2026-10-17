@@ -1,5 +1,5 @@
 /* When focus moves (Tab, in-page links), keep the focused element clear of
-   the fixed dial (top) and the Talk / garden pills (bottom). WCAG 2.4.11. */
+   the fixed day line (top) and the Talk / garden pills (bottom). WCAG 2.4.11. */
 html {
   scroll-padding-top: 5rem;
   scroll-padding-bottom: 6rem;
@@ -18,7 +18,7 @@ main {
   z-index: 2;
 }
 
-/* Everything fixed on screen (Talk to someone, the dial, the garden and their
+/* Everything fixed on screen (Talk to someone, the day line, the garden and their
    menus) reads the --ui-* colours, so it stays readable through the flip. */
 .site-header {
   --bg: var(--ui-bg);

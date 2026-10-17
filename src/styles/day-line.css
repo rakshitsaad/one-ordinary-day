@@ -1,0 +1,303 @@
+/*
+  The day line (src/scripts/day-line.js): the clock and the seven chapter times.
+  Phones: a thin bar across the top. 48rem and up: a slim rail on the right,
+  hanging from the clock where the old sky dial used to be.
+
+  It reads the --ui-* colours and sits on its own --ui-bg, so it stays readable
+  through the sunset→dusk flip like the other fixed controls. Dots and the
+  travelled line use --ui-accent-text (3:1 or better); the track is a faint
+  dotted line. --progress (0–1, set by JS) places the sun and the travelled line.
+*/
+
+.day-line {
+  --dot: 9px;
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  height: calc(44px + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 0px) var(--gutter-right) 0 var(--gutter-left);
+  background: var(--ui-bg);
+  color: var(--ui-fg);
+}
+
+/* The bar fades into the page below it instead of ending in a hard line. */
+.day-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 14px;
+  background: linear-gradient(var(--ui-bg), color-mix(in srgb, var(--ui-bg) 0%, transparent));
+  pointer-events: none;
+}
+
+.day-line__clock {
+  order: 2;
+  flex: none;
+  min-width: 4.1em;
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  line-height: 1;
+  text-align: right;
+}
+
+.day-line__rail {
+  position: relative;
+  flex: 1;
+  align-self: stretch;
+  margin-inline: 0.5rem;
+}
+
+.day-line__track,
+.day-line__travelled {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1.5px;
+  margin-top: -0.75px;
+  border-radius: 1px;
+}
+
+.day-line__track {
+  background: repeating-linear-gradient(to right, color-mix(in srgb, var(--ui-fg) 40%, transparent) 0 2px, transparent 2px 5px);
+}
+
+.day-line__travelled {
+  background: var(--ui-accent-text);
+  transform: scaleX(var(--progress, 0));
+  transform-origin: left center;
+}
+
+.day-line__list {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.day-line__list li {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--at) * 100%);
+}
+
+/* A 28 × 44px target around a 9px dot. */
+.day-line__dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 44px;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--ui-accent-text);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.day-line__dot::before {
+  content: "";
+  width: var(--dot);
+  height: var(--dot);
+  border-radius: 50%;
+  border: 1.5px solid var(--ui-accent-text);
+  background: var(--ui-bg);
+  transition: background-color 1.2s var(--ease-out), scale 1.2s var(--ease-out);
+}
+
+/* Past chapters stay softly filled; the current one fills in. */
+.day-line__dot.is-past::before {
+  background: color-mix(in srgb, var(--ui-accent-text) 45%, var(--ui-bg));
+}
+
+.day-line__dot.is-current::before {
+  background: var(--ui-accent-text);
+  scale: 1.15;
+}
+
+.day-line__dot:focus-visible {
+  outline: 2px solid var(--ui-accent-text);
+  outline-offset: -4px;
+}
+
+/* The label is always there for screen readers, and shows as a small tag on
+   hover or focus. */
+.day-line__label {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  translate: -50% 0;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--ui-fg) 20%, transparent);
+  border-radius: 6px 14px 6px 14px;
+  background: var(--ui-bg);
+  color: var(--ui-fg);
+  font-size: 0.85rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+  clip-path: inset(50%);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.day-line__dot:hover .day-line__label,
+.day-line__dot:focus-visible .day-line__label {
+  clip-path: none;
+  opacity: 1;
+}
+
+/* Keep the end labels on screen. */
+.day-line__list li:first-child .day-line__label {
+  left: -6px;
+  translate: 0 0;
+}
+
+.day-line__list li:last-child .day-line__label {
+  left: auto;
+  right: -6px;
+  translate: 0 0;
+}
+
+/* "Now": a small sun riding the line, turning into a crescent moon after 8 pm. */
+.day-line__now {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--progress, 0) * 100%);
+  width: 14px;
+  height: 14px;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.day-line__now svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.day-line__sun {
+  fill: var(--ui-accent-text);
+  stroke: var(--ui-bg);
+  stroke-width: 1.5;
+}
+
+/* ---- 48rem and up: a short rail on the right, under the clock --------------- */
+
+@media (min-width: 48rem) {
+  /* Room on the right so text never runs under the rail. */
+  :root {
+    --gutter-right: max(3.5rem, env(safe-area-inset-right, 0px));
+  }
+
+  .day-line {
+    top: calc(12px + env(safe-area-inset-top, 0px));
+    left: auto;
+    right: calc(12px + env(safe-area-inset-right, 0px));
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.6rem;
+    height: auto;
+    padding: 0;
+    background: none;
+  }
+
+  .day-line::after {
+    content: none;
+  }
+
+  /* The clock keeps the old dial's pill. */
+  .day-line__clock {
+    order: 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--ui-fg) 18%, transparent);
+    border-radius: 999px;
+    background: var(--ui-bg);
+    font-size: 1.35rem;
+  }
+
+  .day-line__rail {
+    flex: none;
+    align-self: flex-end;
+    width: 30px;
+    height: clamp(14rem, 44vh, 24rem);
+    margin: 0;
+    border: 1px solid color-mix(in srgb, var(--ui-fg) 18%, transparent);
+    border-radius: 999px;
+    background: var(--ui-bg);
+  }
+
+  .day-line__track,
+  .day-line__travelled {
+    left: 50%;
+    right: auto;
+    top: 16px;
+    bottom: 16px;
+    width: 1.5px;
+    height: auto;
+    margin: 0 0 0 -0.75px;
+  }
+
+  .day-line__track {
+    background: repeating-linear-gradient(to bottom, color-mix(in srgb, var(--ui-fg) 40%, transparent) 0 2px, transparent 2px 5px);
+  }
+
+  .day-line__travelled {
+    transform: scaleY(var(--progress, 0));
+    transform-origin: center top;
+  }
+
+  .day-line__list {
+    inset: 16px 0;
+  }
+
+  .day-line__list li {
+    top: calc(var(--at) * 100%);
+    bottom: auto;
+    left: 0;
+    right: 0;
+  }
+
+  .day-line__dot {
+    top: 0;
+    width: 30px;
+    height: 30px;
+  }
+
+  /* Labels open to the left of the rail. */
+  .day-line__label,
+  .day-line__list li:first-child .day-line__label,
+  .day-line__list li:last-child .day-line__label {
+    top: 50%;
+    left: auto;
+    right: calc(100% + 10px);
+    translate: 0 -50%;
+  }
+
+  .day-line__now {
+    top: calc(16px + var(--progress, 0) * (100% - 32px));
+    left: 50%;
+  }
+}
+
+@media (forced-colors: active) {
+  .day-line__dot::before,
+  .day-line__sun {
+    forced-color-adjust: none;
+  }
+}

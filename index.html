@@ -66,22 +66,72 @@
     </header>
 
     <main id="day">
-      <section class="chapter" id="dawn" data-stop="dawn">
+      <!-- The opening screen: Aarav's window at 6:40 am (src/styles/opening.css,
+           src/scripts/opening.js). The scene is decoration only. The clock ticks
+           slowly while the reader stays here; the cue fades once they scroll.
+           data-no-reveal: everything here is readable the moment the page loads. -->
+      <section class="chapter opening" id="dawn" data-stop="dawn" data-name="the alarm" data-no-reveal>
+        <div class="opening__scene" aria-hidden="true">
+          <div class="opening__sunlit"><div class="opening__light"></div></div>
+          <div class="opening__window">
+            <svg class="opening__frame" viewBox="0 0 300 400" focusable="false">
+              <defs>
+                <linearGradient id="opening-sky" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" class="opening__sky-high" />
+                  <stop offset="1" class="opening__sky-low" />
+                </linearGradient>
+                <radialGradient id="opening-glow">
+                  <stop offset="0" class="opening__glow-in" />
+                  <stop offset="1" class="opening__glow-out" />
+                </radialGradient>
+              </defs>
+              <!-- Sky, a low sun, and the rooftops across the lane (one with a water tank). -->
+              <rect x="22" y="22" width="256" height="356" fill="url(#opening-sky)" />
+              <circle cx="196" cy="296" r="86" fill="url(#opening-glow)" />
+              <circle class="opening__sun" cx="196" cy="296" r="17" />
+              <path class="opening__roofs" d="M22 334H72V316H120V328H150V304H206V322H246V308H278V378H22Z M166 304V286H190V304 M170 286V280H186V286" />
+              <!-- Curtain rod, frame, centre bar, top light and grill: hand-drawn strokes. -->
+              <path class="opening__rod" d="M-4 11C70 9 160 12 304 10" />
+              <path class="opening__wood" d="M18 20C90 17 200 19 282 17C284 140 283 260 282 382C200 384 90 383 18 382C17 260 18 140 18 20Z" />
+              <path class="opening__wood opening__wood--thin" d="M150 19C151 140 149 260 150 382M19 128C100 126 200 129 281 127" />
+              <path class="opening__grill" d="M61 129V381M99 129V381M128 129V381M178 129V381M210 129V381M244 129V381M19 256C100 254 200 257 281 255" />
+              <path class="opening__wood" d="M6 389C100 386 200 390 294 387" />
+            </svg>
+            <div class="opening__curtain">
+              <svg viewBox="0 0 120 400" preserveAspectRatio="none" focusable="false">
+                <path class="opening__cloth" d="M4 12C40 10 80 14 114 11C106 120 98 260 90 394C62 398 32 396 6 394C8 260 4 120 4 12Z" />
+                <path class="opening__folds" d="M30 16C28 140 26 270 24 392M58 14C56 150 54 280 50 394M86 13C82 140 78 270 72 393" />
+              </svg>
+            </div>
+            <!-- The alarm he keeps snoozing: a phone on the sill, its screen glowing softly. -->
+            <div class="opening__phone">
+              <span class="opening__phone-glow"></span>
+              <svg viewBox="0 0 30 50" focusable="false">
+                <rect class="opening__phone-screen" x="5.5" y="7" width="19" height="34" rx="2" />
+                <path class="opening__phone-case" d="M7 3H23C25.5 3 27 4.5 27 7V43C27 45.5 25.5 47 23 47H7C4.5 47 3 45.5 3 43V7C3 4.5 4.5 3 7 3Z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
         <div class="chapter__inner">
-          <time class="time" datetime="06:40">6:40 am</time>
-          <h1>One <em>ordinary</em> day.</h1>
-          <p>This is Aarav. He’s 17, in Class 12, and he has snoozed his alarm three times. To anyone watching, today will look normal: school till two, coaching till seven, and forty unread messages in the family group before breakfast.</p>
-          <p>Boards are four months away, and every relative he meets says this is the most important year of his life. Scroll slowly and spend the day with him, from the inside.</p>
-          <span class="note note--squiggle">the sky changes as you scroll</span>
+          <time class="time opening__time" datetime="06:40">6:40 am</time>
+          <!-- The break keeps the title on two lines in every font: in the fallback
+               font "One ordinary day." fitted on one line, and the real font's
+               swap pushed the whole opening up (CLS 0.11). -->
+          <h1>One <em>ordinary</em><br /> day.</h1>
+          <p class="opening__intro">This is Aarav, 17, in Class 12. He has snoozed his alarm three times.</p>
+          <p class="opening__cue">Scroll through his day<svg class="opening__arrow" viewBox="0 0 24 40" aria-hidden="true" focusable="false"><path d="M12 3C11 13 13 23 12 34M4 26C7 29 10 32 12 35C14 32 17 29 20 26" /></svg></p>
         </div>
       </section>
 
-      <section class="chapter" id="morning" data-stop="morning">
+      <section class="chapter" id="morning" data-stop="morning" data-name="the school bus">
         <div class="chapter__inner">
           <time class="time" datetime="08:15">8:15 am</time>
           <h2>Lights off at 11:30. Asleep at <span class="mark">2:10.</span></h2>
           <p>He did try. But the moment the lights went off, his brain switched on: the mock test, the question he got wrong, what Papa would say. Around one he picked up his phone “just for a minute”. The next time he looked, it was 2:10.</p>
           <p>Now he’s on the school bus, reading the same line of chemistry notes for the fourth time. Worry kept him up, and today the tiredness will make every worry hit harder. Nobody on the bus can see any of that. They see a boy yawning into his notes.</p>
+          <p>The day ahead looks normal: school till two, coaching till seven, and forty unread messages in the family group already. Boards are four months away, and every relative he meets says this is the most important year of his life.</p>
           <span class="note note--tick">tried it: phone charging in the kitchen. weirdly works.</span>
         </div>
       </section>
@@ -91,7 +141,7 @@
         <p class="fact__source">Source: <a href="https://www.cdc.gov/sleep/about/index.html" target="_blank" rel="noopener">CDC, About Sleep<span class="visually-hidden"> (opens in a new tab)</span></a>, based on American Academy of Sleep Medicine guidance</p>
       </aside>
 
-      <section class="chapter" id="midday" data-stop="midday">
+      <section class="chapter" id="midday" data-stop="midday" data-name="the lunch table">
         <div class="chapter__inner">
           <time class="time" datetime="13:30">1:30 pm</time>
           <h2>Laughing at lunch. Counting the minutes until it’s over.</h2>
@@ -106,7 +156,7 @@
         <p class="fact__source">Source: <a href="https://www.who.int/news/item/30-06-2025-social-connection-linked-to-improved-heath-and-reduced-risk-of-early-death" target="_blank" rel="noopener">WHO Commission on Social Connection, 2025<span class="visually-hidden"> (opens in a new tab)</span></a></p>
       </aside>
 
-      <section class="chapter" id="afternoon" data-stop="afternoon">
+      <section class="chapter" id="afternoon" data-stop="afternoon" data-name="the noise">
         <div class="chapter__inner">
           <time class="time" datetime="16:50">4:50 pm</time>
           <h2>Then the thoughts get <em>loud.</em></h2>
@@ -144,7 +194,7 @@
         <p class="fact__source">Source: NCERT Manodarpan survey, 2022, <a href="https://www.theweek.in/news/health/2022/10/10/anxiety-students-exams-students-happiness-survey.html" target="_blank" rel="noopener">as reported by The Week<span class="visually-hidden"> (opens in a new tab)</span></a></p>
       </aside>
 
-      <section class="chapter" id="sunset" data-stop="sunset">
+      <section class="chapter" id="sunset" data-stop="sunset" data-name="“you okay?”">
         <div class="chapter__inner">
           <time class="time" datetime="19:10">7:10 pm</time>
           <h2>A message from a friend: <span class="circle">“you okay?”</span></h2>
@@ -159,7 +209,7 @@
            screen. Keep it empty (no text, no facts). -->
       <div class="interlude" aria-hidden="true"></div>
 
-      <section class="chapter" id="dusk" data-stop="dusk">
+      <section class="chapter" id="dusk" data-stop="dusk" data-name="talking it out">
         <div class="chapter__inner">
           <time class="time" datetime="21:30">9:30 pm</time>
           <h2>Talking didn’t fix everything. It made it shareable.</h2>
@@ -178,7 +228,7 @@
         <p class="fact__source">Source: <a href="https://www.unicef.org/india/press-releases/unicef-report-spotlights-mental-health-impact-covid-19-children-and-young-people" target="_blank" rel="noopener">UNICEF, The State of the World’s Children 2021<span class="visually-hidden"> (opens in a new tab)</span></a></p>
       </aside>
 
-      <section class="chapter" id="night" data-stop="night">
+      <section class="chapter" id="night" data-stop="night" data-name="lights off">
         <div class="chapter__inner">
           <time class="time" datetime="23:45">11:45 pm</time>
           <h2>If today sounded a bit like yours, tell someone.</h2>

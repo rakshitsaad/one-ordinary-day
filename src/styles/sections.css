@@ -107,20 +107,13 @@ a.note {
 }
 
 /* Empty evening sky between sunset and dusk (see the comment in index.html).
-   On phones and short screens the two chapters' text is taller than their
-   min-height, so only their 14vh padding adds to the gap. A full screen of sky
-   keeps both paragraphs off screen while the text is below 4.5:1. Roomy screens
-   centre shorter text in taller chapters, and 70svh is enough there. */
+   A full screen of sky at every size keeps both chapters' paragraphs off screen
+   while text is below 4.5:1. Roomy screens used to get 70svh, but the day line's
+   rail narrows the text column from 48rem, the 9:30 pm paragraph grew taller,
+   and at 1280×800 it reached the dip (3.76:1). */
 .interlude {
   height: 100vh;
   height: 100svh;
-}
-
-@media (min-width: 48rem) and (min-height: 50rem) {
-  .interlude {
-    height: 70vh;
-    height: 70svh;
-  }
 }
 
 /* ---- Desktop: an editorial page, not a centred column -------------------------
@@ -157,29 +150,7 @@ a.note {
     rotate: var(--note-tilt, -2deg);
   }
 
-  /* 6:40 am: a cover. Big title low on the page, the note up in the corner. */
-  #dawn {
-    --align: end;
-    min-height: 100vh;
-    min-height: 100svh;
-    padding-block: 18vh 12vh;
-  }
-
-  #dawn .chapter__inner {
-    --col: 1 / span 8;
-    --note-col: 10 / span 3;
-    --note-row: 1 / span 2;
-    --note-tilt: 3deg;
-  }
-
-  #dawn .note {
-    align-self: start;
-  }
-
-  #dawn h1 {
-    font-size: clamp(5.2rem, 9vw, 8rem);
-    line-height: 0.95;
-  }
+  /* 6:40 am, the opening cover, is laid out in opening.css. */
 
   #morning {
     --pad: 12vh 20vh;

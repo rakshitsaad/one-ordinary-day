@@ -11,7 +11,7 @@
    day's colours as you scroll, and a lagging background under instantly
    changing text would dip below AA contrast mid-blend (found in the a11y
    review). Only movement, shadow, decorative border and opacity ease. */
-:is(.talk, .breathe, .breath__go, .page__btn, .myths__arrow, .dial__button, .garden__button, .talk-end__home) {
+:is(.talk, .breathe, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home) {
   transition:
     translate var(--dur-base) var(--ease-out),
     scale var(--dur-base) var(--ease-out),
@@ -21,20 +21,20 @@
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  :is(.talk, .breathe, .breath__go, .page__btn, .myths__arrow, .dial__button, .garden__button, .talk-end__home):not([aria-disabled="true"]):hover {
+  :is(.talk, .breathe, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home):not([aria-disabled="true"]):hover {
     translate: 0 -2px;
   }
 
   /* Only the solid pills cast a shadow; the hand-drawn buttons (buttons.css)
      have no box for one to follow, so their highlighter swells instead. */
-  :is(.talk, .dial__button, .garden__button):hover {
+  :is(.talk, .garden__button):hover {
     box-shadow: 0 10px 18px -14px color-mix(in srgb, var(--fg) 60%, transparent);
   }
 }
 
 /* The press settles in a quarter of a second so it registers under the finger
    (the one place shorter than 0.8s); letting go eases back at the usual pace. */
-:is(.talk, .breathe, .breath__go, .page__btn, .myths__arrow, .dial__button, .garden__button, .talk-end__home):not([aria-disabled="true"]):active {
+:is(.talk, .breathe, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home):not([aria-disabled="true"]):active {
   translate: 0 0;
   scale: 0.97;
   box-shadow: none;

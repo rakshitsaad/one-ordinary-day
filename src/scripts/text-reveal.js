@@ -166,16 +166,33 @@ function revealNote(note) {
   });
 }
 
+// --- Paragraphs: ease in softly as they arrive, a beat after the heading. ---
+
+function revealText(el) {
+  onFirstSight(el, {
+    hide: () => gsap.set(el, { opacity: 0.25, y: 12 }),
+    play: (done) => gsap.to(el, {
+      opacity: 1, y: 0, duration: 1.2, ease: EASE, delay: 0.2, clearProps: 'opacity,transform', onComplete: done,
+    }),
+    finish: () => gsap.set(el, { clearProps: 'opacity,transform', overwrite: true }),
+  });
+}
+
 // ---------------------------------------------------------------------------
 
 export function initTextReveal(root = document.querySelector('main')) {
   if (!root) return;
 
+  // Sections marked data-no-reveal (the opening screen) stay exactly as
+  // authored: readable the moment the page loads.
+  const find = (selector) => [...root.querySelectorAll(selector)].filter((el) => !el.closest('[data-no-reveal]'));
+
   try {
-    root.querySelectorAll('.mark, .circle').forEach(revealInk);
+    find('.mark, .circle').forEach(revealInk);
     if (prefersReducedMotion) return;
-    root.querySelectorAll('h1, h2').forEach(revealHeadline);
-    root.querySelectorAll('.note').forEach(revealNote);
+    find('h1, h2').forEach(revealHeadline);
+    find('.chapter__inner > p, .fact > p').forEach(revealText);
+    find('.note').forEach(revealNote);
   } catch (error) {
     revealAll();
     console.error(error);

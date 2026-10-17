@@ -3,7 +3,10 @@ import { initSmoothScroll } from './scripts/smooth-scroll.js';
 import { createDayTimeline } from './scripts/day-timeline.js';
 import { initDayColors } from './scripts/day-colors.js';
 import { initParticles } from './scripts/particles.js';
-import { initSkyDial } from './scripts/sky-dial.js';
+import { initSky } from './scripts/sky.js';
+import { initScenes } from './scripts/scenes.js';
+import { initDayLine } from './scripts/day-line.js';
+import { initOpening } from './scripts/opening.js';
 import { initInPageLinks } from './scripts/in-page-links.js';
 import { initTextReveal } from './scripts/text-reveal.js';
 import { initThoughts } from './sections/thoughts.js';
@@ -16,8 +19,11 @@ initSmoothScroll();
 
 const timeline = createDayTimeline([...document.querySelectorAll('section[data-stop]')]);
 initDayColors(timeline); // must subscribe before anything that reads dayColors
+initSky(timeline); // the sun, moon and horizon glow, behind the particles
 initParticles(timeline);
-initSkyDial(timeline, document.querySelector('.site-header'));
+initScenes(timeline); // small details in each chapter's top margin
+initDayLine(timeline, document.querySelector('.site-header'));
+initOpening(timeline, document.querySelector('.opening')); // its clock feeds the day line and the sky
 initInPageLinks(timeline);
 initTextReveal();
 // Part of the 4:50 pm chapter, so it loads now: its height changes when it

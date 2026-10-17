@@ -33,14 +33,17 @@ export const contrast = (a, b) => {
   return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 };
 
-// Pull `color` toward `anchor` only as far as needed to reach `min` contrast on `bg`.
+// Pull `color` toward `anchor` only as far as needed to reach `min` contrast on
+// `bg`, which can also be a list of backgrounds (every one must pass).
 export function withContrast(color, bg, anchor, min) {
-  if (contrast(color, bg) >= min) return color;
+  const backgrounds = Array.isArray(bg[0]) ? bg : [bg];
+  const passes = (c) => backgrounds.every((b) => contrast(c, b) >= min);
+  if (passes(color)) return color;
   let lo = 0;
   let hi = 1;
   for (let i = 0; i < 12; i++) {
     const mid = (lo + hi) / 2;
-    if (contrast(mix(color, anchor, mid), bg) >= min) hi = mid;
+    if (passes(mix(color, anchor, mid))) hi = mid;
     else lo = mid;
   }
   return mix(color, anchor, hi);
