@@ -1,0 +1,369 @@
+/*
+  The intro (#about, src/scripts/intro.js): what this is, who it's for and
+  what's inside, in the moment before dawn. It sits at the top of <main>,
+  above the 6:40 am opening, as a real part of the page (scroll past it, or
+  "Begin the day").
+
+  Colours are fixed, not the live day colours: a pre-dawn sky mixed from the
+  dawn and night stops (12–16% night), brightening towards the horizon, where a
+  soft sun glow (dawn accent) breathes on an 8s loop. Text uses the dawn ink:
+  measured at 4.5:1 or better for the small grey lines and 7:1 or better for
+  the rest, on every part of the sky and glow.
+
+  html.at-intro (set before the first paint, then kept by intro.js) means the
+  intro fills the top half of the screen: the day hasn't begun, so the day line
+  and the garden step aside. html.no-intro hides it.
+*/
+
+html.no-intro .intro {
+  display: none;
+}
+
+.day-line,
+.garden {
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    visibility var(--dur-base);
+}
+
+html.at-intro .day-line,
+html.at-intro .garden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.intro {
+  /* The intro's own palette, so buttons, ink and focus rings read from it. */
+  --bg: color-mix(in srgb, var(--dawn-bg) 88%, var(--night-bg));
+  --fg: var(--dawn-fg);
+  --soft: color-mix(in srgb, var(--dawn-fg) 86%, var(--dawn-bg));
+  --accent: var(--dawn-accent);
+  --accent-text: color-mix(in srgb, var(--dawn-accent) 45%, var(--dawn-fg));
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding:
+    calc(var(--bar-h) + env(safe-area-inset-top, 0px) + 0.75rem)
+    var(--gutter-right)
+    calc(1rem + env(safe-area-inset-bottom, 0px))
+    var(--gutter-left);
+  overflow: hidden;
+  color: var(--fg);
+}
+
+/* ---- The sky before dawn ------------------------------------------------------ */
+
+.intro__sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--dawn-bg) 84%, var(--night-bg)),
+    color-mix(in srgb, var(--dawn-bg) 94%, var(--night-bg)) 85%
+  );
+  pointer-events: none;
+}
+
+/* The page's paper grain sits behind <main>, so the sky carries its own. */
+.intro__sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* The sun, still below the horizon: a soft glow that breathes. */
+.intro__sun {
+  position: absolute;
+  left: 66%;
+  bottom: 0;
+  width: min(86vmin, 40rem);
+  aspect-ratio: 1;
+  translate: -50% 58%;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--dawn-accent) 45%, transparent),
+    color-mix(in srgb, var(--dawn-accent) 18%, transparent) 55%,
+    transparent
+  );
+  animation: intro-breathe 8s ease-in-out infinite alternate;
+}
+
+@keyframes intro-breathe {
+  from {
+    opacity: 0.7;
+    scale: 0.96;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1.04;
+  }
+}
+
+/* A hand-drawn horizon along the bottom. */
+.intro__horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.4rem;
+  width: 100%;
+  height: 1.5rem;
+  fill: none;
+  stroke: color-mix(in srgb, var(--dawn-fg) 28%, transparent);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.intro__horizon path {
+  vector-effect: non-scaling-stroke;
+}
+
+/* ---- Words ----------------------------------------------------------------------- */
+
+.intro__inner {
+  display: grid;
+  gap: 0.95rem;
+  width: 100%;
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.intro__about {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.intro h2 {
+  margin-bottom: 0.2rem; /* room for the ink underline */
+  font-size: clamp(2.2rem, 8.5vw, 3.4rem);
+}
+
+.intro p {
+  max-width: 38ch;
+}
+
+.intro__lead {
+  font-size: 1.08rem;
+  line-height: 1.45;
+}
+
+.intro__who {
+  font-size: 0.95rem;
+  color: var(--soft);
+}
+
+.intro__inside {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.intro__label {
+  justify-self: start;
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  line-height: 1;
+  rotate: -1.5deg;
+}
+
+.intro__find {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.intro__find li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+/* Small hand-drawn icons that draw themselves in once (decoration only). */
+.intro__icon {
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-top: -0.12rem;
+  fill: none;
+  stroke: var(--accent-text);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.intro__icon path {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: intro-draw 1.4s var(--ease-out) forwards;
+  animation-delay: var(--draw-at, 0.2s);
+}
+
+.intro__find li:nth-child(2) { --draw-at: 0.35s; }
+.intro__find li:nth-child(3) { --draw-at: 0.5s; }
+.intro__find li:nth-child(4) { --draw-at: 0.65s; }
+
+@keyframes intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.intro__go {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.intro .intro__small {
+  max-width: 46ch;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--soft);
+}
+
+.intro__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  margin-top: 0.45rem;
+}
+
+/* Pen-loop buttons (buttons.css); "Begin the day" also gets the highlighter. */
+.intro__begin,
+.intro__help {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.65rem 1.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+.intro__skip {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.95rem;
+}
+
+/* ---- Wider screens --------------------------------------------------------------- */
+
+@media (min-width: 48rem) {
+  .intro__inner {
+    gap: 1.5rem;
+  }
+
+  .intro h2 {
+    font-size: clamp(3rem, 7vw, 4.2rem);
+  }
+
+  .intro__lead {
+    font-size: 1.2rem;
+  }
+}
+
+/* Desktop: what it is and the way in on the left, what's inside on the right. */
+@media (min-width: 64rem) {
+  .intro__inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 2rem;
+    row-gap: 2rem;
+    max-width: 72rem;
+    align-items: start;
+  }
+
+  .intro__about {
+    grid-column: 1 / span 6;
+    grid-row: 1;
+  }
+
+  .intro__go {
+    grid-column: 1 / span 6;
+    grid-row: 2;
+  }
+
+  .intro__inside {
+    grid-column: 8 / span 5;
+    grid-row: 1 / span 2;
+    align-self: center;
+    gap: 0.9rem;
+  }
+
+  .intro h2 {
+    font-size: 4.6rem;
+  }
+
+  .intro__find {
+    gap: 1rem;
+  }
+
+  .intro__find li {
+    font-size: 1.05rem;
+  }
+
+  .intro__icon {
+    width: 1.85rem;
+    height: 1.85rem;
+  }
+}
+
+/* ---- "Begin the day": the sky brightens into dawn ------------------------------
+   The words fade, the pre-dawn sky clears to the page's own dawn colours, and
+   the sun glow rises and fades. Then intro.js tucks the intro away and the
+   opening fades in. With reduced motion none of this runs: it simply switches. */
+@media (prefers-reduced-motion: no-preference) {
+  .intro.is-leaving .intro__inner {
+    opacity: 0;
+    translate: 0 -10px;
+    transition:
+      opacity 0.8s var(--ease-out),
+      translate 0.8s var(--ease-out);
+  }
+
+  .intro.is-leaving .intro__sky {
+    opacity: 0;
+    transition: opacity 1.3s var(--ease-out) 0.15s;
+  }
+
+  .intro.is-leaving .intro__sun {
+    animation: intro-rise 1.4s var(--ease-out) forwards;
+  }
+
+  .opening.is-arriving > * {
+    animation: intro-arrive 1.2s var(--ease-out) both;
+  }
+}
+
+@keyframes intro-rise {
+  to {
+    translate: -50% 30%;
+    opacity: 0;
+  }
+}
+
+@keyframes intro-arrive {
+  from {
+    opacity: 0;
+  }
+}
+
+/* High contrast mode: the sky and glow are dropped; the words stay. */
+@media (forced-colors: active) {
+  .intro__sun {
+    display: none;
+  }
+}

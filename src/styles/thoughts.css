@@ -1,9 +1,13 @@
 /*
   4:50 pm thoughts (src/sections/thoughts.js).
   Without JS: a readable list of worries → calmer versions.
-  With JS (.is-live): hand-circled thoughts scattered like a crowded head. Each
-  opens, in place, into a small moment card. Text inside the card uses --fg
-  throughout: the card's tint would take --soft below 4.5:1.
+  With JS (.is-live): hand-circled thoughts scattered like a crowded head.
+  "Which of these feels closest…?" Picking one (.is-open; .has-pick on the
+  box) draws a fuller circle round it and softens the others to --soft. The
+  thought turns into its calmer version in place: the worry steps back,
+  smaller and in --soft but still readable, and the calmer words write
+  themselves in underneath, with no card or box around them. Only transform
+  and opacity move; colours switch instantly (they follow the day).
 */
 
 .thoughts {
@@ -121,15 +125,74 @@
 .thoughts.is-live .thought:nth-child(3n) .thought__worry { font-size: 1.6rem; }
 .thoughts.is-live .thought:nth-child(4n) .thought__worry { font-size: 1.3rem; }
 
-/* The pen loop (buttons.css) sits faint until the thought is hovered or open. */
+/* The pen loop (buttons.css) sits faint until the thought is hovered. */
 .thought__open::before {
   opacity: 0.4;
   transition: opacity var(--dur-base) var(--ease-out);
 }
 
-.thought__open:hover::before,
-.thought__open[aria-expanded="true"]::before {
+.thought__open:hover::before {
   opacity: 0.9;
+}
+
+/* Once one is picked, the others soften into the background: --soft (still
+   4.5:1) and a fainter loop. */
+.thoughts.has-pick .thought:not(.is-open) .thought__open {
+  color: var(--soft);
+}
+
+.thoughts.has-pick .thought:not(.is-open) .thought__open::before {
+  opacity: 0.2;
+}
+
+.thoughts.has-pick .thought:not(.is-open) .thought__open:hover::before {
+  opacity: 0.6;
+}
+
+/* The picked one: its faint loop gives way to a fuller circle that draws
+   itself round the thought (1.1s), in --accent-text (3:1 or better). */
+.thought.is-open .thought__open::before {
+  opacity: 0;
+}
+
+.thought__circle {
+  position: absolute;
+  z-index: -1;
+  top: -0.3rem;
+  left: -0.55rem;
+  width: calc(100% + 1.1rem);
+  height: calc(100% + 0.6rem);
+  overflow: visible;
+  fill: none;
+  stroke: var(--accent-text);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.thought__circle path {
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 1.1s var(--ease-out);
+}
+
+.thought.is-open .thought__circle {
+  opacity: 1;
+  transition-duration: 0.2s;
+}
+
+.thought.is-open .thought__circle path {
+  stroke-dashoffset: 0;
+}
+
+/* The worry steps back but stays readable: smaller, softer, still circled.
+   thoughts.js eases the size change (a FLIP scale on the button). */
+.thoughts.is-live .thought.is-open .thought__worry {
+  font-size: 1.2rem;
+  color: var(--soft);
 }
 
 .thought__open--add {
@@ -147,17 +210,15 @@
   opacity: 0.55;
 }
 
-/* ---- The moment card ------------------------------------------------------- */
+/* ---- The calmer version, in place ------------------------------------------
+   No card: it sits right under the worry, lined up with its words. */
 
 .moment {
   display: grid;
-  gap: 0.8rem;
-  margin-top: 0.4rem;
-  padding: 1rem 1.1rem 1.15rem;
-  border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
-  border-radius: 6px 22px 8px 20px;
-  background: color-mix(in srgb, var(--fg) 6%, transparent);
-  animation: moment-in 1s var(--ease-out);
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+  padding: 0 0 0.5rem 1rem;
+  animation: moment-in 0.8s var(--ease-out);
 }
 
 @keyframes moment-in {
@@ -172,30 +233,55 @@
   letter-spacing: 0.02em;
 }
 
+.chapter .moment .moment__label {
+  margin-bottom: -0.45rem;
+}
+
 .chapter .moment .moment__calm,
-.chapter .moment .moment__empty {
+.chapter .moment .moment__words {
   max-width: 36ch;
   font-family: var(--font-hand);
-  font-size: 1.6rem;
+  font-size: 1.65rem;
   line-height: 1.25;
 }
 
-.chapter .moment .moment__empty {
-  font-size: 1.35rem;
-}
-
-/* Each word arrives a moment after the last, like handwriting. */
+/* Words write themselves in, left to right, as if by hand: each arrives a
+   beat after the last, drifting in from the left (thoughts.js sets --at so
+   the whole line is in within about two seconds). */
 .moment__word {
   display: inline-block;
-  animation: moment-word 0.9s var(--ease-out) both;
-  animation-delay: calc(var(--i, 0) * 55ms);
+  animation: moment-write 0.7s var(--ease-out) both;
+  animation-delay: var(--at, 0ms);
 }
 
-@keyframes moment-word {
+@keyframes moment-write {
   from {
     opacity: 0;
-    translate: 0 0.18em;
+    translate: -0.2em 0.06em;
   }
+}
+
+/* What comes after the calmer version waits until it's written. */
+.moment__after,
+.moment__calm:not([hidden]) ~ .moment__yours {
+  animation: moment-in 0.9s var(--ease-out) both;
+  animation-delay: var(--after, 0ms);
+}
+
+/* What they'd tell a friend, in their own hand, and the echo. */
+.moment__yours {
+  display: grid;
+  gap: 0.45rem;
+  padding-left: 0.85rem;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.chapter .moment .moment__echo {
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: var(--soft);
+  animation: moment-in 0.9s var(--ease-out) both;
+  animation-delay: var(--echo-at, 0ms);
 }
 
 .moment__actions {
@@ -213,6 +299,7 @@
   color: var(--fg);
   font: inherit;
   font-size: 0.95rem;
+  text-align: left;
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
@@ -248,10 +335,6 @@
   color: var(--fg);
 }
 
-.moment__optional {
-  font-weight: 400;
-}
-
 .moment__field {
   width: 100%;
   min-height: 46px;
@@ -269,6 +352,11 @@
 .moment__text {
   min-height: 6.5rem;
   resize: vertical;
+}
+
+.moment__field::placeholder {
+  color: var(--soft);
+  opacity: 1;
 }
 
 .moment__field:focus-visible {
@@ -303,6 +391,25 @@
 
 .moment__safety a,
 .moment__reply a {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+/* ---- Start over, and the note about limits ---------------------------------- */
+
+.thoughts__restart {
+  justify-self: start;
+}
+
+.chapter .thoughts .thoughts__limits {
+  max-width: 52ch;
+  padding-left: 0.85rem;
+  border-left: 2px solid color-mix(in srgb, var(--fg) 25%, transparent);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.thoughts__limits a {
   font-weight: 600;
   color: var(--fg);
 }
@@ -355,8 +462,6 @@
   display: grid;
   gap: 0.5rem;
   padding-top: 0.2rem;
-  animation: moment-in 1s var(--ease-out) both;
-  animation-delay: var(--after, 0s);
 }
 
 .chapter .moment .moment__question {
@@ -413,13 +518,16 @@
   }
 
   .moment {
-    padding: 1.2rem 1.4rem 1.3rem;
+    padding-left: 1.1rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .moment,
   .moment__word,
+  .moment__after,
+  .moment__yours,
+  .moment__echo,
   .moment__reflect {
     animation: none;
   }

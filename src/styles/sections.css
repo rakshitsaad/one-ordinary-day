@@ -641,6 +641,13 @@ a.note {
   font-weight: 600;
 }
 
+/* "About this site" stands on its own line, so it gets a full-size target. */
+.site-footer__about {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 @media (min-width: 64rem) {
   .site-footer__inner {
     grid-template-columns: repeat(12, minmax(0, 1fr));

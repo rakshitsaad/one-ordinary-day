@@ -29,10 +29,14 @@ export function initSmoothScroll() {
 }
 
 // Calm programmatic scroll: ease-out, 0.8–1.4s depending on distance.
-// Jumps instantly when reduced motion is on.
-export function scrollToY(y) {
+// Jumps instantly when reduced motion is on, or with { immediate: true }.
+export function scrollToY(y, { immediate = false } = {}) {
   if (!lenis) {
-    window.scrollTo(0, y);
+    window.scrollTo({ top: y, behavior: immediate ? 'instant' : 'auto' });
+    return;
+  }
+  if (immediate) {
+    lenis.scrollTo(y, { immediate: true, force: true });
     return;
   }
   const screens = Math.abs(y - window.scrollY) / window.innerHeight;

@@ -11,7 +11,7 @@
    day's colours as you scroll, and a lagging background under instantly
    changing text would dip below AA contrast mid-blend (found in the a11y
    review). Only movement, shadow, decorative border and opacity ease. */
-:is(.talk, .thought__open, .moment__btn, .moment__choice, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home, .tonight__btn) {
+:is(.talk, .thought__open, .moment__btn, .moment__choice, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home, .tonight__btn, .intro__begin, .intro__help) {
   transition:
     translate var(--dur-base) var(--ease-out),
     scale var(--dur-base) var(--ease-out),
@@ -21,7 +21,7 @@
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  :is(.talk, .thought__open, .moment__btn, .moment__choice, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home, .tonight__btn):not([aria-disabled="true"]):hover {
+  :is(.talk, .thought__open, .moment__btn, .moment__choice, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home, .tonight__btn, .intro__begin, .intro__help):not([aria-disabled="true"]):hover {
     translate: 0 -2px;
   }
 
@@ -34,7 +34,7 @@
 
 /* The press settles in a quarter of a second so it registers under the finger
    (the one place shorter than 0.8s); letting go eases back at the usual pace. */
-:is(.talk, .thought__open, .moment__btn, .moment__choice, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home, .tonight__btn):not([aria-disabled="true"]):active {
+:is(.talk, .thought__open, .moment__btn, .moment__choice, .breath__go, .page__btn, .myths__arrow, .garden__button, .talk-end__home, .tonight__btn, .intro__begin, .intro__help):not([aria-disabled="true"]):active {
   translate: 0 0;
   scale: 0.97;
   box-shadow: none;
@@ -88,7 +88,7 @@
 
 /* ---- Text links: a faint underline that draws in solid on hover ---------- */
 
-:is(a:not([class]), a.note, .talk-top__back, .talk-end__breathe, .myth__again, .garden__clear) {
+:is(a:not([class]), a.note, .talk-top__back, .talk-end__breathe, .myth__again, .garden__clear, .intro__skip, .site-footer__about) {
   text-decoration-line: underline;
   text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
   text-decoration-thickness: 1px;
@@ -105,13 +105,13 @@
 }
 
 @media (hover: hover) {
-  :is(a:not([class]), a.note, .talk-top__back, .talk-end__breathe, .myth__again, .garden__clear):hover {
+  :is(a:not([class]), a.note, .talk-top__back, .talk-end__breathe, .myth__again, .garden__clear, .intro__skip, .site-footer__about):hover {
     background-size: 100% 1.5px;
     text-decoration-color: transparent;
   }
 }
 
-:is(a:not([class]), a.note, .talk-top__back, .talk-end__breathe, .myth__again, .garden__clear):focus-visible {
+:is(a:not([class]), a.note, .talk-top__back, .talk-end__breathe, .myth__again, .garden__clear, .intro__skip, .site-footer__about):focus-visible {
   background-size: 100% 1.5px;
 }
 

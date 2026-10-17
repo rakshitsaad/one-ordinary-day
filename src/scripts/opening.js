@@ -60,7 +60,9 @@ export function initOpening(timeline, section) {
   if (prefersReducedMotion || !time) return;
 
   const timer = setInterval(() => {
-    if (!atTop || document.hidden) return; // the morning only moves while someone's watching
+    // The morning only moves while someone's watching, and not before the
+    // day has begun (the intro above it is on screen: src/scripts/intro.js).
+    if (!atTop || document.hidden || document.documentElement.classList.contains('at-intro')) return;
     minutes += 1;
     // Chapter times are read once at start-up (day-time.js), so updating it is safe.
     time.dateTime = `${pad(Math.floor(minutes / 60))}:${pad(minutes % 60)}`;

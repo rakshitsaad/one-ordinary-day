@@ -8,6 +8,7 @@ import { initScenes } from './scripts/scenes.js';
 import { initDayLine } from './scripts/day-line.js';
 import { initOpening } from './scripts/opening.js';
 import { initInPageLinks } from './scripts/in-page-links.js';
+import { initIntro } from './scripts/intro.js';
 import { initTextReveal } from './scripts/text-reveal.js';
 import { initThoughts } from './sections/thoughts.js';
 import { initGarden } from './scripts/garden.js';
@@ -25,6 +26,7 @@ initScenes(timeline); // small details in each chapter's top margin
 initDayLine(timeline, document.querySelector('.site-header'));
 initOpening(timeline, document.querySelector('.opening')); // its clock feeds the day line and the sky
 initInPageLinks(timeline);
+initIntro(document.querySelector('.intro')); // its clicks run before in-page links (capture)
 initTextReveal();
 // Part of the 4:50 pm chapter, so it loads now: its height changes when it
 // comes alive, and that must happen before the colour timeline is measured.
