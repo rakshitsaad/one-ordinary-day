@@ -1,7 +1,10 @@
 /*
-  / : the intro (index.html). Everything centred on purpose, with big, calm
-  type: why the site exists (Anxiety. Depression. Stress.), the way in, three
-  feeling cards, two checked numbers, and what's here. Dawn palette.
+  / : the intro (index.html), in the dawn palette. The first screen says, in
+  this order: what the site is about ("Mental health & emotional wellbeing"),
+  that your mind matters, the three things it covers, and where to go next.
+  From 60rem the message sits on the left and the drawing on the right; on
+  phones the drawing follows the message. The hero and the look at the story
+  are left-aligned; the feeling cards, numbers and destinations stay centred.
 
   The feeling cards are <details>: they open with no JavaScript, from the
   keyboard (Enter / Space on the summary) and for screen readers. Each drawing
@@ -16,7 +19,7 @@
   display: grid;
   justify-items: center;
   gap: clamp(3.5rem, 9vw, 6rem);
-  padding: calc(var(--bar-h) + env(safe-area-inset-top, 0px) + 2.25rem) var(--gutter-right) 3rem var(--gutter-left);
+  padding: calc(var(--bar-h) + env(safe-area-inset-top, 0px) + 1.5rem) var(--gutter-right) 3rem var(--gutter-left);
   text-align: center;
 }
 
@@ -24,95 +27,147 @@
   margin-inline: auto;
 }
 
-/* ---- Why this site exists ------------------------------------------------------- */
+/* ---- The first screen --------------------------------------------------------------- */
 
 .home__hero {
   display: grid;
-  justify-items: center;
-  gap: 1rem;
-  width: min(52rem, 100%);
+  gap: 2.5rem;
+  width: min(74rem, 100%);
+  text-align: left;
 }
 
-.home__name {
-  font-family: var(--font-hand);
-  font-size: 1.5rem;
-  line-height: 1;
+.home__hero p {
+  margin-inline: 0;
+}
+
+.home__intro {
+  display: grid;
+  justify-items: start;
+}
+
+/* What the site is about, before anything else: small, but plainly readable. */
+.home__kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
   color: var(--fg);
-  rotate: -1.5deg;
+}
+
+/* Narrow phones: a touch smaller, so it stays on one line. */
+@media (max-width: 25rem) {
+  .home__kicker {
+    gap: 0.4rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.09em;
+  }
+}
+
+.home__sprout {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: var(--accent-text);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .home__title {
-  display: grid;
-  gap: 1.4rem;
-  font-size: inherit;
-  line-height: 1;
-}
-
-/* The three words are the page: huge, one per line, a hand-drawn line under
-   each. Enough room between them that each underline stays clear of the word
-   below. */
-.home__words {
-  display: grid;
-  justify-items: center;
-  gap: 0.36em;
-  padding-bottom: 0.12em; /* room under the last underline, in step with the size */
+  max-width: 9.5ch;
+  margin-top: 0.85rem;
   font-family: var(--font-display);
-  font-size: clamp(3.4rem, 15.5vw, 7.75rem);
-  line-height: 1;
+  font-size: clamp(3.1rem, 12.5vw, 5.6rem);
+  font-weight: 400;
+  line-height: 0.98;
   letter-spacing: -0.015em;
 }
 
-/* At this size the default underline (ink.css) sits too low and too heavy:
-   tuck it just under the letters, and thinner. */
-.home__word .mark::after {
-  left: -3%;
-  right: -3%;
-  bottom: -0.02em;
-  height: 0.24em;
+/* The underline under "matters": tucked close and thin at this size. */
+.home__title .mark::after {
+  left: -2%;
+  right: -2%;
+  bottom: -0.03em;
+  height: 0.2em;
 }
 
-.home__word {
-  display: block;
-}
-
-.home__word:nth-child(1) { rotate: -1deg; }
-.home__word:nth-child(2) { rotate: 0.6deg; }
-.home__word:nth-child(3) { rotate: -0.4deg; }
-
-.home__line {
-  display: block;
-  max-width: 20ch;
-  margin-inline: auto;
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 5.5vw, 2.6rem);
-  line-height: 1.15;
-}
-
-.home .home__lead {
-  max-width: 40ch;
-  font-size: 1.12rem;
+.home__hero .home__lead {
+  max-width: 44ch;
+  margin-top: 1.15rem;
+  font-size: clamp(1.06rem, 2.4vw, 1.2rem);
   line-height: 1.55;
+}
+
+/* The three things the site covers: quiet labels, not buttons. */
+.topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.topic {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.85rem 0.32rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--fg) 38%, transparent);
+  border-radius: 1.1rem 1.35rem 1.2rem 1.45rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.topic::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.home__hero .home__promise {
+  margin-top: 0.9rem;
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  rotate: -0.6deg;
 }
 
 .home__go {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem 1rem;
-  margin-top: 0.75rem;
+  gap: 0.6rem 1rem;
+  margin-top: 1.35rem;
 }
 
-/* Pen-loop buttons (buttons.css); "Explore the library" gets the highlighter. */
+/* Pen-loop buttons (buttons.css). "Find what might help" is the one to press:
+   bigger, with the highlighter. "Talk to someone" is a plain loop (and it's
+   in the bar on every page). */
 .home__explore,
 .home__help {
   display: inline-flex;
   align-items: center;
+  gap: 0.45rem;
   min-height: 50px;
-  padding: 0.7rem 1.45rem;
+  padding: 0.7rem 1.4rem;
   font-size: 1.05rem;
   font-weight: 600;
   text-decoration: none;
   touch-action: manipulation;
+}
+
+.home__explore {
+  min-height: 56px;
+  padding-inline: 1.6rem 1.7rem;
+  font-size: 1.12rem;
 }
 
 .home .home__small {
@@ -122,13 +177,421 @@
   color: var(--soft);
 }
 
-/* A small handwritten heading. */
+.home__hero .home__small {
+  margin-top: 0.85rem;
+}
+
+/* A small handwritten line under a heading. */
 .home__label {
   font-family: var(--font-hand);
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   line-height: 1.1;
   letter-spacing: 0;
   rotate: -1deg;
+}
+
+/* ---- The same moment, two ways ------------------------------------------------------
+   Aarav at his desk after school (index.html). The radio buttons under the
+   drawing switch between "What people see" and "What someone might be
+   feeling" (the thoughts above him). Colours are palette mixes; strokes are
+   the text colour. */
+.mind {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  width: min(36rem, 100%);
+  margin: 0 auto;
+}
+
+.mind__art {
+  width: 100%;
+}
+
+.mind__art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.mind__wall {
+  fill: color-mix(in srgb, var(--accent) 12%, var(--bg));
+}
+
+.mind__sky-high { stop-color: color-mix(in srgb, var(--afternoon-particle) 30%, var(--bg)); }
+.mind__sky-low { stop-color: color-mix(in srgb, var(--accent) 55%, var(--bg)); }
+
+.mind__sun-glow {
+  fill: var(--afternoon-particle);
+  opacity: 0.35;
+}
+
+.mind__sun {
+  fill: color-mix(in srgb, var(--afternoon-particle) 70%, var(--sunset-particle));
+}
+
+.mind__roofs {
+  fill: color-mix(in srgb, var(--fg) 34%, color-mix(in srgb, var(--accent) 40%, var(--bg)));
+}
+
+.mind__wood,
+.mind__ink,
+.mind__grill,
+.mind__thought,
+.mind__steam {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mind__wood {
+  stroke: var(--fg);
+  stroke-width: 3;
+}
+
+.mind__wood--thin {
+  stroke-width: 2.2;
+}
+
+.mind__chair {
+  fill: none;
+  stroke: color-mix(in srgb, var(--fg) 75%, var(--bg));
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.mind__grill {
+  stroke: color-mix(in srgb, var(--fg) 70%, transparent);
+  stroke-width: 1.5;
+}
+
+.mind__ink {
+  stroke: var(--fg);
+  stroke-width: 2;
+}
+
+.mind__ink--thin {
+  stroke-width: 1.3;
+}
+
+.mind__desk {
+  fill: color-mix(in srgb, var(--accent) 34%, color-mix(in srgb, var(--fg) 16%, var(--bg)));
+}
+
+.mind__book,
+.mind__chai,
+.mind__phone,
+.mind__paper,
+.mind__bubble {
+  stroke: var(--fg);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.mind__book--1 { fill: color-mix(in srgb, var(--sunset-accent) 55%, var(--bg)); }
+.mind__book--2 { fill: color-mix(in srgb, var(--morning-accent) 50%, var(--bg)); }
+.mind__book--3 { fill: color-mix(in srgb, var(--afternoon-accent) 45%, var(--bg)); }
+
+.mind__chai {
+  fill: color-mix(in srgb, var(--afternoon-accent) 60%, var(--bg));
+  stroke: none;
+}
+
+.mind__steam {
+  stroke: color-mix(in srgb, var(--fg) 40%, transparent);
+  stroke-width: 1.4;
+  animation: mind-steam 8s ease-in-out infinite;
+}
+
+.mind__steam--2 {
+  animation-delay: -4s;
+}
+
+@keyframes mind-steam {
+  0%,
+  100% {
+    opacity: 0.25;
+    translate: 0 2px;
+  }
+
+  50% {
+    opacity: 0.9;
+    translate: 0 -2px;
+  }
+}
+
+.mind__phone {
+  fill: var(--fg);
+}
+
+.mind__screen {
+  fill: color-mix(in srgb, var(--midday-particle) 75%, var(--bg));
+}
+
+.mind__paper {
+  fill: color-mix(in srgb, var(--fg) 3%, var(--bg));
+}
+
+/* Aarav, painted: two cutouts on one body. The calm face fades in over the
+   worried one (1.5s, a soft ease-out; instant with reduced motion through
+   reset.css). Nothing moves or scales. */
+.mind__face--calm {
+  opacity: 0;
+  transition: opacity 1.5s ease-out;
+}
+
+.mind__bubble {
+  fill: var(--bg);
+}
+
+.mind__said,
+.mind__bit {
+  font-family: var(--font-hand);
+  font-size: 19px;
+  fill: var(--fg);
+}
+
+.mind__bit {
+  font-size: 17px;
+  fill: color-mix(in srgb, var(--fg) 82%, var(--bg));
+}
+
+/* The thoughts: a tangle that loosens into a calm line, drifting out of the
+   window. It draws itself in whenever it appears, then breathes slowly. */
+.mind__thought {
+  stroke: var(--accent-text);
+  stroke-width: 2;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+}
+
+.mind__tangle {
+  transform-box: view-box;
+  transform-origin: 436px 100px;
+  animation: mind-breathe 9s ease-in-out infinite alternate;
+}
+
+@keyframes mind-breathe {
+  from {
+    rotate: -1.2deg;
+    scale: 1;
+  }
+
+  to {
+    rotate: 1.2deg;
+    scale: 0.97;
+  }
+}
+
+.mind__inside,
+.mind__outside {
+  transition: opacity 0.9s var(--ease-out);
+}
+
+/* The two views. "What people see": no thoughts, and his calm face. */
+.mind:has(input[value="outside"]:checked) .mind__inside {
+  opacity: 0;
+}
+
+.mind:has(input[value="outside"]:checked) .mind__face--calm {
+  opacity: 1;
+}
+
+.mind:has(input[value="inside"]:checked) .mind__thought {
+  animation: mind-draw 2.6s var(--ease-out) both;
+}
+
+.mind:has(input[value="inside"]:checked) .mind__bit {
+  animation: mind-bit 1.2s var(--ease-out) both;
+}
+
+.mind:has(input[value="inside"]:checked) .mind__bit--1 { animation-delay: 0.5s; }
+.mind:has(input[value="inside"]:checked) .mind__bit--2 { animation-delay: 0.9s; }
+.mind:has(input[value="inside"]:checked) .mind__bit--3 { animation-delay: 1.3s; }
+
+@keyframes mind-draw {
+  from {
+    stroke-dashoffset: 1000;
+  }
+}
+
+@keyframes mind-bit {
+  from {
+    opacity: 0;
+  }
+}
+
+.mind:has(input[value="outside"]:checked) .mind__says--inside,
+.mind:has(input[value="inside"]:checked) .mind__says--outside {
+  display: none;
+}
+
+/* The switch: two radio buttons, drawn as small hand-made rings. */
+.mind__views {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 1.4rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.mind__view {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--soft);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mind__view:has(input:checked) {
+  color: var(--fg);
+}
+
+.mind__view input {
+  appearance: none;
+  display: grid;
+  place-content: center;
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0;
+  border: 1.5px solid currentColor;
+  border-radius: 46% 54% 50% 50% / 52% 46% 54% 48%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.mind__view input::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--accent-text);
+  scale: 0;
+  transition: scale 0.8s var(--ease-out);
+}
+
+.mind__view input:checked::before {
+  scale: 1;
+}
+
+.mind__view input:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+}
+
+/* ---- A look at the story ------------------------------------------------------------ */
+
+.day-peek {
+  display: grid;
+  gap: 2rem;
+  width: min(74rem, 100%); /* lines up with the first screen */
+  text-align: left;
+}
+
+.day-peek p {
+  margin-inline: 0;
+}
+
+.day-peek__text {
+  display: grid;
+  justify-items: start;
+  gap: 0.8rem;
+}
+
+.day-peek h2 {
+  max-width: 16ch;
+  font-size: clamp(2.1rem, 6.5vw, 3.2rem);
+}
+
+.day-peek .day-peek__text p {
+  max-width: 48ch;
+  font-size: 1.08rem;
+  line-height: 1.55;
+}
+
+.day-peek .day-peek__note {
+  font-size: 0.95rem;
+  color: var(--soft);
+}
+
+.day-peek__go {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1rem;
+}
+
+.day-peek__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  color: var(--fg);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.day-peek__time {
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+/* Seven moments down a little line, each dot in its chapter's colour. */
+.day-peek__line {
+  position: relative;
+  display: grid;
+  gap: 0.15rem;
+  margin: 0;
+  padding: 0 0 0 1.9rem;
+  list-style: none;
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+.day-peek__line::before {
+  content: "";
+  position: absolute;
+  top: 0.9rem;
+  bottom: 0.9rem;
+  left: 0.5rem;
+  border-left: 1.5px dashed color-mix(in srgb, var(--fg) 40%, transparent);
+}
+
+.day-peek__line li {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding-block: 0.32rem;
+}
+
+.day-peek__line li::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -1.78rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 1.5px solid color-mix(in srgb, var(--fg) 55%, transparent);
+  border-radius: 50%;
+  background: var(--dot);
+  translate: 0 -50%;
+}
+
+.day-peek__at {
+  flex: none;
+  min-width: 4.6rem;
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 /* ---- Three feelings ----------------------------------------------------------------- */
@@ -138,6 +601,15 @@
   justify-items: center;
   gap: 1.25rem;
   width: min(66rem, 100%);
+}
+
+.feelings__title {
+  font-size: clamp(2.1rem, 6.5vw, 3.2rem);
+}
+
+.feelings .home__label {
+  margin-top: -0.6rem;
+  margin-bottom: 0.25rem;
 }
 
 .feelings__cards {
@@ -551,16 +1023,46 @@
   }
 }
 
+/* Two columns: the message on the left, the drawing on the right, both in
+   the first screen. */
+@media (min-width: 60rem) {
+  .home {
+    padding-top: calc(var(--bar-h) + env(safe-area-inset-top, 0px) + 2rem);
+  }
+
+  .home__hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
+    align-items: center;
+    column-gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .mind {
+    width: 100%;
+  }
+
+  .day-peek {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: center;
+    column-gap: 4rem;
+  }
+}
+
 @media (min-width: 64rem) {
   .find {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-/* High contrast mode: borders stay, the drawings use the text colour. */
+/* High contrast mode: borders stay, the card drawings use the text colour.
+   The desk scene is all colour, so it steps aside (as the story's opening
+   window does), and its switch with it. */
 @media (forced-colors: active) {
   .art-cloud,
   .art-stack rect {
     fill: Canvas;
+  }
+
+  .mind {
+    display: none;
   }
 }

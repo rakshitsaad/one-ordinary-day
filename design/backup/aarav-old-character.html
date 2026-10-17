@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Backup: old Aarav character (flat SVG)</title>
+<!--
+  BACKUP of the flat, hand-drawn Aarav from the intro's desk scene
+  (index.html, inside <figure class="mind">), replaced on 18 Oct 2026 by the
+  painted cutouts src/assets/images/aarav-worried.* and aarav-calm.*.
+
+  To bring him back:
+    1. In index.html, replace the <g class="mind__aarav"> block (and its
+       comment) with the <g class="mind__person"> block below. Put it AFTER the
+       desk line (<path class="mind__wood" d="M18 320…">), as it was. The chair
+       is the first path in the group, so delete the separate
+       <path class="mind__chair"> that sits before the cutout.
+    2. In src/styles/home.css, replace the "Aarav, painted" rules
+       (.mind__face…) with the CSS below.
+  Open this file in a browser to see him on his own.
+-->
+<style>
+  :root { --bg: #F3E6DA; --fg: #3A2E2A; --accent: #D99A7A; --midday-bg: #E2F0EE; --midday-accent: #3F8D89; --ease-out: cubic-bezier(0.22, 1, 0.36, 1); }
+  body { margin: 2rem; background: var(--bg); }
+  .mind__ink { fill: none; stroke: var(--fg); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .mind__ink--thin { stroke-width: 1.3; }
+  .mind__chair { fill: none; stroke: color-mix(in srgb, var(--fg) 75%, var(--bg)); stroke-width: 3.5; stroke-linecap: round; }
+
+.mind__skin {
+  fill: color-mix(in srgb, color-mix(in srgb, var(--accent) 70%, var(--fg)) 70%, var(--bg));
+}
+
+.mind__shirt {
+  fill: color-mix(in srgb, var(--midday-accent) 22%, var(--midday-bg));
+}
+
+.mind__hair {
+  fill: color-mix(in srgb, var(--fg) 92%, var(--bg));
+}
+
+/* Arms are two strokes on one path: an outline, then the fill on top. */
+.mind__limb-line,
+.mind__limb {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.mind__limb-line {
+  stroke: var(--fg);
+}
+
+.mind__limb--shirt {
+  stroke: color-mix(in srgb, var(--midday-accent) 22%, var(--midday-bg));
+}
+
+.mind__limb--skin {
+  stroke: color-mix(in srgb, color-mix(in srgb, var(--accent) 70%, var(--fg)) 70%, var(--bg));
+}
+
+
+.mind__mouth {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 2;
+  stroke-linecap: round;
+  transition: opacity 0.9s var(--ease-out);
+}
+
+.mind__mouth--smile {
+  opacity: 0;
+}
+
+/* "What people see": he smiles. */
+.mind:has(input[value="outside"]:checked) .mind__mouth--still {
+  opacity: 0;
+}
+
+.mind:has(input[value="outside"]:checked) .mind__mouth--smile {
+  opacity: 1;
+}
+
+.mind__skin,
+.mind__shirt,
+.mind__hair {
+  stroke: var(--fg);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+</style>
+</head>
+<body>
+<svg viewBox="380 140 170 190" width="340" aria-hidden="true">
+              <!-- Aarav: chin on his hand, after school, still in his school shirt. -->
+              <g class="mind__person">
+                <path class="mind__chair" d="M504 250C514 242 532 241 542 247M511 247C510 272 510 296 511 319M537 246C538 272 538 296 537 319M511 276C520 274 529 274 537 276" />
+                <path class="mind__skin" d="M444 222C446 230 446 236 445 242H463C462 234 462 228 464 222Z" />
+                <path class="mind__shirt" d="M446 238C430 241 412 249 403 263C395 277 391 299 390 320H508C508 297 505 272 496 257C488 245 475 239 462 238Z" />
+                <path class="mind__ink mind__ink--thin" d="M440 240C446 247 456 248 462 240M470 262C478 280 484 300 486 318" />
+                <path class="mind__limb-line" d="M472 260C458 284 436 302 412 310" stroke-width="25" />
+                <path class="mind__limb mind__limb--shirt" d="M472 260C458 284 436 302 412 310" stroke-width="21" />
+                <path class="mind__limb-line" d="M412 309C420 288 428 266 436 246" stroke-width="19" />
+                <path class="mind__limb mind__limb--skin" d="M412 309C420 288 428 266 436 246" stroke-width="15" />
+                <path class="mind__skin" d="M428 248C424 238 430 228 440 228C450 228 455 236 453 245C451 251 444 254 437 253C433 253 430 251 428 248Z" />
+                <path class="mind__ink mind__ink--thin" d="M433 236C437 235 441 235 445 237M432 242C436 241 441 241 446 243" />
+                <path class="mind__skin" d="M450 164C468 164 481 178 480 197C479 213 472 224 460 229C452 233 442 234 434 230C428 227 425 222 424 217C423 213 421 210 419 208C417 206 416 203 419 201C421 199 421 196 421 192C421 180 431 165 450 164Z" />
+                <path class="mind__hair" d="M421 188C418 168 434 153 455 155C474 156 487 170 485 191C484 201 480 207 477 211C475 200 471 191 463 187C453 184 441 182 431 176C429 181 425 185 421 188Z" />
+                <path class="mind__ink" d="M460 194C467 192 470 200 467 205C465 208 461 208 459 206" />
+                <path class="mind__ink mind__ink--thin" d="M425 186C428 184 432 184 436 185" />
+                <path class="mind__ink" d="M427 194C429 192.6 432 192.6 434 194" />
+                <path class="mind__mouth mind__mouth--smile" d="M424 215C427 219 432 219.5 436 216" />
+                <path class="mind__mouth mind__mouth--still" d="M424.5 217.5C428 217 432 217 435.5 217.5" />
+              </g>
+</svg>
+</body>
+</html>

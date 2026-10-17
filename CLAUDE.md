@@ -12,7 +12,7 @@ Separate pages, each with its own address (Vite multi-page build; see Tech › P
 
 | URL | Page | Colours | Files |
 |---|---|---|---|
-| `/` | Intro: why the site exists, three feeling cards, two facts, what's here | dawn | index.html, home.css, pages/home.js |
+| `/` | Intro: "Your mind matters, too.", what the site covers, the desk scene, a look at the story, three feeling cards, two facts, where to go | dawn | index.html, home.css, pages/home.js |
 | `/library` | The dashboard: every page as a tile; chips bring the ones that might help to the top | morning | library/, library.css, scripts/library.js |
 | `/story` | "One ordinary day": Aarav's day, 6:40 am to 11:45 pm (scroll-driven sky, day line, colours) | live | story/, pages/story.js |
 | `/breathe` | Take a minute | midday (sea-glass) | breathe/, sections/breathing.js |
@@ -115,7 +115,7 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 
 ## Design rules (from the design review)
 
-- **Centring:** the intro (`/`) and the library (`/library`) are centred on purpose: big, calm, easy to scan. Every other page uses a centred column with left-aligned text inside (centred paragraphs are harder to read).
+- **Centring:** the library (`/library`) is centred on purpose: big, calm, easy to scan. The intro's first screen and its look at the story are left-aligned (message and drawing side by side from 60rem); its cards, numbers and destinations stay centred. Every other page uses a centred column with left-aligned text inside (centred paragraphs are harder to read).
 - **The story's desktop layout (64rem and up) is an editorial 12-column grid**, not a centred column ([sections.css](src/styles/sections.css)); the exercise pages keep their sections' own layouts on the same grid. Each chapter sets `--col` (its text columns), `--note-col` / `--note-row` (where its margin note hangs) and `--note-tilt`, plus its own `--pad`. The reading line moves left and right down the day; keep neighbouring chapters on different columns. The opening (6:40 am) is a full-height cover with the title low and Aarav’s window on the right (see Opening screen). Tools put the text on one side and the tool on the other (`grid-template-rows: auto auto auto 1fr`, so the tall side doesn't spread the text out). Phones stay one column.
 - Sunset and dusk keep `min-height: 92svh` and `padding-block: 14vh` on desktop. Together with the `.interlude`, that keeps text off screen during the colour flip.
 - The myths strip still assumes `.chapter__inner` is centred in the section and the deck spans `1 / -1`. Keep both, or redo the full-bleed calc.
@@ -131,7 +131,7 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 - **Footer** (`.site-footer`, src/partials/footer.html, the same on every page): a short colophon saying what the project is and who it's for, that Aarav is made up and when the numbers were checked, and three links (Library, About this site, Talk to someone; 44px tall). It lines up with the column on phones and tablets; from 64rem it's on the 12-column grid (colophon in columns 1–7, links on the right). On the still pages it stays in their 40rem column. The story's own sign-off ("lights off. asleep before midnight, this time.") closes the story itself (`.story-end`). Never a one-line "awareness project" tagline. If the check date on /talk changes, update the footer's month too.
 - **Copy tells to avoid** (all removed in the review):
   - Headings with an italic accent tail.
-  - Eyebrow kickers on non-story sections (`.time` is only for real story times).
+  - Eyebrow kickers on non-story sections (`.time` is only for real story times). The one exception is the intro's "Mental health & emotional wellbeing" label, there on purpose so the subject is clear at a glance.
   - The `X isn't Y; it's Z` construction.
   - Stock phrases: "you're not alone", "highlight reel", "loops can be broken", "right here, right now", "you deserve to be heard", "that's it, that's the whole thing".
   - Narration that explains the lesson after a scene ("that one honest line is where the day starts to turn"). Show the next small moment instead, and let margin notes do the friend-talking.
@@ -145,7 +145,7 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 - Pure white (`#FFF`) or pure black (`#000`)
 - Generic stock illustrations
 - Bootstrap or default Tailwind looks
-- Everything centered (use left-aligned, editorial layouts; the intro and the library are the deliberate exceptions)
+- Everything centered (use left-aligned, editorial layouts; the library and the intro's card sections are the deliberate exceptions)
 - The same rounded card on every block
 
 ## Always
@@ -159,24 +159,31 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 - **Help is always one tap away** (src/partials/bar.html; shell.css `.site-header`, `.talk`, `.skip-link`):
   - **"Skip to help"** is the very first focusable item on every page (`.skip-link`, off screen until focused, then a solid 44px pill at the top left). It goes to `/talk#right-now`, or `#right-now` on /talk.
   - **The top bar**, fixed on every page (`--bar-h`: 56px, 64px from 48rem, plus the top safe-area inset), solid `--ui-bg` with a 14px fade below: the site name (Instrument Serif, home to the intro page `/`; its name is "One Ordinary Day, home"), "Library" (to /library), and **"Talk to someone"** (`.talk`) at the right: solid `--fg` on `--bg`, 44px tall, never behind a menu, the only help button. It goes to /talk; on /talk itself it's left out (the page is the help, and "Skip to help" still jumps to `#right-now`). On /story it reads `--ui-*` colours, so it holds 6.89:1 or better at every scroll position (sunset→dusk flip included). It sits at the top, so it never covers text, the garden, a writing box or the keyboard. No pulse, bounce or attention animation, ever. All three fit a 360px phone (tighter type and gaps on phones; a touch smaller again under 350px, measured at 320px).
-  - Help links besides the bar: the night chapter, the "Not really" reply and the safety line in Untangle a thought, the intro's "I need help now", the library's "Talk to someone" tile, the goodnight in A note for tonight, "Next you could try…" links, and the footer.
+  - Help links besides the bar: the night chapter, the "Not really" reply and the safety line in Untangle a thought, the intro's "Talk to someone", the library's "Talk to someone" tile, the goodnight in A note for tonight, "Next you could try…" links, and the footer.
   - A pinned note (A note for tonight) may sit in the bar just before "Talk to someone" from 48rem; it never covers or replaces the help link.
 
 ## Sections and features
 
 ### Intro page, / ([index.html](index.html), [home.css](src/styles/home.css))
 
-- Centred, with big, calm type, in the dawn palette. It replaced an earlier in-page intro (removed).
-  - "One Ordinary Day" (Caveat), then the h1: **"Anxiety. Depression. Stress."** (huge, one word per line, each with a hand-drawn underline) and "More young people carry them than you’d think."
-  - "This is a short, interactive story about what teenagers often carry quietly, with small things that can help, and a way to reach someone when it’s too much."
-  - "Explore the library" (pen loop + highlighter, /library) and "I need help now" (pen loop, /talk), then "No sign-up. Nothing you write leaves your device." and "This site talks about stress, anxiety and feeling low. Go at your own pace."
-- **Three feeling cards** (`<details class="feeling">`, so they open with no JavaScript, from the keyboard and for screen readers). Each drawing shows the feeling without words and settles on hover, keyboard focus or when open; loops are slow (2.8–7s) and stop with reduced motion:
+- Dawn palette. A visitor should know within about three seconds that this is a mental health site. **The first screen says four things, in this order:**
+  1. **What it's about:** a small label, "Mental health & emotional wellbeing" (uppercase via CSS, 0.8rem, bold, letter-spaced, with a little hand-drawn sprout in `--accent-text`; 0.74rem under 25rem so it stays on one line at 360px). It's the one deliberate eyebrow on the site, asked for so the subject is never hidden.
+  2. **That you're understood:** the h1, "Your mind matters, too." (Instrument Serif, up to 5.6rem, two lines, a hand-drawn underline on "matters"), then "A little space to understand what you’re feeling, navigate stress and anxiety, learn about depression, and find small things that might help."
+  3. **What it covers:** three quiet labels, Stress, Anxiety and Depression (a `<ul aria-label="What this site covers">`; thin outline and an accent dot; not links or buttons), then "Understand your feelings. Take a breath. Find support." in Caveat.
+  4. **What to do next:** "Find what might help →" (/library: pen loop + highlighter, bigger, 56px, 9.6:1 on its highlighter) and "Talk to someone" (/talk: plain pen loop; it's in the bar too), then "Free. No sign-up. Nothing you write leaves your device."
+- **Layout:** from 60rem two columns, the message left and the drawing right; at 1280×800 and 1024×768 everything, small print included, is above the fold. Below 60rem it stacks with the drawing after the message (label and headline first); at 360×640 both buttons are on the first screen. The hero and the story look are left-aligned on the 74rem width; the cards, numbers and destinations stay centred.
+- **The same moment, two ways** (`.mind`, a `<figure>` in the hero's right column): Aarav at his desk after school, drawn in SVG from palette mixes in the site's line style. Reuses the story's window (grill, rooftops, water tank, low sun), books, a cutting chai (with slow steam), his phone and "all good!" in a speech bubble. Aarav himself is a painted cutout (curly brown hair, grey sweatshirt, chin on his hand, looking at the window): two SVG `<image>`s in the same viewBox (x 357, y 145, 169.3×175.5), so he scales with the scene, his arms ending at the desk line, which is drawn over the seam. The drawn chair stays behind him. Files: `src/assets/images/aarav-{worried,calm}.webp` (38–42 KB, 520×539) with PNG fallbacks (pages/home.js swaps to PNG if WebP fails), cut from `reference/aarav-{worried,calm}-full.png`. Both share the worried picture's body and only the head differs, so the fade never moves anything. The old flat SVG character is in [design/backup/aarav-old-character.html](design/backup/aarav-old-character.html).
+  - Two radio buttons under it (a `<fieldset>`, hand-drawn rings, 44px rows): **"What people see"** (the ordinary scene, the thoughts cleared; his calm, small-smile face fades in over 1.5s) and **"What someone might be feeling"** (the default, with his worried face, so "all good!" contrasts with his look: a scribbled tangle of thoughts above him in `--accent-text`, loosening into waves and then a calm line that drifts out of the window, with "rank 214?", "4 hours of sleep" and "so far behind…" in Caveat). CSS only (`:has()`), so it works with no JavaScript, from the keyboard (arrow keys) and on touch; without `:has()` the default view simply shows. Layers cross-fade (0.9s); the thought line draws itself in (2.6s) each time it appears, then the tangle breathes on a 9s loop.
+  - The drawing is `aria-hidden`; a visually hidden figcaption describes the view that's showing. Hidden in forced-colours mode (like the story's window). Reduced motion: no drawing-in or loops, instant swaps.
+  - The thought line's path is generated (a parametric scribble, smoothed): regenerate it rather than hand-editing the `d`.
+- **"Spend one ordinary day with Aarav."** (`.day-peek`): two lines about him, "It touches on exam pressure, loneliness and feeling low. Go at your own pace.", "Read his day →" (/story, about 10 minutes), and the seven chapters down a small dashed line, each dot in that chapter's background colour (an `<ol aria-label="Seven moments in his day">`). Two columns from 60rem.
+- **"Sometimes, it can feel like…"** then **three feeling cards** (`<details class="feeling">`, each hinting "a few ways it shows up", so they open with no JavaScript, from the keyboard and for screen readers). Each drawing shows the feeling without words and settles on hover, keyboard focus or when open; loops are slow (2.8–7s) and stop with reduced motion:
   - Anxiety: tangled scribbles that buzz, then untangle into three calm lines. Opens to "It can feel like…" (four teenage lines), "Lots of people feel this, especially around exams. It’s okay to ask for help." and "Try a slow breath" (/breathe).
   - Depression: a soft grey cloud that sits heavy; a little light breaks through. → "How to start the conversation" (/start-the-conversation).
   - Stress: books piling up and wobbling, then settling into a neat stack. → "Untangle a thought" (/thoughts).
   - Never diagnostic: "it can feel like", never "you have…" or "symptoms".
 - **Two facts** (checked 18 Oct 2026; see Story and copy › sources): WHO, 1 in 7 aged 10–19 worldwide; UNICEF India, 1 in 7 aged 15–24 often feel depressed or have little interest in doing things.
-- **"What you’ll find here"**: six links with hand-drawn icons (the story, calming exercises, myths, how to talk to someone, free helplines, a note for tonight), and "Or see everything in the library".
+- **"Where would you like to go from here?"**: six links with hand-drawn icons (the story, calming exercises, myths, how to talk to someone, free helplines, a note for tonight), and "Or see everything in the library".
 - A tiny inline script in its `<head>` forwards links from the old one-page site: `/#take-a-minute` → /breathe, `#five-senses` → /ground, `#myths`, `#tonight`, `#about`, `#help` → /story#help, and chapter hashes (`#sunset`…) → /story#….
 
 ### Library, /library ([library/index.html](library/index.html), [library.css](src/styles/library.css), [library.js](src/scripts/library.js))
@@ -387,8 +394,8 @@ Don't add colours outside this palette except tints made by mixing these (for ex
   - Story page before the launch pass: 92 / 96 / 96 / 91.
   - The one accessibility flag is `color-contrast` on headings and paragraphs further down the page. Lighthouse catches them in their pre-reveal state (20% opacity, offscreen, see Text reveals). Readers never see them like that.
   - To re-run: `npx lighthouse http://localhost:4173/ --chrome-flags="--headless=new"` (mobile is the default).
-- **Images:** the site uses none, apart from the link-preview image and icons in `public/`.
-- **Head tags** (every page): a specific `<title>`, a meta description of 160 characters or fewer (the intro's uses the one-line summary: "a short, interactive story about what teenagers often carry quietly"), `theme-color` (the page's background), and icons: favicon.svg (the old sky dial's sun on its dotted arc over a hand-drawn horizon, dawn palette), favicon.ico (16 and 32px inside) and apple-touch-icon.png (180px, opaque). Plus Open Graph and `twitter:card` tags and `public/robots.txt`.
+- **Images:** only Aarav's two cutouts in the intro's desk scene (`src/assets/images`), plus the link-preview image and icons in `public/`.
+- **Head tags** (every page): a specific `<title>`, a meta description of 160 characters or fewer (the intro's: "A gentle space for young people in India to understand stress, anxiety and depression, take a breath and find support. Free and private, no sign-up."), `theme-color` (the page's background), and icons: favicon.svg (the old sky dial's sun on its dotted arc over a hand-drawn horizon, dawn palette), favicon.ico (16 and 32px inside) and apple-touch-icon.png (180px, opaque). Plus Open Graph and `twitter:card` tags and `public/robots.txt`.
   - The preview image is `public/og-image.jpg`: 1200×630, JPEG q85 with 4:4:4 chroma, about 50 KB. Its source is [design/og-image.html](design/og-image.html), with regeneration steps in the file.
   - **og:image, og:url and canonical need full addresses.** vite.config.js fills `%SITE_URL%` in at build time from `SITE_URL` (in `.env.production`), or on Vercel from `VERCEL_PROJECT_PRODUCTION_URL`. That's the production domain, so it follows a custom domain automatically. With neither (a local build), the build warns, drops canonical and og:url, and leaves the image path relative.
 
@@ -408,7 +415,7 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 ### Project structure
 
 ```
-index.html              / : the intro (feeling cards, facts, what's here)
+index.html              / : the intro (first screen + desk scene, story look, feeling cards, facts, where to go)
 library/index.html      /library: the dashboard
 story/index.html        /story: Aarav's day (chapters, facts, interlude, end)
 breathe/ ground/ thoughts/ myths/ tonight/   one page each, with its section
