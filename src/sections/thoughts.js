@@ -1,5 +1,4 @@
-import { prefersReducedMotion } from '../scripts/motion.js';
-import { scrollToY } from '../scripts/smooth-scroll.js';
+import { prefersReducedMotion, scrollGently as scrollToY } from '../scripts/motion.js';
 
 // 4:50 pm: Aarav's anxious thoughts, made personal. "Which of these feels
 // closest to something you've thought?" Picking one draws a circle round it and

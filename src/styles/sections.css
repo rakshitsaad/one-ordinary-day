@@ -172,7 +172,6 @@ a.note {
     --note-tilt: 2deg;
   }
 
-  /* The thoughts get more room; the note sits beside the crowd. */
   #afternoon {
     --pad: 14vh 18vh;
   }
@@ -180,11 +179,19 @@ a.note {
   #afternoon .chapter__inner {
     --col: 1 / span 7;
     --note-col: 10 / span 3;
-    --note-row: 5;
+    --note-row: 3 / span 2;
   }
 
-  #afternoon .thoughts {
-    grid-column: 1 / span 9;
+  /* The link onward to /thoughts stays in the reading line. */
+  #afternoon .note--link {
+    grid-column: var(--col);
+    grid-row: auto;
+    rotate: -1deg;
+  }
+
+  /* /thoughts: the crowd gets the room. */
+  .thoughts-page .chapter__inner {
+    --col: 2 / span 9;
   }
 
   #sunset,
@@ -506,162 +513,37 @@ a.note {
   color: var(--fg);
 }
 
-/* ---- The top bar: help first --------------------------------------------------
-   "Talk to someone" lives in a slim bar fixed to the top of every page, the
-   first thing after "Skip to help". It used to float in the bottom-left corner,
-   where it sat over story text and next to the on-screen keyboard; up here it
-   has its own band and covers nothing. On the story page the day line shares
-   the bar on phones and hangs from its right end from 48rem. The bar reads the
-   --ui-* colours (base.css), which stay readable through the sunset→dusk flip. */
-:root {
-  --bar-h: 56px;
-}
+/* The top bar, "Skip to help", the footer and the page frame live in shell.css. */
 
-.site-header {
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  height: calc(var(--bar-h) + env(safe-area-inset-top, 0px));
-  padding: env(safe-area-inset-top, 0px) var(--gutter-right) 0 var(--gutter-left);
-  background: var(--ui-bg);
-}
-
-/* The bar fades into the page below it instead of ending in a hard line. */
-.site-header::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: 0;
-  right: 0;
-  top: 100%;
-  height: 14px;
-  background: linear-gradient(var(--ui-bg), color-mix(in srgb, var(--ui-bg) 0%, transparent));
-  pointer-events: none;
-}
-
-/* Solid and high-contrast on purpose: the one thing you can always find. No
-   pulsing or attention-grabbing motion; it's just always there. */
-.talk {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0.55rem 1.05rem;
-  border-radius: 999px;
-  background: var(--fg);
-  color: var(--bg);
-  font-size: 0.9rem;
-  font-weight: 600;
-  white-space: nowrap;
-  text-decoration: none;
-}
-
-.talk:focus-visible {
-  outline-offset: 3px;
-}
-
-/* "Skip to help": the very first Tab stop, out of sight until it's focused. */
-.skip-link {
-  position: fixed;
-  z-index: 30;
-  top: calc(6px + env(safe-area-inset-top, 0px));
-  left: var(--gutter-left);
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0.5rem 1.1rem;
-  border-radius: 8px;
-  background: var(--ui-fg);
-  color: var(--ui-bg);
-  font-weight: 600;
-  text-decoration: none;
-  translate: 0 calc(-100% - 12px);
-}
-
-.skip-link:focus {
-  translate: none;
-  outline: 2px solid var(--ui-accent-text);
-  outline-offset: 3px;
-}
-
-@media (min-width: 48rem) {
-  :root {
-    --bar-h: 64px;
-  }
-}
-
-/* Footer: a sign-off in the margin hand, then a short colophon. Lines up with
-   the chapter column on phones and tablets; on desktop it sits on the same
-   12-column grid, starting at the left edge. The bottom padding clears the
-   Talk and garden pills. */
-.site-footer {
+/* ---- The end of the story --------------------------------------------------------
+   The sign-off in the margin hand, then where to go next. Sits in the night
+   colours after 11:45 pm, like the rest of the end of the day. */
+.story-end {
   position: relative;
   z-index: 2;
-  padding-block: 2rem 7rem;
-  padding-left: var(--gutter-left);
-  padding-right: var(--gutter-right);
-  font-size: 0.95rem;
-  color: var(--soft);
-}
-
-.site-footer__inner {
   display: grid;
-  gap: 1.1rem;
-  max-width: 40rem;
-  margin-inline: auto;
-  padding-top: 2rem;
-  border-top: 1px solid color-mix(in srgb, var(--fg) 22%, transparent);
+  gap: 1.25rem;
+  width: min(40rem, calc(100% - var(--gutter-left) - var(--gutter-right)));
+  margin: 0 auto;
+  padding-block: 4rem 2rem;
 }
 
-.site-footer__text {
-  display: grid;
-  gap: 0.8rem;
-}
-
-.site-footer p {
-  max-width: 58ch;
-}
-
-.site-footer__sign {
+.story-end__sign {
   justify-self: start;
   font-family: var(--font-hand);
-  font-size: 1.7rem;
+  font-size: clamp(1.8rem, 6vw, 2.4rem);
   line-height: 1.2;
   color: var(--fg);
   rotate: -1.5deg;
 }
 
-.site-footer a {
-  color: var(--fg);
-  font-weight: 600;
-}
-
-/* "About this site" stands on its own line, so it gets a full-size target. */
-.site-footer__about {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
+.story-end .page-next {
+  width: 100%;
+  margin: 0;
 }
 
 @media (min-width: 64rem) {
-  .site-footer__inner {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: 2rem;
-    max-width: 72rem;
-    padding-top: 3rem;
-  }
-
-  .site-footer__sign {
-    grid-column: 1 / span 4;
-    font-size: 2rem;
-  }
-
-  .site-footer__text {
-    grid-column: 6 / span 6;
+  .story-end {
+    width: min(72rem, calc(100% - var(--gutter-left) - var(--gutter-right)));
   }
 }

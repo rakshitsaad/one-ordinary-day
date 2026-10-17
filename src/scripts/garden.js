@@ -96,7 +96,9 @@ function messageFor(plants) {
 
 // --- The widget ------------------------------------------------------------
 
-export function initGarden(timeline, mount) {
+// On the library, the story and the exercise pages. On the story, pass its
+// timeline so reading it can grow a plant too.
+export function initGarden(mount, { timeline = null } = {}) {
   let plants = store.read();
 
   const garden = document.createElement('div');
@@ -228,7 +230,7 @@ export function initGarden(timeline, mount) {
 
   // --- What grows a plant ---------------------------------------------------
   onCare((kind) => plant(kind));
-  watchStory(timeline, () => {
+  if (timeline) watchStory(timeline, () => {
     // Reading the story grows at most one plant a day.
     if (!plants.some((p) => p.k === 'story' && sameDay(p.t, Date.now()))) plant('story');
   });

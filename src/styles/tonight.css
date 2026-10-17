@@ -358,9 +358,9 @@
 }
 
 /* ---- Kept on screen ------------------------------------------------------------
-   The picked note, pinned while the reader looks around. tonight.js puts it in
-   the top bar (.site-header). From 48rem it sits in the bar itself, beside
-   "Talk to someone": that strip is always kept clear, so the note covers
+   The picked note, pinned while the reader stays on /tonight. tonight.js puts
+   it in the top bar (.site-header). From 48rem it sits in the bar itself, just
+   before "Talk to someone": that strip is always kept clear, so the note covers
    nothing. On phones the bar is full (the help link and the day line's dots),
    so it's a small note in the bottom-left corner, opposite the garden, which
    tucks away while a text box has focus (never over the box or the keyboard).
@@ -463,8 +463,9 @@
     bottom: auto;
     flex: 0 1 auto;
     min-width: 0;
-    /* Clear of the clock pill at the bar's right end. */
-    max-width: min(34rem, calc(100% - 15rem));
+    margin-left: auto;
+    /* Room for the site name, "Library" and "Talk to someone". */
+    max-width: min(34rem, calc(100% - 27rem));
     padding: 0.35rem 2.7rem 0.35rem 0.9rem;
     rotate: -0.8deg;
   }
@@ -486,6 +487,10 @@
   .pinned-note__close {
     top: 50%;
     translate: 0 -50%;
+  }
+
+  .pinned-note + .talk {
+    margin-left: 0;
   }
 }
 

@@ -1,0 +1,286 @@
+/*
+  The frame every page shares: the top bar (src/partials/bar.html), "Skip to
+  help", the footer (src/partials/footer.html) and, for every page but the
+  story, a centred column with "Back to library" and "Next you could try…".
+*/
+
+/* ---- The top bar: help first --------------------------------------------------
+   Fixed to the top of every page: the site name (home, to the intro page),
+   "Library", and "Talk to someone", the first thing after "Skip to help". All
+   three fit a 360px phone; on narrower screens they get a little smaller. It
+   reads the --ui-* colours (base.css): the page's own colours, and on the story
+   the ones that stay readable through the sunset→dusk flip. On the story the
+   day line joins it: a strip just under it on phones, the clock and rail at
+   the right from 48rem (day-line.css). */
+:root {
+  --bar-h: 56px;
+}
+
+.site-header {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: calc(var(--bar-h) + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 0px) var(--gutter-right) 0 var(--gutter-left);
+  background: var(--ui-bg);
+  view-transition-name: site-header; /* stays put while the page cross-fades */
+}
+
+/* The bar fades into the page below it instead of ending in a hard line. */
+.site-header::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 14px;
+  background: linear-gradient(var(--ui-bg), color-mix(in srgb, var(--ui-bg) 0%, transparent));
+  pointer-events: none;
+}
+
+.brand {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ui-fg);
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.bar-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 0.3rem;
+  color: var(--ui-fg);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 0.22em;
+}
+
+.bar-link[aria-current="page"] {
+  text-decoration-color: currentColor;
+}
+
+/* Solid and high-contrast on purpose: the one thing you can always find. No
+   pulsing or attention-grabbing motion; it's just always there. */
+.talk {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-left: auto;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.talk:focus-visible {
+  outline-offset: 3px;
+}
+
+/* "Skip to help": the very first Tab stop, out of sight until it's focused. */
+.skip-link {
+  position: fixed;
+  z-index: 30;
+  top: calc(6px + env(safe-area-inset-top, 0px));
+  left: var(--gutter-left);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 1.1rem;
+  border-radius: 8px;
+  background: var(--ui-fg);
+  color: var(--ui-bg);
+  font-weight: 600;
+  text-decoration: none;
+  translate: 0 calc(-100% - 12px);
+}
+
+.skip-link:focus {
+  translate: none;
+  outline: 2px solid var(--ui-accent-text);
+  outline-offset: 3px;
+}
+
+/* Phones narrower than 350px: everything a touch smaller, so all three fit. */
+@media (max-width: 21.85rem) {
+  .site-header {
+    gap: 0.375rem;
+  }
+
+  .brand {
+    font-size: 1rem;
+  }
+
+  .bar-link {
+    font-size: 0.85rem;
+  }
+
+  .talk {
+    padding-inline: 0.75rem;
+    font-size: 0.84rem;
+  }
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --bar-h: 64px;
+  }
+
+  .site-header {
+    gap: 0.75rem;
+  }
+
+  .brand {
+    font-size: 1.45rem;
+  }
+
+  .bar-link {
+    font-size: 0.95rem;
+  }
+
+  .talk {
+    padding-inline: 1.05rem;
+  }
+}
+
+/* ---- A page's own column (every page but the story) ------------------------------
+   Centred, with a comfortable line length; text inside stays left-aligned,
+   which is easier to read than centred paragraphs. The intro and the library
+   centre everything (home.css, library.css). */
+.site-main {
+  position: relative;
+  z-index: 2;
+  padding-top: calc(var(--bar-h) + env(safe-area-inset-top, 0px) + 1.25rem);
+}
+
+.site-main__back {
+  width: min(72rem, calc(100% - var(--gutter-left) - var(--gutter-right)));
+  margin-inline: auto;
+}
+
+.site-main__back a,
+.page-next a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* Section pages (breathe, ground, myths, tonight, thoughts): the section keeps
+   its own layout, without the story's full-screen height. */
+.site-main .chapter {
+  min-height: 0;
+  padding-block: 1.5rem 3rem;
+}
+
+/* "Next you could try…" at the bottom of a page. */
+.page-next {
+  display: grid;
+  justify-items: start;
+  gap: 0.25rem;
+  width: min(40rem, calc(100% - var(--gutter-left) - var(--gutter-right)));
+  margin: 0 auto 1rem;
+  padding: 1.5rem 0 0;
+  border-top: 1px dashed color-mix(in srgb, var(--fg) 30%, transparent);
+}
+
+.page-next__label {
+  font-family: var(--font-hand);
+  font-size: 1.4rem;
+  line-height: 1.1;
+  color: var(--fg);
+}
+
+.page-next a {
+  font-size: 1.05rem;
+}
+
+@media (min-width: 64rem) {
+  .site-main .chapter {
+    padding-block: 2rem 4rem;
+  }
+
+  .page-next {
+    width: min(72rem, calc(100% - var(--gutter-left) - var(--gutter-right)));
+  }
+}
+
+/* ---- Footer -----------------------------------------------------------------------
+   A short colophon and the site's three links, the same on every page. The
+   bottom padding clears the garden. */
+.site-footer {
+  position: relative;
+  z-index: 2;
+  padding-block: 2rem 7rem;
+  padding-left: var(--gutter-left);
+  padding-right: var(--gutter-right);
+  font-size: 0.95rem;
+  color: var(--soft);
+}
+
+.site-footer__inner {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 40rem;
+  margin-inline: auto;
+  padding-top: 2rem;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 22%, transparent);
+}
+
+.site-footer p {
+  max-width: 58ch;
+}
+
+.site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.25rem;
+}
+
+.site-footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--fg);
+  font-weight: 600;
+}
+
+@media (min-width: 64rem) {
+  .site-footer__inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 2rem;
+    max-width: 72rem;
+    padding-top: 2.5rem;
+  }
+
+  .site-footer__text {
+    grid-column: 1 / span 7;
+  }
+
+  .site-footer__links {
+    grid-column: 9 / -1;
+    align-content: start;
+    justify-content: flex-end;
+  }
+}

@@ -1,0 +1,10 @@
+    <!-- Help first: "Skip to help" is the first Tab stop, and "Talk to someone" is
+         in the bar on every page but /talk itself (src/partials/bar.html; styles
+         in shell.css). The site name goes home, to the intro page; "Library" goes
+         to the library, on phones too. -->
+    <a class="skip-link" href="{{skip}}">Skip to help</a>
+    <header class="site-header {{class}}">
+      <a class="brand" href="/"><span class="brand__name">One Ordinary Day</span><span class="visually-hidden">, home</span></a>
+      <a class="bar-link" href="/library">Library</a>
+      {{talkLink}}
+    </header>

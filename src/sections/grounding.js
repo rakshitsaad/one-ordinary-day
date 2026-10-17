@@ -1,4 +1,4 @@
-import { prefersReducedMotion } from '../scripts/smooth-scroll.js';
+import { prefersReducedMotion } from '../scripts/motion.js';
 import { tookCare } from '../scripts/care.js';
 
 // 5-4-3-2-1 grounding as a notebook. Pages turn around the left edge like a

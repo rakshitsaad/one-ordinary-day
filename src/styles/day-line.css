@@ -1,7 +1,8 @@
 /*
-  The day line (src/scripts/day-line.js): the clock and the seven chapter times.
-  Phones: seven dots in the top bar, beside "Talk to someone". 48rem and up: the
-  clock at the right end of the top bar, with a slim rail hanging below it.
+  The day line (src/scripts/day-line.js), on /story only: the clock and the
+  seven chapter times. Phones: seven dots in a slim strip just under the top bar
+  (the bar has the site name and "Talk to someone"). 48rem and up: the clock at
+  the right end of the top bar, with a slim rail hanging below it.
 
   It reads the --ui-* colours and sits on --ui-bg (the bar's, or its own on the
   rail), so it stays readable through the sunset→dusk flip like the other fixed
@@ -10,18 +11,31 @@
   dotted line. --progress (0–1, set by JS) places the sun and the travelled line.
 */
 
-/* Phones: the dots share the top bar with "Talk to someone" (sections.css).
-   The clock is left to screen readers here: the bar has room for the help link
-   and seven tappable dots, not a clock as well, and each chapter shows its time. */
+/* Phones: a strip just under the bar, on the bar's colour. The clock is left to
+   screen readers here (each chapter shows its own time). --line-h tells the
+   page how much room the strip takes. */
+:root {
+  --line-h: 40px;
+  scroll-padding-top: calc(var(--bar-h) + var(--line-h) + 1.5rem);
+}
+
 .day-line {
   --dot: 9px;
-  position: relative;
-  flex: 1;
-  min-width: 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
-  height: 44px;
+  height: var(--line-h);
+  padding: 0 calc(var(--gutter-right) - 0.5rem) 0 calc(var(--gutter-left) - 0.5rem);
+  background: var(--ui-bg);
   color: var(--ui-fg);
+}
+
+/* The bar's soft fade moves below the strip. */
+.site-header--story::after {
+  top: calc(100% + var(--line-h));
 }
 
 .day-line__clock {
@@ -186,9 +200,20 @@
 /* ---- 48rem and up: a short rail on the right, under the clock --------------- */
 
 @media (min-width: 48rem) {
-  /* Room on the right so text never runs under the rail. */
+  /* Room on the right so text never runs under the rail, and no strip. */
   :root {
     --gutter-right: max(3.5rem, env(safe-area-inset-right, 0px));
+    --line-h: 0px;
+    scroll-padding-top: 5rem;
+  }
+
+  .site-header--story::after {
+    top: 100%;
+  }
+
+  /* "Talk to someone" stays clear of the clock pill at the bar's right end. */
+  .site-header--story {
+    padding-right: calc(9rem + env(safe-area-inset-right, 0px));
   }
 
   /* The clock sits at the right end of the top bar; the rail hangs below it in
@@ -197,12 +222,15 @@
     position: fixed;
     z-index: 10;
     top: calc(10px + env(safe-area-inset-top, 0px));
+    left: auto;
     right: calc(12px + env(safe-area-inset-right, 0px));
     flex: none;
     flex-direction: column;
     align-items: flex-end;
     gap: 0.6rem;
     height: auto;
+    padding: 0;
+    background: none;
   }
 
   /* The clock keeps the old dial's pill. */

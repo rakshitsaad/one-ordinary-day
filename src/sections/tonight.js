@@ -1,5 +1,4 @@
-import { prefersReducedMotion } from '../scripts/motion.js';
-import { scrollToY } from '../scripts/smooth-scroll.js';
+import { prefersReducedMotion, scrollGently as scrollToY } from '../scripts/motion.js';
 import { copyText } from '../scripts/copy.js';
 
 // "A note for tonight" (#tonight): the quiet end of the day. The reader picks
@@ -327,9 +326,11 @@ export function initTonight(desk) {
     close.setAttribute('aria-label', 'Take the note off the screen');
     close.innerHTML = CROSS;
     el.append(text, close);
-    // In the top bar (see tonight.css): beside "Talk to someone" on wider
+    // In the top bar (see tonight.css): just before "Talk to someone" on wider
     // screens, the bottom-left corner on phones.
-    (document.querySelector('.site-header') ?? document.body).append(el);
+    const header = document.querySelector('.site-header');
+    if (header) header.insertBefore(el, header.querySelector('.talk'));
+    else document.body.append(el);
 
     pinned = { el, text: chosen.words.textContent };
     root.style.setProperty('--pinned-h', `${Math.ceil(el.getBoundingClientRect().height)}px`);

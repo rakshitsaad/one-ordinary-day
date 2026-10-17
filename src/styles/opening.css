@@ -16,7 +16,7 @@
 */
 
 .opening {
-  --window-top: calc(var(--bar-h) + 0.85rem + env(safe-area-inset-top, 0px)); /* below the top bar */
+  --window-top: calc(var(--bar-h) + var(--line-h, 0px) + 0.85rem + env(safe-area-inset-top, 0px)); /* below the top bar */
   --window-w: min(40vw, 15rem);
   position: relative;
   align-items: flex-end;

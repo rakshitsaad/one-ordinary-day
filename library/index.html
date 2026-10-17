@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en" data-palette="morning">
+  <head>
+    <!-- include:head -->
+    <title>Library · One Ordinary Day</title>
+    <meta name="description" content="Every part of One Ordinary Day in one place: the story, breathing, grounding, untangling a thought, myths, how to talk to someone and free helplines." />
+    <meta name="theme-color" content="#EDF2E9" />
+    <link rel="canonical" href="%SITE_URL%/library" />
+    <meta property="og:title" content="One Ordinary Day · the library" />
+    <meta property="og:description" content="Every part of One Ordinary Day in one place: the story, breathing, grounding, untangling a thought, myths, how to talk to someone and free helplines." />
+    <meta property="og:url" content="%SITE_URL%/library" />
+  </head>
+  <body>
+    <!-- include:bar -->
+
+    <!-- The library (src/styles/library.css, src/scripts/library.js): every page,
+         one tap away. Without JS the chips stay hidden and every tile shows. The
+         chips only highlight; nothing is hidden, and nothing is recorded.
+         data-for lists the chips a tile answers to. -->
+    <main id="main" class="site-main library" data-library>
+      <header class="library__head">
+        <h1 class="library__title">Where would you like to go?</h1>
+        <p class="library__lead">Everything on this site, one tap away. Start anywhere, and leave whenever you like.</p>
+      </header>
+
+      <div class="chips" role="group" aria-label="Show what might help" hidden>
+        <button class="chip" type="button" aria-pressed="false" data-filter="anxious">I feel anxious</button>
+        <button class="chip" type="button" aria-pressed="false" data-filter="low">I feel low</button>
+        <button class="chip" type="button" aria-pressed="false" data-filter="stressed">I feel stressed</button>
+        <button class="chip" type="button" aria-pressed="false" data-filter="friend">I want to help a friend</button>
+        <button class="chip" type="button" aria-pressed="true" data-filter="all">Show everything</button>
+      </div>
+      <p class="visually-hidden" role="status" data-library-status></p>
+
+      <ul class="tiles">
+        <li class="tile-slot tile-slot--story" data-for="low friend">
+          <a class="tile" href="/story">
+            <svg class="tile__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M3 19.5C9 18.8 18 19.9 25 19.2" /><path d="M8.6 19.2C8.8 15.9 11.2 13.6 14.2 13.6C17.2 13.6 19.5 16 19.6 19.1" /><path d="M14.1 6.6V9.6M7.4 9.3L9.3 11.3M20.9 9.2L19 11.2" /></svg>
+            <span class="tile__name">One ordinary day</span>
+            <span class="tile__line">Spend a school day with Aarav, 17, from his third snooze to lights out. Scroll and the light changes with the hours.</span>
+            <span class="tile__time">about 10 min</span>
+          </a>
+        </li>
+        <li class="tile-slot tile-slot--talk" data-for="anxious low stressed friend">
+          <a class="tile tile--talk" href="/talk">
+            <svg class="tile__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M8.9 4.6L11.2 4.3C11.7 4.2 12.1 4.5 12.3 5L13.6 8.6C13.8 9.1 13.6 9.6 13.2 9.9L11.6 11C12.6 13.4 14.4 15.3 16.9 16.5L18.1 14.9C18.4 14.5 18.9 14.4 19.4 14.6L22.9 16C23.4 16.2 23.7 16.7 23.6 17.2L23.2 19.6C23.1 20.9 22 21.8 20.7 21.7C13 21.2 7 15.2 6.4 7.4C6.3 6 7.4 4.8 8.9 4.6Z" /></svg>
+            <span class="tile__name">Talk to someone</span>
+            <span class="tile__line">Free helplines in India, like Tele-MANAS on 14416, and what happens when you call.</span>
+            <span class="tile__time">any time</span>
+          </a>
+        </li>
+        <li class="tile-slot" data-for="anxious stressed">
+          <a class="tile" href="/breathe">
+            <svg class="tile__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M14.2 4.4C19.9 4.3 23.7 8.4 23.6 14.1C23.5 19.8 19.6 23.7 13.9 23.6C8.3 23.5 4.4 19.6 4.5 13.9C4.6 8.6 8.4 4.5 13.6 4.4" /><path d="M14 9.6C16.6 9.5 18.5 11.5 18.4 14.1C18.3 16.6 16.4 18.5 13.9 18.4C11.4 18.3 9.5 16.4 9.6 13.9C9.7 11.6 11.4 9.7 13.6 9.6" /></svg>
+            <span class="tile__name">Breathe</span>
+            <span class="tile__line">A slow breath with a shape that breathes with you. Rain or waves, if you like.</span>
+            <span class="tile__time">2 min</span>
+          </a>
+        </li>
+        <li class="tile-slot" data-for="anxious stressed">
+          <a class="tile" href="/ground">
+            <svg class="tile__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M9 15V8.2C9 7.2 9.8 6.5 10.7 6.6C11.5 6.7 12 7.4 12 8.2V13M12 12.4V6C12 5 12.8 4.3 13.7 4.4C14.5 4.5 15 5.2 15 6V12.6M15 12.6V7C15 6.1 15.7 5.4 16.6 5.5C17.4 5.6 18 6.3 18 7.1V13.4M18 11.8C18 11 18.6 10.4 19.4 10.4C20.2 10.4 20.8 11.1 20.8 11.9V16.4C20.8 20.6 18 23.6 14 23.6C10.8 23.6 8.6 21.6 7.4 19L5.8 15.4C5.5 14.6 5.9 13.8 6.7 13.6C7.4 13.4 8.1 13.8 8.4 14.5L9 15.8" /></svg>
+            <span class="tile__name">Ground yourself</span>
+            <span class="tile__line">5-4-3-2-1: five things you can see, down to one you can taste.</span>
+            <span class="tile__time">3 min</span>
+          </a>
+        </li>
+        <li class="tile-slot" data-for="anxious stressed low">
+          <a class="tile" href="/thoughts">
+            <svg class="tile__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M4 9C7 5 11 13 8 15C5 17 6 9 11 9C15 9 12 15 15.5 14" /><path d="M15.5 14C18 13.6 20 14.2 24 14" /></svg>
+            <span class="tile__name">Untangle a thought</span>
+            <span class="tile__line">Pick the worry closest to yours and see it put more kindly.</span>
+            <span class="tile__time">5 min</span>
+          </a>
+        </li>
+        <li class="tile-slot" data-for="low friend">
+          <a class="tile" href="/start-the-conversation">
+            <svg class="tile__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M6.8 5.2C11.6 4.9 17.4 5 21.6 5.3C23.4 5.4 24.2 6.6 24.2 8.4C24.3 10.8 24.2 13.2 24 15.4C23.9 17 22.8 17.9 21.2 17.9C18 18 15 18 12.6 18L8.2 22.4L8.8 18C7.6 18 6.6 18 5.9 17.8C4.6 17.5 3.9 16.6 3.9 15.1C3.8 12.8 3.8 10.4 3.9 8.2C4 6.4 5 5.3 6.8 5.2Z" /><path d="M8.6 10.1C11.6 9.9 15.6 10 19.2 10.2M8.6 13.4C10.8 13.3 13.4 13.3 15.6 13.4" /></svg>
+            <span class="tile__name">Start the conversation</span>
+            <span class="tile__line">What to say to a friend, a parent or a teacher, and how to help a friend.</span>
+            <span class="tile__time">5 min</span>
+          </a>
+        </li>
+        <li class="tile-slot" data-for="friend stressed">
+          <a class="tile" href="/myths">
+            <svg class="tile__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M7 5.5H18.5L22 9V22.5H7Z" /><path d="M18.5 5.5V9H22" /><path d="M10.5 13H18.5M10.5 16.5H16" /></svg>
+            <span class="tile__name">Myths we grew up with</span>
+            <span class="tile__line">“It’s just a phase.” Eight things families say, and what’s true.</span>
+            <span class="tile__time">4 min</span>
+          </a>
+        </li>
+        <li class="tile-slot tile-slot--tonight" data-for="low anxious">
+          <a class="tile" href="/tonight">
+            <svg class="tile__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M18.5 5.5C14.2 6.2 11.4 10 12 14.3C12.6 18.6 16.6 21.5 20.8 20.8C19.2 22.6 16.9 23.6 14.4 23.6C9.3 23.6 5.2 19.5 5.2 14.4C5.2 9.3 9.3 5.2 14.4 5.2C15.9 5.2 17.3 5.6 18.5 5.5Z" /><path d="M21.5 6.5V10M19.8 8.2H23.2" /></svg>
+            <span class="tile__name">A note for tonight</span>
+            <span class="tile__line">Pick one gentle reminder to keep before you sleep, or write your own.</span>
+            <span class="tile__time">2 min</span>
+          </a>
+        </li>
+        <li class="tile-slot" data-for="">
+          <a class="tile" href="/about">
+            <svg class="tile__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M14 4.5C19.3 4.4 23.6 8.6 23.5 14C23.4 19.4 19.2 23.6 13.9 23.5C8.6 23.4 4.5 19.2 4.5 13.9C4.6 8.7 8.8 4.6 14 4.5Z" /><path d="M14 12.5V18.6M14 9.2V9.4" /></svg>
+            <span class="tile__name">About this site</span>
+            <span class="tile__line">Who made it, who it’s for, and what happens to what you write: nothing.</span>
+            <span class="tile__time">1 min</span>
+          </a>
+        </li>
+      </ul>
+
+      <p class="library__start"><a href="/">New here? Start with the intro</a></p>
+    </main>
+
+    <!-- include:footer -->
+    <script type="module" src="/src/pages/library.js"></script>
+  </body>
+</html>

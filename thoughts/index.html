@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" data-palette="afternoon">
+  <head>
+    <!-- include:head -->
+    <title>Untangle a thought · One Ordinary Day</title>
+    <meta name="description" content="Pick the anxious thought closest to yours and watch it soften into a calmer version. Say what you’d tell a friend. Nothing is sent anywhere." />
+    <meta name="theme-color" content="#F5E6C6" />
+    <link rel="canonical" href="%SITE_URL%/thoughts" />
+    <meta property="og:title" content="Untangle a thought" />
+    <meta property="og:description" content="Pick the anxious thought closest to yours and watch it soften into a calmer version. Say what you’d tell a friend. Nothing is sent anywhere." />
+    <meta property="og:url" content="%SITE_URL%/thoughts" />
+  </head>
+  <body>
+    <!-- include:bar -->
+
+    <main id="main" class="site-main">
+      <p class="site-main__back"><a href="/library"><span aria-hidden="true">←</span> Back to library</a></p>
+
+      <section class="chapter thoughts-page" id="thoughts" aria-labelledby="thoughts-title">
+        <div class="chapter__inner">
+          <h1 id="thoughts-title">Untangle a thought</h1>
+          <p>At 4:50 pm, in an auto on the way to coaching, Aarav’s thoughts get loud. Think a worry enough times and it starts to sound like a fact. Here are some of his. One of them might sound like yours.</p>
+          <!-- Without JS this is a plain list of worries, each with a calmer way to
+               put it. src/sections/thoughts.js makes it personal: pick the thought
+               closest to yours, watch it soften into a calmer version in place,
+               say what you'd tell a friend, start over. Anything typed stays in
+               the browser; see the privacy notes in thoughts.js and CLAUDE.md
+               before changing how notes are kept. -->
+          <div class="thoughts" data-thoughts>
+            <p class="thoughts__intro" hidden>There’s no right way to do this. You can try it, or just read.</p>
+            <p class="thoughts__hint" id="thoughts-hint" hidden>Which of these feels closest to something you’ve thought?</p>
+            <ul class="thoughts__box" aria-label="Aarav’s thoughts">
+              <li class="thought"><span class="thought__worry">I’m so behind</span> <span class="thought__calm">I’m behind on some things right now. I can catch up on some of it, and being behind doesn’t say anything about who I am.</span></li>
+              <li class="thought"><span class="thought__worry">what if I don’t get in?</span> <span class="thought__calm">I might not, and that would really hurt. It still wouldn’t be the only way into the life I want.</span></li>
+              <li class="thought"><span class="thought__worry">everyone’s ahead of me</span> <span class="thought__calm">It looks that way from here. I’m comparing my worst day with the best bits of theirs, and I can’t see their bad days.</span></li>
+              <li class="thought"><span class="thought__worry">they’ve spent so much on coaching</span> <span class="thought__calm">They have, and I feel that. They did it because they care about me, and they’d probably rather know I’m struggling than have a rank.</span></li>
+              <li class="thought"><span class="thought__worry">Sharma uncle’s son got 98%</span> <span class="thought__calm">Good for him. His marks don’t take anything away from mine, and I don’t have to run his race.</span></li>
+              <li class="thought"><span class="thought__worry">mock test rank: 214</span> <span class="thought__calm">That stings. It’s one practice test, and it shows me which chapters need another look before the real one.</span></li>
+              <li class="thought"><span class="thought__worry">I wasted the whole day</span> <span class="thought__calm">I did less than I hoped, on four hours of sleep. Tomorrow I can start smaller.</span></li>
+              <li class="thought"><span class="thought__worry">why can’t I just focus?</span> <span class="thought__calm">I fell asleep at 2:10. A tired brain finds it hard to focus. That’s tiredness, and sleep helps more than shouting at myself.</span></li>
+              <li class="thought"><span class="thought__worry">nobody gets it</span> <span class="thought__calm">It feels that way right now, but I haven’t really told anyone yet. Kabir might get more of it than I think.</span></li>
+              <li class="thought"><span class="thought__worry">I should be happier than this</span> <span class="thought__calm">I’m carrying a lot: boards, coaching, everyone’s hopes. It makes sense that I don’t feel great, and I can go easier on myself about it.</span></li>
+              <li class="thought"><span class="thought__worry">what will Papa say?</span> <span class="thought__calm">He might be disappointed for a while. He might also surprise me. Either way, he’d want to know how I’m really doing.</span></li>
+            </ul>
+            <p class="visually-hidden" aria-live="polite" data-thoughts-status></p>
+            <p class="thoughts__limits">These are small ways to look at a thought differently. They’re not a replacement for talking to someone. If a thought keeps coming back or feels too heavy, a counsellor or a helpline can help: <a href="/talk">talk to someone</a>.</p>
+          </div>
+        </div>
+      </section>
+
+      <nav class="page-next" aria-label="Next you could try">
+        <p class="page-next__label">Next you could try…</p>
+        <a href="/start-the-conversation">Start the conversation <span aria-hidden="true">→</span></a>
+      </nav>
+    </main>
+
+    <!-- include:footer -->
+    <script type="module" src="/src/pages/thoughts.js"></script>
+  </body>
+</html>

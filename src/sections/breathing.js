@@ -1,4 +1,4 @@
-import { prefersReducedMotion } from '../scripts/smooth-scroll.js';
+import { prefersReducedMotion } from '../scripts/motion.js';
 import { setAmbient, setAmbientAudible } from '../scripts/ambient-sound.js';
 import { tookCare } from '../scripts/care.js';
 

@@ -1,771 +1,206 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>One Ordinary Day · a short interactive story about what teens carry quietly</title>
+    <!-- include:head -->
+    <title>One Ordinary Day · anxiety, depression and stress, for young people in India</title>
     <meta name="description" content="A short, interactive story about what teenagers often carry quietly, and what can help. For students, friends, parents and teachers. Free help in India." />
     <meta name="theme-color" content="#F3E6DA" />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
-    <!-- Link previews need full addresses: the site address is filled in at
-         build time from SITE_URL in .env.production (see vite.config.js). -->
     <link rel="canonical" href="%SITE_URL%/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="One Ordinary Day" />
-    <meta property="og:locale" content="en_IN" />
     <meta property="og:title" content="One Ordinary Day · a short interactive story about what teens carry quietly" />
     <meta property="og:description" content="A short, interactive story about what teenagers often carry quietly, and what can help. For students, friends, parents and teachers. Free help in India." />
     <meta property="og:url" content="%SITE_URL%/" />
-    <meta property="og:image" content="%SITE_URL%/og-image.jpg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="One ordinary day. Spend one ordinary day with a 17-year-old, from the inside." />
-    <meta name="twitter:card" content="summary_large_image" />
-
-    <!-- Page transition, arriving half (src/scripts/page-transition.js fades it).
-         Inline so the veil exists on the very first paint; its own timer means
-         the page can never stay hidden, even if the scripts fail to load. -->
-    <style>
-      html[data-arriving]::after {
-        content: "";
-        position: fixed;
-        inset: 0;
-        z-index: 2147483647;
-        background: var(--arrive-bg);
-        pointer-events: none;
-        transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-      }
-      html.is-arrived::after {
-        opacity: 0;
-      }
-    </style>
-    <script>
-      try {
-        var fade = sessionStorage.getItem("ood-page-fade");
-        sessionStorage.removeItem("ood-page-fade");
-        if (fade && /^(rgb|color)\([\w\s.,%/-]*\)$/.test(fade) && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          var root = document.documentElement;
-          root.setAttribute("data-arriving", "");
-          root.style.setProperty("--arrive-bg", fade);
-          setTimeout(function () { root.classList.add("is-arrived"); }, 1500);
-          setTimeout(function () { root.removeAttribute("data-arriving"); }, 2600);
-        }
-      } catch (e) {}
-    </script>
-    <!-- The intro (#about, src/scripts/intro.js): decided before the first paint,
-         so it never flashes. It shows on the first visit in this browser session,
-         or for a link to #about. A link to anywhere else on the page (#take-a-minute,
-         a day-line chapter…) goes straight there. If storage is blocked, it shows.
-         Without JS it simply sits above the story, which is fine. -->
+    <!-- Links from when the site was one long page (/#take-a-minute, /#sunset…)
+         go to their new pages. -->
     <script>
       (function () {
-        var hash = location.hash;
-        var show = !hash || hash === "#about";
-        try {
-          if (hash !== "#about" && sessionStorage.getItem("ood-intro-seen")) show = false;
-          sessionStorage.setItem("ood-intro-seen", "1");
-        } catch (e) {}
-        document.documentElement.classList.add(show ? "at-intro" : "no-intro");
+        var id = location.hash.slice(1);
+        if (!id) return;
+        var pages = { "take-a-minute": "/breathe", "five-senses": "/ground", myths: "/myths", tonight: "/tonight", about: "/about", day: "/story", help: "/story#help" };
+        var chapters = ["dawn", "morning", "midday", "afternoon", "sunset", "dusk", "night"];
+        var to = pages[id] || (chapters.indexOf(id) > -1 ? "/story#" + id : "");
+        if (to) location.replace(to);
       })();
     </script>
-
-    <!-- The two fonts on the first screen (src/styles/fonts.css has the rest). -->
-    <link rel="preload" href="/src/assets/fonts/figtree-latin-variable.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/src/assets/fonts/instrument-serif-latin-400.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
-    <!-- Help first: "Skip to help" is the first Tab stop, and the bar's
-         "Talk to someone" is the first thing you see (sections.css). -->
-    <a class="skip-link" href="talk.html#right-now">Skip to help</a>
-    <header class="site-header">
-      <a class="talk" href="talk.html">Talk to someone</a>
-    </header>
+    <!-- include:bar -->
 
-    <main id="day">
-      <!-- The intro (src/styles/intro.css, src/scripts/intro.js): what this is, who
-           it's for and what's inside, in the moment before dawn. Readable the moment
-           the page loads, with or without JS (data-no-reveal). Hidden (html.no-intro)
-           on later visits in the same session and for links to other parts of the
-           page; "About this site" in the footer brings it back. -->
-      <section class="intro" id="about" aria-labelledby="intro-title" data-no-reveal>
-        <div class="intro__sky" aria-hidden="true">
-          <span class="intro__sun"></span>
-          <svg class="intro__horizon" viewBox="0 0 1200 40" preserveAspectRatio="none" focusable="false"><path d="M0 22C160 18 320 25 480 21C640 17 820 24 980 20C1060 18 1130 21 1200 19" /></svg>
+    <!-- The intro (src/styles/home.css): why the site exists, what three
+         common feelings can feel like, two checked numbers, and where to go.
+         Everything is centred here and in the library, on purpose. The feeling
+         cards are <details>, so they open without JavaScript. Never diagnostic:
+         "it can feel like", never "you have". -->
+    <main id="main" class="home">
+      <section class="home__hero" aria-labelledby="home-title">
+        <p class="home__name">One Ordinary Day</p>
+        <h1 id="home-title" class="home__title">
+          <span class="home__words">
+            <span class="home__word"><span class="mark">Anxiety.</span></span>
+            <span class="home__word"><span class="mark">Depression.</span></span>
+            <span class="home__word"><span class="mark">Stress.</span></span>
+          </span>
+          <span class="home__line">More young people carry them than you’d think.</span>
+        </h1>
+        <p class="home__lead">This is a short, interactive story about what teenagers often carry quietly, with small things that can help, and a way to reach someone when it’s too much.</p>
+        <div class="home__go">
+          <a class="home__explore" href="/library">Explore the library</a>
+          <a class="home__help" href="/talk">I need help now</a>
         </div>
-
-        <div class="intro__inner">
-          <div class="intro__about">
-            <h2 id="intro-title">One <span class="mark">Ordinary</span> Day</h2>
-            <p class="intro__lead">A short, interactive story about what teenagers often carry quietly, and what can help.</p>
-            <p class="intro__who">For students, friends, parents and teachers.</p>
-          </div>
-
-          <div class="intro__inside">
-            <p class="intro__label" id="intro-find">what you’ll find</p>
-            <ul class="intro__find" aria-labelledby="intro-find">
-              <li>
-                <svg class="intro__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path pathLength="100" d="M3 19.5C9 18.8 18 19.9 25 19.2" /><path pathLength="100" d="M8.6 19.2C8.8 15.9 11.2 13.6 14.2 13.6C17.2 13.6 19.5 16 19.6 19.1" /><path pathLength="100" d="M14.1 6.6V9.6M7.4 9.3L9.3 11.3M20.9 9.2L19 11.2" /></svg>
-                <span>One student’s day, from morning to night</span>
-              </li>
-              <li>
-                <svg class="intro__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path pathLength="100" d="M14.2 4.4C19.9 4.3 23.7 8.4 23.6 14.1C23.5 19.8 19.6 23.7 13.9 23.6C8.3 23.5 4.4 19.6 4.5 13.9C4.6 8.6 8.4 4.5 13.6 4.4" /><path pathLength="100" d="M14 9.6C16.6 9.5 18.5 11.5 18.4 14.1C18.3 16.6 16.4 18.5 13.9 18.4C11.4 18.3 9.5 16.4 9.6 13.9C9.7 11.6 11.4 9.7 13.6 9.6" /></svg>
-                <span>Small calming exercises: breathing, grounding, reframing a thought</span>
-              </li>
-              <li>
-                <svg class="intro__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path pathLength="100" d="M6.8 5.2C11.6 4.9 17.4 5 21.6 5.3C23.4 5.4 24.2 6.6 24.2 8.4C24.3 10.8 24.2 13.2 24 15.4C23.9 17 22.8 17.9 21.2 17.9C18 18 15 18 12.6 18L8.2 22.4L8.8 18C7.6 18 6.6 18 5.9 17.8C4.6 17.5 3.9 16.6 3.9 15.1C3.8 12.8 3.8 10.4 3.9 8.2C4 6.4 5 5.3 6.8 5.2Z" /><path pathLength="100" d="M8.6 10.1C11.6 9.9 15.6 10 19.2 10.2M8.6 13.4C10.8 13.3 13.4 13.3 15.6 13.4" /></svg>
-                <span>How to start talking about how you feel</span>
-              </li>
-              <li>
-                <svg class="intro__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path pathLength="100" d="M8.9 4.6L11.2 4.3C11.7 4.2 12.1 4.5 12.3 5L13.6 8.6C13.8 9.1 13.6 9.6 13.2 9.9L11.6 11C12.6 13.4 14.4 15.3 16.9 16.5L18.1 14.9C18.4 14.5 18.9 14.4 19.4 14.6L22.9 16C23.4 16.2 23.7 16.7 23.6 17.2L23.2 19.6C23.1 20.9 22 21.8 20.7 21.7C13 21.2 7 15.2 6.4 7.4C6.3 6 7.4 4.8 8.9 4.6Z" /></svg>
-                <span>Free help, whenever you need it</span>
-              </li>
-            </ul>
-          </div>
-
-          <div class="intro__go">
-            <p class="intro__small">About 10 minutes. No sign-up. Nothing you write leaves your device.</p>
-            <p class="intro__small">It touches on stress, anxiety and feeling low. Go at your own pace.</p>
-            <div class="intro__actions">
-              <a class="intro__begin" href="#dawn">Begin the day</a>
-              <a class="intro__help" href="talk.html#right-now">I need help now</a>
-            </div>
-            <a class="intro__skip" href="#take-a-minute">Skip to the exercises</a>
-          </div>
-        </div>
+        <p class="home__small">No sign-up. Nothing you write leaves your device.</p>
+        <p class="home__small">This site talks about stress, anxiety and feeling low. Go at your own pace.</p>
       </section>
 
-      <!-- The opening screen: Aarav's window at 6:40 am (src/styles/opening.css,
-           src/scripts/opening.js). The scene is decoration only. The clock ticks
-           slowly while the reader stays here; the cue fades once they scroll.
-           data-no-reveal: everything here is readable the moment the page loads. -->
-      <section class="chapter opening" id="dawn" data-stop="dawn" data-name="the alarm" data-no-reveal>
-        <div class="opening__scene" aria-hidden="true">
-          <div class="opening__sunlit"><div class="opening__light"></div></div>
-          <div class="opening__window">
-            <svg class="opening__frame" viewBox="0 0 300 400" focusable="false">
-              <defs>
-                <linearGradient id="opening-sky" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" class="opening__sky-high" />
-                  <stop offset="1" class="opening__sky-low" />
-                </linearGradient>
-                <radialGradient id="opening-glow">
-                  <stop offset="0" class="opening__glow-in" />
-                  <stop offset="1" class="opening__glow-out" />
-                </radialGradient>
-              </defs>
-              <!-- Sky, a low sun, and the rooftops across the lane (one with a water tank). -->
-              <rect x="22" y="22" width="256" height="356" fill="url(#opening-sky)" />
-              <circle cx="196" cy="296" r="86" fill="url(#opening-glow)" />
-              <circle class="opening__sun" cx="196" cy="296" r="17" />
-              <path class="opening__roofs" d="M22 334H72V316H120V328H150V304H206V322H246V308H278V378H22Z M166 304V286H190V304 M170 286V280H186V286" />
-              <!-- Curtain rod, frame, centre bar, top light and grill: hand-drawn strokes. -->
-              <path class="opening__rod" d="M-4 11C70 9 160 12 304 10" />
-              <path class="opening__wood" d="M18 20C90 17 200 19 282 17C284 140 283 260 282 382C200 384 90 383 18 382C17 260 18 140 18 20Z" />
-              <path class="opening__wood opening__wood--thin" d="M150 19C151 140 149 260 150 382M19 128C100 126 200 129 281 127" />
-              <path class="opening__grill" d="M61 129V381M99 129V381M128 129V381M178 129V381M210 129V381M244 129V381M19 256C100 254 200 257 281 255" />
-              <path class="opening__wood" d="M6 389C100 386 200 390 294 387" />
-            </svg>
-            <div class="opening__curtain">
-              <svg viewBox="0 0 120 400" preserveAspectRatio="none" focusable="false">
-                <path class="opening__cloth" d="M4 12C40 10 80 14 114 11C106 120 98 260 90 394C62 398 32 396 6 394C8 260 4 120 4 12Z" />
-                <path class="opening__folds" d="M30 16C28 140 26 270 24 392M58 14C56 150 54 280 50 394M86 13C82 140 78 270 72 393" />
+      <section class="feelings" aria-labelledby="feelings-title">
+        <h2 id="feelings-title" class="home__label">tap one to see what it can feel like</h2>
+        <div class="feelings__cards">
+          <details class="feeling feeling--anxiety">
+            <summary class="feeling__face">
+              <svg class="feeling__art" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+                <g class="art-tangle">
+                  <path pathLength="100" d="M18 42C28 20 50 62 40 46C30 30 62 24 56 46C50 66 80 18 76 40C72 58 94 34 102 42" />
+                  <path pathLength="100" d="M24 52C38 30 46 56 60 36C72 18 70 60 88 38C96 28 100 50 92 54C84 58 70 44 62 52" />
+                  <path pathLength="100" d="M30 34C44 30 36 50 50 48C62 46 58 28 72 30C84 32 80 52 96 46" />
+                </g>
+                <g class="art-calm">
+                  <path pathLength="100" d="M18 30C44 27 76 33 102 30" />
+                  <path pathLength="100" d="M18 42C44 39 76 45 102 42" />
+                  <path pathLength="100" d="M18 54C44 51 76 57 102 54" />
+                </g>
               </svg>
+              <span class="feeling__name">Anxiety</span>
+              <span class="feeling__hint">what it can feel like</span>
+            </summary>
+            <div class="feeling__inside">
+              <p class="feeling__label">It can feel like…</p>
+              <ul class="feeling__lines">
+                <li>Your mind keeps running ahead to everything that could go wrong.</li>
+                <li>Your chest goes tight before a test, even when you’ve studied.</li>
+                <li>You check your phone, then check it again.</li>
+                <li>Sleep won’t come, because your thoughts won’t stop.</li>
+              </ul>
+              <p class="feeling__okay">Lots of people feel this, especially around exams. It’s okay to ask for help.</p>
+              <a class="feeling__link" href="/breathe">Try a slow breath <span aria-hidden="true">→</span></a>
             </div>
-            <!-- The alarm he keeps snoozing: a phone on the sill, its screen glowing softly. -->
-            <div class="opening__phone">
-              <span class="opening__phone-glow"></span>
-              <svg viewBox="0 0 30 50" focusable="false">
-                <rect class="opening__phone-screen" x="5.5" y="7" width="19" height="34" rx="2" />
-                <path class="opening__phone-case" d="M7 3H23C25.5 3 27 4.5 27 7V43C27 45.5 25.5 47 23 47H7C4.5 47 3 45.5 3 43V7C3 4.5 4.5 3 7 3Z" />
+          </details>
+
+          <details class="feeling feeling--low">
+            <summary class="feeling__face">
+              <svg class="feeling__art" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+                <g class="art-light">
+                  <circle cx="82" cy="26" r="9" />
+                  <path pathLength="100" d="M82 9V13M96 13L93 16M99 26H95M68 13L71 16" />
+                </g>
+                <g class="art-cloud-wrap"><path class="art-cloud" d="M31 55C22 55 18 48 21 42C23 37 29 35 33 37C35 29 43 24 51 27C56 20 68 20 73 28C81 26 89 32 88 40C95 41 99 48 95 53C93 56 89 57 86 57H34C33 57 32 56 31 55Z" /></g>
               </svg>
+              <span class="feeling__name">Depression</span>
+              <span class="feeling__hint">what it can feel like</span>
+            </summary>
+            <div class="feeling__inside">
+              <p class="feeling__label">It can feel like…</p>
+              <ul class="feeling__lines">
+                <li>Things you used to enjoy feel flat, or far away.</li>
+                <li>You’re tired even after you’ve slept.</li>
+                <li>Replying to one message feels like too much.</li>
+                <li>You’re fine at school, and empty when you get home.</li>
+              </ul>
+              <p class="feeling__okay">It’s more common than people say, and it can get lighter with support. You don’t have to wait until it’s bad to tell someone.</p>
+              <a class="feeling__link" href="/start-the-conversation">How to start the conversation <span aria-hidden="true">→</span></a>
             </div>
-          </div>
-        </div>
+          </details>
 
-        <div class="chapter__inner">
-          <time class="time opening__time" datetime="06:40">6:40 am</time>
-          <!-- The break keeps the title on two lines in every font: in the fallback
-               font "One ordinary day." fitted on one line, and the real font's
-               swap pushed the whole opening up (CLS 0.11). -->
-          <h1>One <em>ordinary</em><br /> day.</h1>
-          <p class="opening__intro">This is Aarav, 17, in Class 12. He has snoozed his alarm three times.</p>
-          <p class="opening__cue">Scroll through his day<svg class="opening__arrow" viewBox="0 0 24 40" aria-hidden="true" focusable="false"><path d="M12 3C11 13 13 23 12 34M4 26C7 29 10 32 12 35C14 32 17 29 20 26" /></svg></p>
-        </div>
-      </section>
-
-      <section class="chapter" id="morning" data-stop="morning" data-name="the school bus">
-        <div class="chapter__inner">
-          <time class="time" datetime="08:15">8:15 am</time>
-          <h2>Lights off at 11:30. Asleep at <span class="mark">2:10.</span></h2>
-          <p>He did try. But the moment the lights went off, his brain switched on: the mock test, the question he got wrong, what Papa would say. Around one he picked up his phone “just for a minute”. The next time he looked, it was 2:10.</p>
-          <p>Now he’s on the school bus, reading the same line of chemistry notes for the fourth time. Worry kept him up, and today the tiredness will make every worry hit harder. Nobody on the bus can see any of that. They see a boy yawning into his notes.</p>
-          <p>The day ahead looks normal: school till two, coaching till seven, and forty unread messages in the family group already. Boards are four months away, and every relative he meets says this is the most important year of his life.</p>
-          <span class="note note--tick">tried it: phone charging in the kitchen. weirdly works.</span>
-        </div>
-      </section>
-
-      <aside class="fact fact--hang" role="note">
-        <p class="fact__text"><span class="fact__figure">8–10 hours</span> of sleep a night is what teenagers need. Late coaching, early school and “one more reel” eat into it fast.</p>
-        <p class="fact__source">Source: <a href="https://www.cdc.gov/sleep/about/index.html" target="_blank" rel="noopener">CDC, About Sleep<span class="visually-hidden"> (opens in a new tab)</span></a>, based on American Academy of Sleep Medicine guidance</p>
-      </aside>
-
-      <section class="chapter" id="midday" data-stop="midday" data-name="the lunch table">
-        <div class="chapter__inner">
-          <time class="time" datetime="13:30">1:30 pm</time>
-          <h2>Laughing at lunch. Counting the minutes until it’s over.</h2>
-          <p>Someone reads out the mock test ranks from the class group. Aarav laughs in the right places and makes the joke everyone expects from him. Last night’s stories showed half his class at a birthday he didn’t know about. Nobody mentions it, so neither does he.</p>
-          <p>Nobody at the table would guess. On the bad days he’s usually at his funniest. Ask anyone there and they’d tell you he seems fine.</p>
-          <span class="note">ask twice. “no, really, how are you?”</span>
-        </div>
-      </section>
-
-      <aside class="fact fact--aside" role="note">
-        <p class="fact__text"><span class="fact__figure">17–21%</span> of young people aged 13 to 29 say they feel lonely, and teenagers report it most. Lonely teens are also 22% more likely to end up with lower grades.</p>
-        <p class="fact__source">Source: <a href="https://www.who.int/news/item/30-06-2025-social-connection-linked-to-improved-heath-and-reduced-risk-of-early-death" target="_blank" rel="noopener">WHO Commission on Social Connection, 2025<span class="visually-hidden"> (opens in a new tab)</span></a></p>
-      </aside>
-
-      <section class="chapter" id="afternoon" data-stop="afternoon" data-name="the noise">
-        <div class="chapter__inner">
-          <time class="time" datetime="16:50">4:50 pm</time>
-          <h2>Then the thoughts get <em>loud.</em></h2>
-          <p>In the auto to coaching, he opens Instagram. A cousin’s IIT admit letter. A classmate’s 5 am “study with me” reel. In the family group, Papa has forwarded a topper’s interview with the caption “Very inspiring!!”</p>
-          <p><em>What if I don’t get in. Everyone’s so far ahead. They’ve spent so much on my coaching.</em> Think a worry enough times and it starts to sound like a fact. Half an hour of reels into an auto ride, it’s hard to tell the two apart.</p>
-          <!-- Without JS this is a plain list of worries, each with a calmer way to
-               put it. src/sections/thoughts.js makes it personal: pick the thought
-               closest to yours, watch it soften into a calmer version in place,
-               say what you'd tell a friend, start over. Anything typed stays in
-               the browser; see the privacy notes in thoughts.js and CLAUDE.md
-               before changing how notes are kept. -->
-          <div class="thoughts" data-thoughts>
-            <p class="thoughts__intro" hidden>You can try this, or just keep scrolling. Both are fine. <a class="thoughts__skip" href="#sunset">Skip this part</a></p>
-            <p class="thoughts__hint" id="thoughts-hint" hidden>Which of these feels closest to something you’ve thought?</p>
-            <ul class="thoughts__box" aria-label="Aarav’s thoughts">
-              <li class="thought"><span class="thought__worry">I’m so behind</span> <span class="thought__calm">I’m behind on some things right now. I can catch up on some of it, and being behind doesn’t say anything about who I am.</span></li>
-              <li class="thought"><span class="thought__worry">what if I don’t get in?</span> <span class="thought__calm">I might not, and that would really hurt. It still wouldn’t be the only way into the life I want.</span></li>
-              <li class="thought"><span class="thought__worry">everyone’s ahead of me</span> <span class="thought__calm">It looks that way from here. I’m comparing my worst day with the best bits of theirs, and I can’t see their bad days.</span></li>
-              <li class="thought"><span class="thought__worry">they’ve spent so much on coaching</span> <span class="thought__calm">They have, and I feel that. They did it because they care about me, and they’d probably rather know I’m struggling than have a rank.</span></li>
-              <li class="thought"><span class="thought__worry">Sharma uncle’s son got 98%</span> <span class="thought__calm">Good for him. His marks don’t take anything away from mine, and I don’t have to run his race.</span></li>
-              <li class="thought"><span class="thought__worry">mock test rank: 214</span> <span class="thought__calm">That stings. It’s one practice test, and it shows me which chapters need another look before the real one.</span></li>
-              <li class="thought"><span class="thought__worry">I wasted the whole day</span> <span class="thought__calm">I did less than I hoped, on four hours of sleep. Tomorrow I can start smaller.</span></li>
-              <li class="thought"><span class="thought__worry">why can’t I just focus?</span> <span class="thought__calm">I fell asleep at 2:10. A tired brain finds it hard to focus. That’s tiredness, and sleep helps more than shouting at myself.</span></li>
-              <li class="thought"><span class="thought__worry">nobody gets it</span> <span class="thought__calm">It feels that way right now, but I haven’t really told anyone yet. Kabir might get more of it than I think.</span></li>
-              <li class="thought"><span class="thought__worry">I should be happier than this</span> <span class="thought__calm">I’m carrying a lot: boards, coaching, everyone’s hopes. It makes sense that I don’t feel great, and I can go easier on myself about it.</span></li>
-              <li class="thought"><span class="thought__worry">what will Papa say?</span> <span class="thought__calm">He might be disappointed for a while. He might also surprise me. Either way, he’d want to know how I’m really doing.</span></li>
-            </ul>
-            <p class="visually-hidden" aria-live="polite" data-thoughts-status></p>
-            <p class="thoughts__limits">These are small ways to look at a thought differently. They’re not a replacement for talking to someone. If a thought keeps coming back or feels too heavy, a counsellor or a helpline can help: <a href="talk.html">talk to someone</a>.</p>
-          </div>
-          <span class="note note--squiggle">nobody posts their bad mock test.</span>
-        </div>
-      </section>
-
-      <aside class="fact fact--big" role="note">
-        <p class="fact__text"><span class="fact__figure">8 in 10</span> students in middle and secondary classes said studies, exams and results make them anxious, in a 2022 NCERT survey of nearly 3.8 lakh school students.</p>
-        <p class="fact__source">Source: NCERT Manodarpan survey, 2022, <a href="https://www.theweek.in/news/health/2022/10/10/anxiety-students-exams-students-happiness-survey.html" target="_blank" rel="noopener">as reported by The Week<span class="visually-hidden"> (opens in a new tab)</span></a></p>
-      </aside>
-
-      <section class="chapter" id="sunset" data-stop="sunset" data-name="“you okay?”">
-        <div class="chapter__inner">
-          <time class="time" datetime="19:10">7:10 pm</time>
-          <h2>A message from a friend: <span class="circle">“you okay?”</span></h2>
-          <p>Dinner is dal, the TV news, and Mummy asking about the mock test before he’s even sat down. He says “it was fine” and looks at his plate. Later, his phone buzzes. It’s Kabir from coaching: “you okay? you were really quiet today.”</p>
-          <p>His thumbs type “haha yeah just tired”. He looks at it for a long time. Then he deletes it and writes: “not really, honestly.” He presses send before he can change his mind.</p>
-        </div>
-      </section>
-
-      <!-- A stretch of empty evening sky. The text colour flips from dark to light
-           between sunset and dusk, and no palette colours can hold 4.5:1 at the
-           exact midpoint, so the flip happens while only sky and stars are on
-           screen. Keep it empty (no text, no facts). -->
-      <div class="interlude" aria-hidden="true"></div>
-
-      <section class="chapter" id="dusk" data-stop="dusk" data-name="talking it out">
-        <div class="chapter__inner">
-          <time class="time" datetime="21:30">9:30 pm</time>
-          <h2>Talking didn’t fix everything. It made it shareable.</h2>
-          <p>Turns out Kabir hasn’t slept properly in weeks either. They send voice notes for an hour, half complaining, half laughing. Later, Aarav finds his mum in the kitchen and tells her, quietly, that things have been really hard. She doesn’t have the perfect words. She warms two glasses of haldi doodh and sits with him anyway.</p>
-          <p>Nothing is solved. The boards are still four months away. But Kabir wants to revise together on Sunday, and Mummy hasn’t asked about the mock test once since. <span class="mark">Small things, but they count.</span></p>
-          <span class="note">you don’t need the right words. he didn’t have them either.</span>
-        </div>
-      </section>
-
-      <aside class="fact fact--compare" role="note">
-        <div class="fact__bars" aria-hidden="true">
-          <p class="fact__bar" style="--v: 41"><span class="fact__figure">41%</span> <span class="fact__who">India</span></p>
-          <p class="fact__bar" style="--v: 83"><span class="fact__figure">83%</span> <span class="fact__who">average of 21 countries</span></p>
-        </div>
-        <p class="fact__text">Only 41% of young Indians aged 15 to 24 said it’s good to get support for mental health problems. Across 21 countries, the average was 83%.</p>
-        <p class="fact__source">Source: <a href="https://www.unicef.org/india/press-releases/unicef-report-spotlights-mental-health-impact-covid-19-children-and-young-people" target="_blank" rel="noopener">UNICEF, The State of the World’s Children 2021<span class="visually-hidden"> (opens in a new tab)</span></a></p>
-      </aside>
-
-      <section class="chapter" id="night" data-stop="night" data-name="lights off">
-        <div class="chapter__inner">
-          <time class="time" datetime="23:45">11:45 pm</time>
-          <h2>If today sounded a bit like yours, tell someone.</h2>
-          <p>The family group has finally gone quiet. His phone is charging in the kitchen, and for the first time this week he’s asleep before midnight.</p>
-          <p>Around 1 in 7 people aged 10 to 19 lives with a mental health condition, and much of it goes unrecognised and untreated (<a href="https://www.who.int/news-room/fact-sheets/detail/adolescent-mental-health" target="_blank" rel="noopener">WHO<span class="visually-hidden">, opens in a new tab</span></a>). A friend, a parent, a teacher or your school counsellor is a good place to start. If it can’t wait, this line is free and open right now.</p>
-          <div class="helpline" id="help">
-            <p class="helpline__name">Tele-MANAS <span>Government of India mental health helpline</span></p>
-            <p class="helpline__numbers">
-              <a class="helpline__number" href="tel:14416">14416</a>
-              <span class="helpline__or">or</span>
-              <a class="helpline__number helpline__number--long" href="tel:18008914416">1-800-891-4416</a>
-            </p>
-            <p class="helpline__meta">Free · 24×7 · choose your language</p>
-            <p class="helpline__source">From the Ministry of Health: <a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=1866498" target="_blank" rel="noopener">launch, 2022<span class="visually-hidden"> (opens in a new tab)</span></a> · <a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2022057" target="_blank" rel="noopener">numbers, 2024<span class="visually-hidden"> (opens in a new tab)</span></a></p>
-          </div>
-          <p class="more-help"><a href="talk.html">All the help in one place: more free helplines, and what happens when you call <span aria-hidden="true">→</span></a></p>
-          <p class="more-help"><a href="talk.html#start-the-conversation">How to start the conversation with someone you know <span aria-hidden="true">→</span></a></p>
-          <p class="emergency">In danger right now? Call <a href="tel:112">112</a>, India’s emergency number (<a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=1565239" target="_blank" rel="noopener">source<span class="visually-hidden">, opens in a new tab</span></a>).</p>
-          <a class="note note--squiggle" href="#take-a-minute">need a moment first? take a minute ↓</a>
-        </div>
-      </section>
-
-      <!-- Not a time of day: no data-stop, so it stays out of the colour timeline
-           and the dial menu, and sits in the night palette after the story. -->
-      <section class="chapter minute" id="take-a-minute" aria-labelledby="minute-title">
-        <div class="chapter__inner">
-          <h2 id="minute-title">Take a minute.</h2>
-          <p>Pick a rhythm and breathe along with the shape. Stop whenever you like.</p>
-
-          <div class="breath" data-breath>
-            <!-- Without JS: the two patterns as plain instructions. -->
-            <div class="breath__fallback">
-              <p><strong>Box breathing:</strong> breathe in for 4, hold for 4, breathe out for 4, hold for 4. Do it three times.</p>
-              <p><strong>4-7-8:</strong> breathe in for 4, hold for 7, breathe out slowly for 8. Do it three times.</p>
+          <details class="feeling feeling--stress">
+            <summary class="feeling__face">
+              <svg class="feeling__art" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+                <g class="art-stack">
+                  <rect x="36" y="58" width="48" height="9" rx="2" />
+                  <rect x="38" y="47" width="44" height="9" rx="2" />
+                  <rect x="34" y="36" width="50" height="9" rx="2" />
+                  <rect x="40" y="25" width="40" height="9" rx="2" />
+                  <rect x="37" y="14" width="46" height="9" rx="2" />
+                </g>
+              </svg>
+              <span class="feeling__name">Stress</span>
+              <span class="feeling__hint">what it can feel like</span>
+            </summary>
+            <div class="feeling__inside">
+              <p class="feeling__label">It can feel like…</p>
+              <ul class="feeling__lines">
+                <li>Your to-do list grows faster than you can tick things off.</li>
+                <li>Marks, coaching and everyone’s hopes, all at once.</li>
+                <li>Headaches, a clenched jaw, snapping at people you love.</li>
+                <li>Even resting feels like falling behind.</li>
+              </ul>
+              <p class="feeling__okay">Stress is what a lot of pressure does to anyone. You can put some of it down, and you can ask for help.</p>
+              <a class="feeling__link" href="/thoughts">Untangle a thought <span aria-hidden="true">→</span></a>
             </div>
-
-            <div class="breath__app" hidden>
-              <fieldset class="pills breath__rhythm">
-                <legend>rhythm</legend>
-                <label><input type="radio" name="breath-pattern" value="box" checked /><span>Box breathing <small>4 · 4 · 4 · 4</small></span></label>
-                <label><input type="radio" name="breath-pattern" value="478" /><span>4-7-8 <small>4 · 7 · 8</small></span></label>
-              </fieldset>
-
-              <div class="breath__stage">
-                <svg class="breath__art" viewBox="0 0 300 300" aria-hidden="true" focusable="false">
-                  <defs>
-                    <radialGradient id="breath-fill" cx="50%" cy="45%" r="60%">
-                      <stop offset="0%" class="breath__fill-core" />
-                      <stop offset="100%" class="breath__fill-edge" />
-                    </radialGradient>
-                  </defs>
-                  <circle class="breath__track" cx="150" cy="150" r="140" />
-                  <circle class="breath__progress" cx="150" cy="150" r="140" pathLength="1000" transform="rotate(-90 150 150)" />
-                  <g class="breath__marks"></g>
-                  <path class="breath__halo" />
-                  <path class="breath__blob" />
-                </svg>
-              </div>
-
-              <p class="breath__cue" aria-live="polite">ready when you are</p>
-
-              <div class="breath__rounds">
-                <span class="visually-hidden breath__rounds-label"></span>
-                <span class="breath__dot" aria-hidden="true"></span>
-                <span class="breath__dot" aria-hidden="true"></span>
-                <span class="breath__dot" aria-hidden="true"></span>
-              </div>
-
-              <div class="breath__controls">
-                <button class="breath__go" type="button">Begin</button>
-                <fieldset class="pills breath__sound">
-                  <legend>sound</legend>
-                  <label><input type="radio" name="breath-sound" value="off" checked /><span>off</span></label>
-                  <label><input type="radio" name="breath-sound" value="rain" /><span>rain</span></label>
-                  <label><input type="radio" name="breath-sound" value="waves" /><span>waves</span></label>
-                </fieldset>
-              </div>
-
-              <div class="breath__done" hidden>
-                <p>Three rounds, nice and slow.</p>
-                <p>If your shoulders are still up near your ears, go again. This will be here later too.</p>
-              </div>
-
-              <p class="breath__tip">If a hold feels uncomfortable, skip it and just breathe gently. There’s no wrong way to do this.</p>
-            </div>
-          </div>
-          <a class="note note--tick" href="#five-senses">rather do something with your hands? try 5-4-3-2-1 ↓</a>
+          </details>
         </div>
       </section>
 
-      <!-- 5-4-3-2-1 grounding. Like "Take a minute": no data-stop, night palette.
-           Without JS the pages simply stack; src/sections/grounding.js turns them
-           into a notebook you page through. Nothing typed here is stored. -->
-      <section class="chapter grounding" id="five-senses" aria-labelledby="grounding-title">
-        <div class="chapter__inner">
-          <h2 id="grounding-title">Name what’s in the room.</h2>
-          <p>When your head won’t stop, give it a smaller job: five things you can see, down to one thing you can taste.</p>
-
-          <div class="notebook" data-notebook>
-            <article class="page page--intro" aria-labelledby="g-intro-title">
-              <div class="page__top">
-                <span class="page__count">before we start</span>
-                <svg class="page__doodle" viewBox="0 0 120 90" aria-hidden="true" focusable="false">
-                  <path style="--i:0" d="M24 72 L 80 20 C 84 16, 90 18, 93 22 C 96 26, 96 30, 92 34 L 36 84" />
-                  <path style="--i:1" d="M24 72 L 16 90 L 36 84" />
-                  <path style="--i:2" d="M72 28 C 76 30, 82 36, 84 41" />
-                  <path style="--i:3" d="M44 88 C 60 84, 82 89, 104 85" />
-                </svg>
-              </div>
-              <h3 id="g-intro-title">One sense at a time.</h3>
-              <p>Go slowly. Write things down if it helps, or just notice them. Both count.</p>
-              <p class="page__privacy">This page doesn’t save or send anything you type. It stays on your screen and disappears when you leave or start again.</p>
-              <div class="page__nav" hidden>
-                <span></span>
-                <button class="page__btn page__btn--next" type="button">Start</button>
-              </div>
-            </article>
-
-            <article class="page" aria-labelledby="g-see-title">
-              <div class="page__top">
-                <span class="page__count">1 of 5</span>
-                <svg class="page__doodle" viewBox="0 0 120 90" aria-hidden="true" focusable="false">
-                  <path style="--i:0" d="M12 46 C 30 22, 88 20, 108 44" />
-                  <path style="--i:1" d="M14 48 C 34 70, 86 70, 106 46" />
-                  <path style="--i:2" d="M60 33 C 70 33, 74 41, 73 47 C 72 56, 64 60, 58 59 C 49 58, 46 50, 47 45 C 48 38, 53 33, 62 34" />
-                  <path style="--i:3" d="M59 42 C 63 42, 64 46, 62 48 C 60 50, 56 49, 56 46 C 56 44, 57 42, 60 42" />
-                  <path style="--i:4" d="M30 31 L 25 22 M46 25 L 43 15 M62 23 L 62 13 M78 25 L 81 15 M93 31 L 98 23" />
-                </svg>
-              </div>
-              <h3 id="g-see-title">5 things you can see</h3>
-              <p>Look around slowly. Big things, tiny things, a colour, a shadow. Let your eyes land and stay for a moment.</p>
-              <ol class="page__lines">
-                <li><label><span class="visually-hidden">Something you can see, 1 of 5</span><input type="text" autocomplete="off" spellcheck="false" placeholder="the light on the wall" /></label></li>
-                <li><label><span class="visually-hidden">Something you can see, 2 of 5</span><input type="text" autocomplete="off" spellcheck="false" placeholder="my own hands" /></label></li>
-                <li><label><span class="visually-hidden">Something you can see, 3 of 5</span><input type="text" autocomplete="off" spellcheck="false" placeholder="something blue" /></label></li>
-                <li><label><span class="visually-hidden">Something you can see, 4 of 5</span><input type="text" autocomplete="off" spellcheck="false" placeholder="a shadow" /></label></li>
-                <li><label><span class="visually-hidden">Something you can see, 5 of 5</span><input type="text" autocomplete="off" spellcheck="false" placeholder="the sky outside" /></label></li>
-              </ol>
-              <div class="page__nav" hidden>
-                <button class="page__btn page__btn--back" type="button">Back</button>
-                <button class="page__btn page__btn--next" type="button">Next</button>
-              </div>
-            </article>
-
-            <article class="page" aria-labelledby="g-touch-title">
-              <div class="page__top">
-                <span class="page__count">2 of 5</span>
-                <svg class="page__doodle" viewBox="0 0 120 90" aria-hidden="true" focusable="false">
-                  <path style="--i:0" d="M40 86 C 38 72, 31 62, 25 54 C 20 47, 27 41, 33 47 L 41 57 L 39 23 C 39 17, 47 17, 47 23 L 48 47 L 50 15 C 50 9, 58 9, 58 15 L 58 47 L 61 19 C 61 13, 69 13, 69 19 L 67 49 L 73 29 C 75 23, 82 25, 80 31 L 73 61 C 71 73, 67 81, 65 87" />
-                  <path style="--i:1" d="M90 50 C 96 52, 100 56, 102 62 M94 40 C 102 42, 108 48, 110 56" />
-                </svg>
-              </div>
-              <h3 id="g-touch-title">4 things you can touch</h3>
-              <p>Notice what’s against your skin: your clothes, the floor under your feet, something cool or soft.</p>
-              <ol class="page__lines">
-                <li><label><span class="visually-hidden">Something you can touch, 1 of 4</span><input type="text" autocomplete="off" spellcheck="false" placeholder="the chair under me" /></label></li>
-                <li><label><span class="visually-hidden">Something you can touch, 2 of 4</span><input type="text" autocomplete="off" spellcheck="false" placeholder="my sleeve" /></label></li>
-                <li><label><span class="visually-hidden">Something you can touch, 3 of 4</span><input type="text" autocomplete="off" spellcheck="false" placeholder="the cool floor" /></label></li>
-                <li><label><span class="visually-hidden">Something you can touch, 4 of 4</span><input type="text" autocomplete="off" spellcheck="false" placeholder="my phone case" /></label></li>
-              </ol>
-              <div class="page__nav" hidden>
-                <button class="page__btn page__btn--back" type="button">Back</button>
-                <button class="page__btn page__btn--next" type="button">Next</button>
-              </div>
-            </article>
-
-            <article class="page" aria-labelledby="g-hear-title">
-              <div class="page__top">
-                <span class="page__count">3 of 5</span>
-                <svg class="page__doodle" viewBox="0 0 120 90" aria-hidden="true" focusable="false">
-                  <path style="--i:0" d="M66 18 C 87 18, 95 39, 87 54 C 81 64, 73 62, 71 72 C 69 82, 57 85, 52 76" />
-                  <path style="--i:1" d="M70 33 C 79 33, 81 44, 75 48 C 71 51, 66 47, 68 42" />
-                  <path style="--i:2" d="M41 34 C 35 40, 35 50, 41 56" />
-                  <path style="--i:3" d="M31 27 C 21 37, 21 53, 31 63" />
-                </svg>
-              </div>
-              <h3 id="g-hear-title">3 things you can hear</h3>
-              <p>Listen past the loudest thing. A fan, the traffic, birds, a pressure cooker somewhere, your own breath.</p>
-              <ol class="page__lines">
-                <li><label><span class="visually-hidden">Something you can hear, 1 of 3</span><input type="text" autocomplete="off" spellcheck="false" placeholder="the ceiling fan" /></label></li>
-                <li><label><span class="visually-hidden">Something you can hear, 2 of 3</span><input type="text" autocomplete="off" spellcheck="false" placeholder="a horn outside" /></label></li>
-                <li><label><span class="visually-hidden">Something you can hear, 3 of 3</span><input type="text" autocomplete="off" spellcheck="false" placeholder="my own breathing" /></label></li>
-              </ol>
-              <div class="page__nav" hidden>
-                <button class="page__btn page__btn--back" type="button">Back</button>
-                <button class="page__btn page__btn--next" type="button">Next</button>
-              </div>
-            </article>
-
-            <article class="page" aria-labelledby="g-smell-title">
-              <div class="page__top">
-                <span class="page__count">4 of 5</span>
-                <svg class="page__doodle" viewBox="0 0 120 90" aria-hidden="true" focusable="false">
-                  <path style="--i:0" d="M72 14 C 72 33, 80 47, 88 57 C 92 63, 86 69, 78 67 C 74 66, 72 69, 67 69" />
-                  <path style="--i:1" d="M18 64 C 24 58, 30 70, 36 64 C 42 58, 48 70, 54 64" />
-                  <path style="--i:2" d="M22 47 C 28 41, 34 53, 40 47 C 46 41, 52 53, 58 47" />
-                </svg>
-              </div>
-              <h3 id="g-smell-title">2 things you can smell</h3>
-              <p>If nothing comes, that’s okay. You can remember a smell you like instead: rain on dry ground, chai, a freshly washed shirt.</p>
-              <ol class="page__lines">
-                <li><label><span class="visually-hidden">Something you can smell, 1 of 2</span><input type="text" autocomplete="off" spellcheck="false" placeholder="chai from the kitchen" /></label></li>
-                <li><label><span class="visually-hidden">Something you can smell, 2 of 2</span><input type="text" autocomplete="off" spellcheck="false" placeholder="rain on dry ground" /></label></li>
-              </ol>
-              <div class="page__nav" hidden>
-                <button class="page__btn page__btn--back" type="button">Back</button>
-                <button class="page__btn page__btn--next" type="button">Next</button>
-              </div>
-            </article>
-
-            <article class="page" aria-labelledby="g-taste-title">
-              <div class="page__top">
-                <span class="page__count">5 of 5</span>
-                <svg class="page__doodle" viewBox="0 0 120 90" aria-hidden="true" focusable="false">
-                  <path style="--i:0" d="M38 40 L 44 82 C 46 86, 74 86, 76 82 L 82 40" />
-                  <path style="--i:1" d="M35 40 C 50 45, 70 45, 85 40" />
-                  <path style="--i:2" d="M42 55 C 54 58, 66 58, 78 55" />
-                  <path style="--i:3" d="M52 32 C 46 26, 58 21, 52 13 M67 32 C 61 26, 73 21, 67 13" />
-                </svg>
-              </div>
-              <h3 id="g-taste-title">1 thing you can taste</h3>
-              <p>Maybe toothpaste, the last thing you ate, or take a sip of water and really notice it.</p>
-              <ol class="page__lines">
-                <li><label><span class="visually-hidden">Something you can taste</span><input type="text" autocomplete="off" spellcheck="false" placeholder="a sip of water" /></label></li>
-              </ol>
-              <div class="page__nav" hidden>
-                <button class="page__btn page__btn--back" type="button">Back</button>
-                <button class="page__btn page__btn--next" type="button">Next</button>
-              </div>
-            </article>
-
-            <article class="page page--end" aria-labelledby="g-end-title">
-              <div class="page__top">
-                <span class="page__count">done</span>
-                <svg class="page__doodle" viewBox="0 0 120 90" aria-hidden="true" focusable="false">
-                  <path style="--i:0" d="M12 74 C 40 71, 80 76, 108 72" />
-                  <path style="--i:1" d="M60 73 C 60 61, 58 51, 60 40" />
-                  <path style="--i:2" d="M60 53 C 48 53, 40 45, 38 37 C 48 37, 58 43, 60 53" />
-                  <path style="--i:3" d="M60 45 C 68 39, 80 37, 86 41 C 82 49, 70 51, 60 47" />
-                </svg>
-              </div>
-              <h3 id="g-end-title">That’s the room you’re in.</h3>
-              <p>Not the exam hall, not tomorrow, not the conversation you’re dreading. This room. Come back to it whenever your thoughts start running ahead.</p>
-              <p>If it still feels like too much, <a href="talk.html">talk to someone</a>.</p>
-              <div class="page__nav" hidden>
-                <button class="page__btn page__btn--back" type="button">Back</button>
-                <button class="page__btn page__btn--again" type="button">Start again</button>
-              </div>
-            </article>
-          </div>
+      <!-- Two numbers, each checked on 18 Oct 2026 on the source linked under it. -->
+      <section class="home__facts" aria-labelledby="facts-title">
+        <h2 id="facts-title" class="visually-hidden">A few numbers</h2>
+        <div class="home-fact">
+          <p class="home-fact__text"><span class="home-fact__figure">1 in 7</span> young people aged 10 to 19, around the world, experiences a mental health condition.</p>
+          <p class="home-fact__source">Source: <a href="https://www.who.int/news-room/fact-sheets/detail/adolescent-mental-health" target="_blank" rel="noopener">WHO, Mental health of adolescents, 2025<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+        </div>
+        <div class="home-fact">
+          <p class="home-fact__text"><span class="home-fact__figure">1 in 7</span> young people in India, aged 15 to 24, said they often feel depressed or have little interest in doing things.</p>
+          <p class="home-fact__source">Source: <a href="https://www.unicef.org/india/press-releases/unicef-report-spotlights-mental-health-impact-covid-19-children-and-young-people" target="_blank" rel="noopener">UNICEF India, The State of the World’s Children 2021<span class="visually-hidden"> (opens in a new tab)</span></a></p>
         </div>
       </section>
 
-      <!-- Myths. Like the tools above: no data-stop, night palette. Each note
-           borrows a daytime stop's paper and ink. Without JS: a scrollable row of
-           notes showing myth and fact together; src/sections/myths.js adds the
-           flip and the arrow buttons. -->
-      <section class="chapter myths" id="myths" aria-labelledby="myths-title">
-        <div class="chapter__inner">
-          <h2 id="myths-title">Myths we grew up with.</h2>
-          <p>Usually from people who loved us and meant well. Tap a note to see what’s actually true.</p>
-
-          <div class="myths__deck" data-myths>
-            <ul class="myths__track" aria-label="Myths and what’s actually true, 8 notes">
-              <li class="myth" style="--paper: var(--dawn-bg); --ink: var(--dawn-fg); --tape: var(--dawn-accent)">
-                <div class="myth__note">
-                  <div class="myth__face myth__face--front">
-                    <span class="myth__tag">myth</span>
-                    <p class="myth__text">“It’s just a phase.”</p>
-                    <span class="myth__hint" aria-hidden="true">tap to flip</span>
-                  </div>
-                  <div class="myth__face myth__face--back">
-                    <span class="myth__tag">actually…</span>
-                    <p class="myth__fact">Some moods do pass. But if sadness or worry hangs around for weeks and gets in the way of sleep, school or friends, it deserves real attention, not a wait-and-see. Asking early is never an overreaction.</p>
-                  </div>
-                </div>
-              </li>
-              <li class="myth" style="--paper: var(--morning-bg); --ink: var(--morning-fg); --tape: var(--morning-accent)">
-                <div class="myth__note">
-                  <div class="myth__face myth__face--front">
-                    <span class="myth__tag">myth</span>
-                    <p class="myth__text">“Therapy is for crazy people.”</p>
-                    <span class="myth__hint" aria-hidden="true">tap to flip</span>
-                  </div>
-                  <div class="myth__face myth__face--back">
-                    <span class="myth__tag">actually…</span>
-                    <p class="myth__fact">Therapy is for anyone carrying something heavy: exam stress, a breakup, a fight at home, a mood you can’t explain. It’s like seeing a doctor for a sprain. You don’t wait until you can’t walk.</p>
-                  </div>
-                </div>
-              </li>
-              <li class="myth" style="--paper: var(--afternoon-bg); --ink: var(--afternoon-fg); --tape: var(--afternoon-accent)">
-                <div class="myth__note">
-                  <div class="myth__face myth__face--front">
-                    <span class="myth__tag">myth</span>
-                    <p class="myth__text">“Boys don’t cry.”</p>
-                    <span class="myth__hint" aria-hidden="true">tap to flip</span>
-                  </div>
-                  <div class="myth__face myth__face--back">
-                    <span class="myth__tag">actually…</span>
-                    <p class="myth__fact">Everyone cries. Boys are usually taught to swallow it, so they carry the same feelings with nowhere to put them. Most of the men you know have cried too. They just didn’t let you see.</p>
-                  </div>
-                </div>
-              </li>
-              <li class="myth" style="--paper: var(--midday-bg); --ink: var(--midday-fg); --tape: var(--midday-accent)">
-                <div class="myth__note">
-                  <div class="myth__face myth__face--front">
-                    <span class="myth__tag">myth</span>
-                    <p class="myth__text">“Just think positive and it’ll go away.”</p>
-                    <span class="myth__hint" aria-hidden="true">tap to flip</span>
-                  </div>
-                  <div class="myth__face myth__face--back">
-                    <span class="myth__tag">actually…</span>
-                    <p class="myth__fact">If it worked like that, nobody would struggle. Feelings aren’t a switch you flip by trying harder. What helps is real support: someone who listens, rest, and sometimes a professional. “Just be happy” usually makes people feel more alone.</p>
-                  </div>
-                </div>
-              </li>
-              <li class="myth" style="--paper: var(--sunset-bg); --ink: var(--sunset-fg); --tape: var(--sunset-accent)">
-                <div class="myth__note">
-                  <div class="myth__face myth__face--front">
-                    <span class="myth__tag">myth</span>
-                    <p class="myth__text">“What stress? You’re just a kid.”</p>
-                    <span class="myth__hint" aria-hidden="true">tap to flip</span>
-                  </div>
-                  <div class="myth__face myth__face--back">
-                    <span class="myth__tag">actually…</span>
-                    <p class="myth__fact">Ranks, comparison, friendships, expectations at home: teenage stress is real stress. Around 1 in 7 people aged 10 to 19 lives with a mental health condition (<a href="https://www.who.int/news-room/fact-sheets/detail/adolescent-mental-health" target="_blank" rel="noopener">WHO<span class="visually-hidden">, opens in a new tab</span></a>). Being young doesn’t make it small.</p>
-                  </div>
-                </div>
-              </li>
-              <li class="myth" style="--paper: var(--morning-bg); --ink: var(--morning-fg); --tape: var(--morning-accent)">
-                <div class="myth__note">
-                  <div class="myth__face myth__face--front">
-                    <span class="myth__tag">myth</span>
-                    <p class="myth__text">“Talking about it will only make it worse.”</p>
-                    <span class="myth__hint" aria-hidden="true">tap to flip</span>
-                  </div>
-                  <div class="myth__face myth__face--back">
-                    <span class="myth__tag">actually…</span>
-                    <p class="myth__fact">Saying it out loud usually makes it lighter, not heavier. Being listened to, even once, can turn a spiral into something you can actually look at. You don’t need the perfect words. “Not really, honestly” is enough.</p>
-                  </div>
-                </div>
-              </li>
-              <li class="myth" style="--paper: var(--dawn-bg); --ink: var(--dawn-fg); --tape: var(--dawn-accent)">
-                <div class="myth__note">
-                  <div class="myth__face myth__face--front">
-                    <span class="myth__tag">myth</span>
-                    <p class="myth__text">“Strong people handle it alone.”</p>
-                    <span class="myth__hint" aria-hidden="true">tap to flip</span>
-                  </div>
-                  <div class="myth__face myth__face--back">
-                    <span class="myth__tag">actually…</span>
-                    <p class="myth__fact">The people who seem strongest usually have someone they call when it gets bad. Asking for help is a skill, and like any skill, the second time is easier than the first.</p>
-                  </div>
-                </div>
-              </li>
-              <li class="myth" style="--paper: var(--afternoon-bg); --ink: var(--afternoon-fg); --tape: var(--afternoon-accent)">
-                <div class="myth__note">
-                  <div class="myth__face myth__face--front">
-                    <span class="myth__tag">myth</span>
-                    <p class="myth__text">“Sleep is for after the exams.”</p>
-                    <span class="myth__hint" aria-hidden="true">tap to flip</span>
-                  </div>
-                  <div class="myth__face myth__face--back">
-                    <span class="myth__tag">actually…</span>
-                    <p class="myth__fact">Teenagers need 8 to 10 hours of sleep a night (<a href="https://www.cdc.gov/sleep/about/index.html" target="_blank" rel="noopener">CDC<span class="visually-hidden">, opens in a new tab</span></a>). A tired brain makes everything harder: focus, mood, memory. Revising at 2 am feels productive; the trouble is remembering any of it the next day.</p>
-                  </div>
-                </div>
-              </li>
-            </ul>
-
-            <div class="myths__controls" hidden>
-              <button class="myths__arrow myths__arrow--prev" type="button" aria-label="Previous myth">
-                <svg viewBox="0 0 40 24" aria-hidden="true" focusable="false"><path d="M36 13 C 26 11, 14 13, 5 12" /><path d="M12 5 L 4 12 L 12 19" /></svg>
-              </button>
-              <span class="myths__count" aria-hidden="true">1 / 8</span>
-              <button class="myths__arrow myths__arrow--next" type="button" aria-label="Next myth">
-                <svg viewBox="0 0 40 24" aria-hidden="true" focusable="false"><path d="M4 11 C 14 13, 26 11, 35 12" /><path d="M28 5 L 36 12 L 28 19" /></svg>
-              </button>
-              <span class="myths__swipe" aria-hidden="true">or swipe</span>
-            </div>
-            <p class="visually-hidden" aria-live="polite" data-myths-status></p>
-          </div>
-        </div>
-      </section>
-
-      <!-- A note for tonight: the quiet end of the day. No data-stop, night
-           palette. Without JS: the notes simply read as a list. With JS
-           (src/sections/tonight.js) each note is a button: pick one, copy it,
-           or keep it pinned in the corner until the page is closed. Nothing
-           is saved or sent anywhere. -->
-      <section class="chapter tonight" id="tonight" aria-labelledby="tonight-title">
-        <div class="chapter__inner">
-          <h2 id="tonight-title">A note for <span class="mark">tonight</span></h2>
-          <p class="tonight__intro">Pick one to keep with you. You don’t have to do anything with it.</p>
-
-          <div class="tonight__desk" data-tonight>
-            <ul class="tonight__notes" aria-label="Notes for tonight">
-              <li class="tonight__note tonight__note--pin" style="--paper: var(--dawn-bg); --ink: var(--dawn-fg); --pin: var(--dawn-accent)">
-                <p class="tonight__text">I don’t have to solve everything tonight.</p>
-              </li>
-              <li class="tonight__note tonight__note--tape" style="--paper: var(--midday-bg); --ink: var(--midday-fg); --pin: var(--midday-accent)">
-                <p class="tonight__text">Today was hard. I still got through it.</p>
-              </li>
-              <li class="tonight__note tonight__note--fold" style="--paper: var(--afternoon-bg); --ink: var(--afternoon-fg); --pin: var(--afternoon-accent)">
-                <p class="tonight__text">Resting isn’t the same as giving up.</p>
-              </li>
-              <li class="tonight__note tonight__note--clip" style="--paper: var(--morning-bg); --ink: var(--morning-fg); --pin: var(--morning-accent)">
-                <p class="tonight__text">One bad test doesn’t decide my whole life.</p>
-              </li>
-              <li class="tonight__note tonight__note--pin" style="--paper: var(--sunset-bg); --ink: var(--sunset-fg); --pin: var(--sunset-accent)">
-                <p class="tonight__text">Marks matter. They’re just not all of me.</p>
-              </li>
-              <li class="tonight__note tonight__note--tape" style="--paper: var(--dawn-bg); --ink: var(--dawn-fg); --pin: var(--dawn-accent)">
-                <p class="tonight__text">It’s okay to feel like this. It won’t always feel this heavy.</p>
-              </li>
-              <li class="tonight__note tonight__note--fold" style="--paper: var(--midday-bg); --ink: var(--midday-fg); --pin: var(--midday-accent)">
-                <p class="tonight__text">I can ask for help tomorrow. Or tonight.</p>
-              </li>
-              <li class="tonight__note tonight__note--clip" style="--paper: var(--afternoon-bg); --ink: var(--afternoon-fg); --pin: var(--afternoon-accent)">
-                <p class="tonight__text"><span lang="hi-Latn">Kal ki tension kal.</span> Sleep first.</p>
-              </li>
-              <li class="tonight__note tonight__note--own" style="--paper: var(--night-particle); --ink: var(--night-bg); --pin: var(--night-accent)" data-own hidden>
-                <button class="tonight__pick" type="button">Write my own</button>
-                <p class="tonight__text" tabindex="-1" aria-hidden="true" hidden><span class="visually-hidden">Your note for tonight: </span><span class="tonight__words"></span></p>
-              </li>
-            </ul>
-
-            <div class="tonight__actions" data-actions hidden>
-              <div class="tonight__write" data-write hidden>
-                <label class="tonight__label" for="tonight-own">Your note for tonight</label>
-                <textarea class="tonight__field" id="tonight-own" maxlength="120" rows="3" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-describedby="tonight-own-hint"></textarea>
-                <p class="tonight__hint" id="tonight-own-hint">A line or two, up to 120 characters. Say it the way you’d say it to a friend.</p>
-                <button class="tonight__btn tonight__btn--main" type="button" data-act="use">Keep this note</button>
-              </div>
-              <div class="tonight__options" data-options>
-                <button class="tonight__btn tonight__btn--main" type="button" data-act="copy">Copy</button>
-                <button class="tonight__btn" type="button" data-act="pin">Keep it on screen</button>
-              </div>
-              <button class="tonight__btn tonight__btn--quiet" type="button" data-act="another">Choose another</button>
-            </div>
-            <p class="visually-hidden" role="status" data-tonight-status></p>
-          </div>
-
-          <p class="tonight__private">Nothing here is saved or sent anywhere. Your note stays only until you close this page.</p>
-
-          <div class="tonight__end">
-            <p class="tonight__goodnight">Goodnight, Aarav. Goodnight to you too.</p>
-            <p class="tonight__help">If tonight feels heavy, you don’t have to wait for morning. <a href="talk.html">Talk to someone</a>, or call Tele-MANAS on <a href="tel:14416"><span aria-hidden="true">14416</span><span class="visually-hidden">1 4 4 1 6</span></a>: it’s free, any time of night.</p>
-            <a class="note note--tick" href="#dawn">start the day again ↑</a>
-          </div>
-        </div>
+      <section class="home__find" aria-labelledby="find-title">
+        <h2 id="find-title">What you’ll find here</h2>
+        <ul class="find">
+          <li>
+            <a class="find__item" href="/story">
+              <svg class="find__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M3 19.5C9 18.8 18 19.9 25 19.2" /><path d="M8.6 19.2C8.8 15.9 11.2 13.6 14.2 13.6C17.2 13.6 19.5 16 19.6 19.1" /><path d="M14.1 6.6V9.6M7.4 9.3L9.3 11.3M20.9 9.2L19 11.2" /></svg>
+              <span class="find__name">The story</span>
+              <span class="find__line">One student’s day, from morning to night</span>
+            </a>
+          </li>
+          <li>
+            <a class="find__item" href="/breathe">
+              <svg class="find__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M14.2 4.4C19.9 4.3 23.7 8.4 23.6 14.1C23.5 19.8 19.6 23.7 13.9 23.6C8.3 23.5 4.4 19.6 4.5 13.9C4.6 8.6 8.4 4.5 13.6 4.4" /><path d="M14 9.6C16.6 9.5 18.5 11.5 18.4 14.1C18.3 16.6 16.4 18.5 13.9 18.4C11.4 18.3 9.5 16.4 9.6 13.9C9.7 11.6 11.4 9.7 13.6 9.6" /></svg>
+              <span class="find__name">Calming exercises</span>
+              <span class="find__line">Breathe, ground yourself, untangle a thought</span>
+            </a>
+          </li>
+          <li>
+            <a class="find__item" href="/myths">
+              <svg class="find__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M7 5.5H18.5L22 9V22.5H7Z" /><path d="M18.5 5.5V9H22" /><path d="M10.5 13H18.5M10.5 16.5H16" /></svg>
+              <span class="find__name">Myths we grew up with</span>
+              <span class="find__line">What families often say, and what’s true</span>
+            </a>
+          </li>
+          <li>
+            <a class="find__item" href="/start-the-conversation">
+              <svg class="find__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M6.8 5.2C11.6 4.9 17.4 5 21.6 5.3C23.4 5.4 24.2 6.6 24.2 8.4C24.3 10.8 24.2 13.2 24 15.4C23.9 17 22.8 17.9 21.2 17.9C18 18 15 18 12.6 18L8.2 22.4L8.8 18C7.6 18 6.6 18 5.9 17.8C4.6 17.5 3.9 16.6 3.9 15.1C3.8 12.8 3.8 10.4 3.9 8.2C4 6.4 5 5.3 6.8 5.2Z" /><path d="M8.6 10.1C11.6 9.9 15.6 10 19.2 10.2M8.6 13.4C10.8 13.3 13.4 13.3 15.6 13.4" /></svg>
+              <span class="find__name">How to talk to someone</span>
+              <span class="find__line">Words to start with a friend, a parent or a teacher</span>
+            </a>
+          </li>
+          <li>
+            <a class="find__item" href="/talk">
+              <svg class="find__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M8.9 4.6L11.2 4.3C11.7 4.2 12.1 4.5 12.3 5L13.6 8.6C13.8 9.1 13.6 9.6 13.2 9.9L11.6 11C12.6 13.4 14.4 15.3 16.9 16.5L18.1 14.9C18.4 14.5 18.9 14.4 19.4 14.6L22.9 16C23.4 16.2 23.7 16.7 23.6 17.2L23.2 19.6C23.1 20.9 22 21.8 20.7 21.7C13 21.2 7 15.2 6.4 7.4C6.3 6 7.4 4.8 8.9 4.6Z" /></svg>
+              <span class="find__name">Free helplines</span>
+              <span class="find__line">Tele-MANAS 14416 and more, in India</span>
+            </a>
+          </li>
+          <li>
+            <a class="find__item" href="/tonight">
+              <svg class="find__icon" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M18.5 5.5C14.2 6.2 11.4 10 12 14.3C12.6 18.6 16.6 21.5 20.8 20.8C19.2 22.6 16.9 23.6 14.4 23.6C9.3 23.6 5.2 19.5 5.2 14.4C5.2 9.3 9.3 5.2 14.4 5.2C15.9 5.2 17.3 5.6 18.5 5.5Z" /><path d="M21.5 6.5V10M19.8 8.2H23.2" /></svg>
+              <span class="find__name">A note for tonight</span>
+              <span class="find__line">One gentle reminder to keep before you sleep</span>
+            </a>
+          </li>
+        </ul>
+        <p class="home__more"><a href="/library">Or see everything in the library <span aria-hidden="true">→</span></a></p>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="site-footer__inner">
-        <p class="site-footer__sign">lights off. asleep before midnight, this time.</p>
-        <div class="site-footer__text">
-          <p>One Ordinary Day is a small project about youth mental health, made for students in India having a day like Aarav’s, and for the parents, friends and teachers around them. Aarav is made up. The helpline numbers are real, and were checked against their official sources in October 2026.</p>
-          <p>If tonight’s a hard one, the <a href="talk.html">Talk to someone page</a> has free helplines, most of them open all night, and <a href="talk.html#start-the-conversation">ways to bring it up with someone you know</a>.</p>
-          <p><a class="site-footer__about" href="#about">About this site</a></p>
-        </div>
-      </div>
-    </footer>
-    <script type="module" src="/src/main.js"></script>
+    <!-- include:footer -->
+    <script type="module" src="/src/pages/home.js"></script>
   </body>
 </html>

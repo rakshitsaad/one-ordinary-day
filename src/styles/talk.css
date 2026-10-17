@@ -1,6 +1,9 @@
 /*
-  "Talk to someone" page (talk.html). Calm and still: the dawn palette from
-  tokens.css, no motion beyond a gentle smooth scroll for in-page links.
+  The still pages: /talk (Talk to someone), and the column, sections and way
+  back shared by /start-the-conversation and /about (body.talk-page). Calm and
+  still: the dawn palette from tokens.css, no motion beyond the page fade and a
+  gentle smooth scroll for in-page links. The conversation guide's own styles
+  are in conversation.css.
 */
 
 @media (prefers-reduced-motion: no-preference) {
@@ -16,22 +19,10 @@
   margin-inline: auto;
 }
 
-/* ---- Top bar: always a clear way back ------------------------------------- */
-
-.talk-top {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  min-height: calc(var(--bar-h) + env(safe-area-inset-top, 0px));
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-left: var(--gutter-left);
-  padding-right: var(--gutter-right);
-  background: var(--bg); /* solid, so nothing scrolls visibly underneath */
-  border-bottom: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+/* "Back to library" sits in the column, not the wider page frame. */
+.talk-page .site-main__back {
+  width: auto;
+  margin: 0;
 }
 
 /* The help page stays still: no lift, press, swelling highlighter or drawn-in
@@ -50,16 +41,6 @@ body.talk-page :is(.talk, .talk-end__home, .dial__call, .copy-btn):is(:hover, :a
 
 body.talk-page .talk-end__home:hover::after {
   scale: none;
-}
-
-.talk-top__back {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-height: 52px;
-  font-weight: 600;
-  text-decoration: none;
-  color: var(--fg);
 }
 
 /* Anything linked to (the floating button, the "back" links) clears the bar. */
@@ -515,144 +496,6 @@ body.talk-page .talk-end__home:hover::after {
   color: var(--fg);
 }
 
-/* ---- How do I start the conversation? ------------------------------------- */
-/* Plain sections with a jump list (no tabs), so it all works without JS. */
-
-.guide-nav ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.guide-nav a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0.4rem 1rem;
-  border: 1.5px solid color-mix(in srgb, var(--fg) 40%, transparent);
-  border-radius: 999px;
-  font-weight: 600;
-  color: var(--fg);
-  text-decoration: none;
-}
-
-.guide-nav a:hover {
-  border-color: var(--fg);
-}
-
-.guide {
-  display: grid;
-  gap: 0.7rem;
-  margin-top: 1rem;
-  padding-left: 1rem;
-  border-left: 2px solid color-mix(in srgb, var(--accent) 70%, transparent);
-}
-
-.guide p,
-.guide li {
-  color: var(--fg);
-}
-
-.talk-page .guide h3 {
-  font-size: 1.7rem;
-}
-
-.talk-page .guide__label {
-  margin-top: 0.4rem;
-  font-family: var(--font-hand);
-  font-size: 1.3rem;
-  line-height: 1.2;
-}
-
-.messages {
-  display: grid;
-  gap: 0.9rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.message {
-  display: grid;
-  justify-items: start;
-  gap: 0.35rem;
-}
-
-.message__tag {
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--fg);
-}
-
-/* What you could send, in a soft speech bubble. */
-.talk-page .message__text {
-  max-width: 34rem;
-  padding: 0.65rem 1rem;
-  border: 1.5px solid color-mix(in srgb, var(--fg) 25%, transparent);
-  border-radius: 18px 18px 18px 4px;
-  background: var(--bg);
-  font-family: var(--font-hand);
-  font-size: 1.4rem;
-  line-height: 1.3;
-}
-
-.guide__tips {
-  display: grid;
-  gap: 0.55rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.guide__tips li {
-  position: relative;
-  padding-left: 1.4rem;
-  line-height: 1.5;
-}
-
-.guide__tips li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.72em;
-  width: 0.75rem;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--accent);
-  rotate: -4deg;
-}
-
-/* ---- Helping a friend ----------------------------------------------------- */
-
-.help-friend {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.help-friend p {
-  color: var(--fg);
-}
-
-.help-friend__part {
-  display: grid;
-  gap: 0.6rem;
-}
-
-.talk-page .help-friend h3 {
-  font-size: 1.4rem;
-}
-
-/* The one that matters most gets a clear, quiet frame. */
-.help-friend__part--adult {
-  padding: 0.9rem 1rem;
-  border: 2px solid var(--fg);
-  border-radius: 6px 18px 8px 16px;
-}
-
 /* ---- The way back --------------------------------------------------------- */
 
 .talk-end {
@@ -693,14 +536,15 @@ body.talk-page .talk-end__home:hover::after {
   color: var(--fg);
 }
 
-/* This page is one column, so its footer stays in it at every width. */
+/* These pages are one column, so their footer stays in it at every width. */
 .talk-page .site-footer__inner {
   grid-template-columns: none;
   max-width: 40rem;
 }
 
-.talk-page .site-footer__text {
+.talk-page :is(.site-footer__text, .site-footer__links) {
   grid-column: auto;
+  justify-content: flex-start;
 }
 
 @media (min-width: 48rem) {

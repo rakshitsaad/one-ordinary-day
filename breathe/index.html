@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" data-palette="midday">
+  <head>
+    <!-- include:head -->
+    <title>Breathe · One Ordinary Day</title>
+    <meta name="description" content="A gentle breathing exercise: box breathing or 4-7-8, with a shape that breathes with you and optional rain or waves. No timers, no pressure." />
+    <meta name="theme-color" content="#E2F0EE" />
+    <link rel="canonical" href="%SITE_URL%/breathe" />
+    <meta property="og:title" content="Take a minute: a slow breath" />
+    <meta property="og:description" content="A gentle breathing exercise: box breathing or 4-7-8, with a shape that breathes with you and optional rain or waves. No timers, no pressure." />
+    <meta property="og:url" content="%SITE_URL%/breathe" />
+  </head>
+  <body>
+    <!-- include:bar -->
+
+    <main id="main" class="site-main">
+      <p class="site-main__back"><a href="/library"><span aria-hidden="true">←</span> Back to library</a></p>
+
+      <!-- Not a time of day: no data-stop, so it stays out of the colour timeline
+           and the dial menu, and sits in the night palette after the story. -->
+      <section class="chapter minute" id="take-a-minute" aria-labelledby="minute-title">
+        <div class="chapter__inner">
+          <h1 id="minute-title">Take a minute.</h1>
+          <p>Pick a rhythm and breathe along with the shape. Stop whenever you like.</p>
+
+          <div class="breath" data-breath>
+            <!-- Without JS: the two patterns as plain instructions. -->
+            <div class="breath__fallback">
+              <p><strong>Box breathing:</strong> breathe in for 4, hold for 4, breathe out for 4, hold for 4. Do it three times.</p>
+              <p><strong>4-7-8:</strong> breathe in for 4, hold for 7, breathe out slowly for 8. Do it three times.</p>
+            </div>
+
+            <div class="breath__app" hidden>
+              <fieldset class="pills breath__rhythm">
+                <legend>rhythm</legend>
+                <label><input type="radio" name="breath-pattern" value="box" checked /><span>Box breathing <small>4 · 4 · 4 · 4</small></span></label>
+                <label><input type="radio" name="breath-pattern" value="478" /><span>4-7-8 <small>4 · 7 · 8</small></span></label>
+              </fieldset>
+
+              <div class="breath__stage">
+                <svg class="breath__art" viewBox="0 0 300 300" aria-hidden="true" focusable="false">
+                  <defs>
+                    <radialGradient id="breath-fill" cx="50%" cy="45%" r="60%">
+                      <stop offset="0%" class="breath__fill-core" />
+                      <stop offset="100%" class="breath__fill-edge" />
+                    </radialGradient>
+                  </defs>
+                  <circle class="breath__track" cx="150" cy="150" r="140" />
+                  <circle class="breath__progress" cx="150" cy="150" r="140" pathLength="1000" transform="rotate(-90 150 150)" />
+                  <g class="breath__marks"></g>
+                  <path class="breath__halo" />
+                  <path class="breath__blob" />
+                </svg>
+              </div>
+
+              <p class="breath__cue" aria-live="polite">ready when you are</p>
+
+              <div class="breath__rounds">
+                <span class="visually-hidden breath__rounds-label"></span>
+                <span class="breath__dot" aria-hidden="true"></span>
+                <span class="breath__dot" aria-hidden="true"></span>
+                <span class="breath__dot" aria-hidden="true"></span>
+              </div>
+
+              <div class="breath__controls">
+                <button class="breath__go" type="button">Begin</button>
+                <fieldset class="pills breath__sound">
+                  <legend>sound</legend>
+                  <label><input type="radio" name="breath-sound" value="off" checked /><span>off</span></label>
+                  <label><input type="radio" name="breath-sound" value="rain" /><span>rain</span></label>
+                  <label><input type="radio" name="breath-sound" value="waves" /><span>waves</span></label>
+                </fieldset>
+              </div>
+
+              <div class="breath__done" hidden>
+                <p>Three rounds, nice and slow.</p>
+                <p>If your shoulders are still up near your ears, go again. This will be here later too.</p>
+              </div>
+
+              <p class="breath__tip">If a hold feels uncomfortable, skip it and just breathe gently. There’s no wrong way to do this.</p>
+            </div>
+          </div>
+          <a class="note note--tick" href="/ground">rather do something with your hands? try 5-4-3-2-1</a>
+        </div>
+      </section>
+
+      <nav class="page-next" aria-label="Next you could try">
+        <p class="page-next__label">Next you could try…</p>
+        <a href="/ground">Ground yourself with 5-4-3-2-1 <span aria-hidden="true">→</span></a>
+      </nav>
+    </main>
+
+    <!-- include:footer -->
+    <script type="module" src="/src/pages/breathe.js"></script>
+  </body>
+</html>

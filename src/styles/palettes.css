@@ -1,0 +1,57 @@
+/*
+  One time of day per page. Every page but the story sits in a single colour
+  stop, chosen for its mood: <html data-palette="…">. The story has no
+  attribute: day-colors.js writes its colours as you scroll. Dawn is the default
+  (tokens.css), used by the intro, Talk, Start the conversation and About.
+
+  --soft and --accent-text follow from these through tokens.css. The two dark
+  stops need more of the text colour in --soft to stay at 4.5:1. Measured per
+  palette: see CLAUDE.md.
+*/
+
+[data-palette="morning"] {
+  --bg: var(--morning-bg);
+  --fg: var(--morning-fg);
+  --accent: var(--morning-accent);
+  --particle: var(--morning-particle);
+}
+
+/* Calm sea-glass, for breathing. */
+[data-palette="midday"] {
+  --bg: var(--midday-bg);
+  --fg: var(--midday-fg);
+  --accent: var(--midday-accent);
+  --particle: var(--midday-particle);
+}
+
+[data-palette="afternoon"] {
+  --bg: var(--afternoon-bg);
+  --fg: var(--afternoon-fg);
+  --accent: var(--afternoon-accent);
+  --particle: var(--afternoon-particle);
+}
+
+[data-palette="dusk"] {
+  --bg: var(--dusk-bg);
+  --fg: var(--dusk-fg);
+  --accent: var(--dusk-accent);
+  --particle: var(--dusk-particle);
+}
+
+[data-palette="night"] {
+  --bg: var(--night-bg);
+  --fg: var(--night-fg);
+  --accent: var(--night-accent);
+  --particle: var(--night-particle);
+}
+
+[data-palette="morning"],
+[data-palette="midday"],
+[data-palette="afternoon"] {
+  --soft: color-mix(in srgb, var(--fg) 76%, var(--bg));
+}
+
+[data-palette="dusk"],
+[data-palette="night"] {
+  --soft: color-mix(in srgb, var(--fg) 84%, var(--bg));
+}

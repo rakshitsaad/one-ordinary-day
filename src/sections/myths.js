@@ -1,4 +1,4 @@
-import { prefersReducedMotion } from '../scripts/smooth-scroll.js';
+import { prefersReducedMotion } from '../scripts/motion.js';
 
 // "Myths we grew up with": a row of tilted paper notes. The row is a native
 // scroll-snap strip, so phones swipe it with real momentum and vertical page

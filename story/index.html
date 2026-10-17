@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- include:head -->
+    <title>One ordinary day · Aarav’s day, from 6:40 am to lights out</title>
+    <meta name="description" content="Spend one school day with Aarav, 17: boards, coaching, comparison and a friend who checks in. Scroll from dawn to night, with free help in India." />
+    <meta name="theme-color" content="#F3E6DA" />
+    <link rel="canonical" href="%SITE_URL%/story" />
+    <meta property="og:title" content="One ordinary day: Aarav’s day, from 6:40 am to lights out" />
+    <meta property="og:description" content="Spend one school day with Aarav, 17: boards, coaching, comparison and a friend who checks in. Scroll from dawn to night, with free help in India." />
+    <meta property="og:url" content="%SITE_URL%/story" />
+  </head>
+  <body>
+    <!-- include:bar class="site-header--story" -->
+
+    <main id="day">
+      <!-- The opening screen: Aarav's window at 6:40 am (src/styles/opening.css,
+           src/scripts/opening.js). The scene is decoration only. The clock ticks
+           slowly while the reader stays here; the cue fades once they scroll.
+           data-no-reveal: everything here is readable the moment the page loads. -->
+      <section class="chapter opening" id="dawn" data-stop="dawn" data-name="the alarm" data-no-reveal>
+        <div class="opening__scene" aria-hidden="true">
+          <div class="opening__sunlit"><div class="opening__light"></div></div>
+          <div class="opening__window">
+            <svg class="opening__frame" viewBox="0 0 300 400" focusable="false">
+              <defs>
+                <linearGradient id="opening-sky" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" class="opening__sky-high" />
+                  <stop offset="1" class="opening__sky-low" />
+                </linearGradient>
+                <radialGradient id="opening-glow">
+                  <stop offset="0" class="opening__glow-in" />
+                  <stop offset="1" class="opening__glow-out" />
+                </radialGradient>
+              </defs>
+              <!-- Sky, a low sun, and the rooftops across the lane (one with a water tank). -->
+              <rect x="22" y="22" width="256" height="356" fill="url(#opening-sky)" />
+              <circle cx="196" cy="296" r="86" fill="url(#opening-glow)" />
+              <circle class="opening__sun" cx="196" cy="296" r="17" />
+              <path class="opening__roofs" d="M22 334H72V316H120V328H150V304H206V322H246V308H278V378H22Z M166 304V286H190V304 M170 286V280H186V286" />
+              <!-- Curtain rod, frame, centre bar, top light and grill: hand-drawn strokes. -->
+              <path class="opening__rod" d="M-4 11C70 9 160 12 304 10" />
+              <path class="opening__wood" d="M18 20C90 17 200 19 282 17C284 140 283 260 282 382C200 384 90 383 18 382C17 260 18 140 18 20Z" />
+              <path class="opening__wood opening__wood--thin" d="M150 19C151 140 149 260 150 382M19 128C100 126 200 129 281 127" />
+              <path class="opening__grill" d="M61 129V381M99 129V381M128 129V381M178 129V381M210 129V381M244 129V381M19 256C100 254 200 257 281 255" />
+              <path class="opening__wood" d="M6 389C100 386 200 390 294 387" />
+            </svg>
+            <div class="opening__curtain">
+              <svg viewBox="0 0 120 400" preserveAspectRatio="none" focusable="false">
+                <path class="opening__cloth" d="M4 12C40 10 80 14 114 11C106 120 98 260 90 394C62 398 32 396 6 394C8 260 4 120 4 12Z" />
+                <path class="opening__folds" d="M30 16C28 140 26 270 24 392M58 14C56 150 54 280 50 394M86 13C82 140 78 270 72 393" />
+              </svg>
+            </div>
+            <!-- The alarm he keeps snoozing: a phone on the sill, its screen glowing softly. -->
+            <div class="opening__phone">
+              <span class="opening__phone-glow"></span>
+              <svg viewBox="0 0 30 50" focusable="false">
+                <rect class="opening__phone-screen" x="5.5" y="7" width="19" height="34" rx="2" />
+                <path class="opening__phone-case" d="M7 3H23C25.5 3 27 4.5 27 7V43C27 45.5 25.5 47 23 47H7C4.5 47 3 45.5 3 43V7C3 4.5 4.5 3 7 3Z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="chapter__inner">
+          <time class="time opening__time" datetime="06:40">6:40 am</time>
+          <!-- The break keeps the title on two lines in every font: in the fallback
+               font "One ordinary day." fitted on one line, and the real font's
+               swap pushed the whole opening up (CLS 0.11). -->
+          <h1>One <em>ordinary</em><br /> day.</h1>
+          <p class="opening__intro">This is Aarav, 17, in Class 12. He has snoozed his alarm three times.</p>
+          <p class="opening__cue">Scroll through his day<svg class="opening__arrow" viewBox="0 0 24 40" aria-hidden="true" focusable="false"><path d="M12 3C11 13 13 23 12 34M4 26C7 29 10 32 12 35C14 32 17 29 20 26" /></svg></p>
+        </div>
+      </section>
+
+      <section class="chapter" id="morning" data-stop="morning" data-name="the school bus">
+        <div class="chapter__inner">
+          <time class="time" datetime="08:15">8:15 am</time>
+          <h2>Lights off at 11:30. Asleep at <span class="mark">2:10.</span></h2>
+          <p>He did try. But the moment the lights went off, his brain switched on: the mock test, the question he got wrong, what Papa would say. Around one he picked up his phone “just for a minute”. The next time he looked, it was 2:10.</p>
+          <p>Now he’s on the school bus, reading the same line of chemistry notes for the fourth time. Worry kept him up, and today the tiredness will make every worry hit harder. Nobody on the bus can see any of that. They see a boy yawning into his notes.</p>
+          <p>The day ahead looks normal: school till two, coaching till seven, and forty unread messages in the family group already. Boards are four months away, and every relative he meets says this is the most important year of his life.</p>
+          <span class="note note--tick">tried it: phone charging in the kitchen. weirdly works.</span>
+        </div>
+      </section>
+
+      <aside class="fact fact--hang" role="note">
+        <p class="fact__text"><span class="fact__figure">8–10 hours</span> of sleep a night is what teenagers need. Late coaching, early school and “one more reel” eat into it fast.</p>
+        <p class="fact__source">Source: <a href="https://www.cdc.gov/sleep/about/index.html" target="_blank" rel="noopener">CDC, About Sleep<span class="visually-hidden"> (opens in a new tab)</span></a>, based on American Academy of Sleep Medicine guidance</p>
+      </aside>
+
+      <section class="chapter" id="midday" data-stop="midday" data-name="the lunch table">
+        <div class="chapter__inner">
+          <time class="time" datetime="13:30">1:30 pm</time>
+          <h2>Laughing at lunch. Counting the minutes until it’s over.</h2>
+          <p>Someone reads out the mock test ranks from the class group. Aarav laughs in the right places and makes the joke everyone expects from him. Last night’s stories showed half his class at a birthday he didn’t know about. Nobody mentions it, so neither does he.</p>
+          <p>Nobody at the table would guess. On the bad days he’s usually at his funniest. Ask anyone there and they’d tell you he seems fine.</p>
+          <span class="note">ask twice. “no, really, how are you?”</span>
+        </div>
+      </section>
+
+      <aside class="fact fact--aside" role="note">
+        <p class="fact__text"><span class="fact__figure">17–21%</span> of young people aged 13 to 29 say they feel lonely, and teenagers report it most. Lonely teens are also 22% more likely to end up with lower grades.</p>
+        <p class="fact__source">Source: <a href="https://www.who.int/news/item/30-06-2025-social-connection-linked-to-improved-heath-and-reduced-risk-of-early-death" target="_blank" rel="noopener">WHO Commission on Social Connection, 2025<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+      </aside>
+
+      <section class="chapter" id="afternoon" data-stop="afternoon" data-name="the noise">
+        <div class="chapter__inner">
+          <time class="time" datetime="16:50">4:50 pm</time>
+          <h2>Then the thoughts get <em>loud.</em></h2>
+          <p>In the auto to coaching, he opens Instagram. A cousin’s IIT admit letter. A classmate’s 5 am “study with me” reel. In the family group, Papa has forwarded a topper’s interview with the caption “Very inspiring!!”</p>
+          <p><em>What if I don’t get in. Everyone’s so far ahead. They’ve spent so much on my coaching.</em> Think a worry enough times and it starts to sound like a fact. Half an hour of reels into an auto ride, it’s hard to tell the two apart.</p>
+          <!-- The thoughts themselves, to pick and soften one, live on /thoughts. -->
+          <a class="note note--link" href="/thoughts">untangle one of these thoughts</a>
+          <span class="note note--squiggle">nobody posts their bad mock test.</span>
+        </div>
+      </section>
+
+      <aside class="fact fact--big" role="note">
+        <p class="fact__text"><span class="fact__figure">8 in 10</span> students in middle and secondary classes said studies, exams and results make them anxious, in a 2022 NCERT survey of nearly 3.8 lakh school students.</p>
+        <p class="fact__source">Source: NCERT Manodarpan survey, 2022, <a href="https://www.theweek.in/news/health/2022/10/10/anxiety-students-exams-students-happiness-survey.html" target="_blank" rel="noopener">as reported by The Week<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+      </aside>
+
+      <section class="chapter" id="sunset" data-stop="sunset" data-name="“you okay?”">
+        <div class="chapter__inner">
+          <time class="time" datetime="19:10">7:10 pm</time>
+          <h2>A message from a friend: <span class="circle">“you okay?”</span></h2>
+          <p>Dinner is dal, the TV news, and Mummy asking about the mock test before he’s even sat down. He says “it was fine” and looks at his plate. Later, his phone buzzes. It’s Kabir from coaching: “you okay? you were really quiet today.”</p>
+          <p>His thumbs type “haha yeah just tired”. He looks at it for a long time. Then he deletes it and writes: “not really, honestly.” He presses send before he can change his mind.</p>
+        </div>
+      </section>
+
+      <!-- A stretch of empty evening sky. The text colour flips from dark to light
+           between sunset and dusk, and no palette colours can hold 4.5:1 at the
+           exact midpoint, so the flip happens while only sky and stars are on
+           screen. Keep it empty (no text, no facts). -->
+      <div class="interlude" aria-hidden="true"></div>
+
+      <section class="chapter" id="dusk" data-stop="dusk" data-name="talking it out">
+        <div class="chapter__inner">
+          <time class="time" datetime="21:30">9:30 pm</time>
+          <h2>Talking didn’t fix everything. It made it shareable.</h2>
+          <p>Turns out Kabir hasn’t slept properly in weeks either. They send voice notes for an hour, half complaining, half laughing. Later, Aarav finds his mum in the kitchen and tells her, quietly, that things have been really hard. She doesn’t have the perfect words. She warms two glasses of haldi doodh and sits with him anyway.</p>
+          <p>Nothing is solved. The boards are still four months away. But Kabir wants to revise together on Sunday, and Mummy hasn’t asked about the mock test once since. <span class="mark">Small things, but they count.</span></p>
+          <span class="note">you don’t need the right words. he didn’t have them either.</span>
+        </div>
+      </section>
+
+      <aside class="fact fact--compare" role="note">
+        <div class="fact__bars" aria-hidden="true">
+          <p class="fact__bar" style="--v: 41"><span class="fact__figure">41%</span> <span class="fact__who">India</span></p>
+          <p class="fact__bar" style="--v: 83"><span class="fact__figure">83%</span> <span class="fact__who">average of 21 countries</span></p>
+        </div>
+        <p class="fact__text">Only 41% of young Indians aged 15 to 24 said it’s good to get support for mental health problems. Across 21 countries, the average was 83%.</p>
+        <p class="fact__source">Source: <a href="https://www.unicef.org/india/press-releases/unicef-report-spotlights-mental-health-impact-covid-19-children-and-young-people" target="_blank" rel="noopener">UNICEF, The State of the World’s Children 2021<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+      </aside>
+
+      <section class="chapter" id="night" data-stop="night" data-name="lights off">
+        <div class="chapter__inner">
+          <time class="time" datetime="23:45">11:45 pm</time>
+          <h2>If today sounded a bit like yours, tell someone.</h2>
+          <p>The family group has finally gone quiet. His phone is charging in the kitchen, and for the first time this week he’s asleep before midnight.</p>
+          <p>Around 1 in 7 people aged 10 to 19 lives with a mental health condition, and much of it goes unrecognised and untreated (<a href="https://www.who.int/news-room/fact-sheets/detail/adolescent-mental-health" target="_blank" rel="noopener">WHO<span class="visually-hidden">, opens in a new tab</span></a>). A friend, a parent, a teacher or your school counsellor is a good place to start. If it can’t wait, this line is free and open right now.</p>
+          <div class="helpline" id="help">
+            <p class="helpline__name">Tele-MANAS <span>Government of India mental health helpline</span></p>
+            <p class="helpline__numbers">
+              <a class="helpline__number" href="tel:14416">14416</a>
+              <span class="helpline__or">or</span>
+              <a class="helpline__number helpline__number--long" href="tel:18008914416">1-800-891-4416</a>
+            </p>
+            <p class="helpline__meta">Free · 24×7 · choose your language</p>
+            <p class="helpline__source">From the Ministry of Health: <a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=1866498" target="_blank" rel="noopener">launch, 2022<span class="visually-hidden"> (opens in a new tab)</span></a> · <a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2022057" target="_blank" rel="noopener">numbers, 2024<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+          </div>
+          <p class="more-help"><a href="/talk">All the help in one place: more free helplines, and what happens when you call <span aria-hidden="true">→</span></a></p>
+          <p class="more-help"><a href="/start-the-conversation">How to start the conversation with someone you know <span aria-hidden="true">→</span></a></p>
+          <p class="emergency">In danger right now? Call <a href="tel:112">112</a>, India’s emergency number (<a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=1565239" target="_blank" rel="noopener">source<span class="visually-hidden">, opens in a new tab</span></a>).</p>
+          <a class="note note--squiggle" href="/breathe">need a moment first? take a minute</a>
+        </div>
+      </section>
+
+      <!-- The end of the day: the sign-off, and where to go next. -->
+      <section class="story-end" aria-label="After the story">
+        <p class="story-end__sign">lights off. asleep before midnight, this time.</p>
+        <nav class="page-next" aria-label="Next you could try">
+          <p class="page-next__label">Next you could try…</p>
+          <a href="/tonight">A note for tonight <span aria-hidden="true">→</span></a>
+          <a href="/library"><span aria-hidden="true">←</span> Back to library</a>
+        </nav>
+      </section>
+    </main>
+
+    <!-- include:footer -->
+    <script type="module" src="/src/pages/story.js"></script>
+  </body>
+</html>

@@ -1,16 +1,19 @@
 import { prefersReducedMotion } from './motion.js';
 
-// Moving between the story and the "Talk to someone" page fades through the
-// current background colour: the page dissolves into its own colour, and the
-// next page starts as that colour and dissolves into view.
+// Moving between pages: a soft cross-fade. Browsers with cross-document View
+// Transitions (Chrome, Edge, Safari 18.2+) do it natively from the
+// @view-transition rule in src/partials/head.html, so this does nothing there.
+// Elsewhere it fades through the current background colour: the page dissolves
+// into its own colour, and the next page starts as that colour and dissolves in.
 //
-// Leaving is kept short (0.5s) so getting to help never feels delayed. The
-// arriving half lives in a tiny inline <style> + <script> in each page's
-// <head> (so the veil is there on the very first paint); this module fades it.
+// Both halves are short (0.3s out, 0.6s in) so nothing ever makes you wait. The
+// arriving half lives in a tiny inline <style> + <script> in the shared head
+// (so the veil is there on the very first paint); this module fades it.
 
 const KEY = 'ood-page-fade';
-const LEAVE_MS = 500;
-const ARRIVE_MS = 900;
+const LEAVE_MS = 300;
+const ARRIVE_MS = 600;
+const NATIVE = 'PageRevealEvent' in window; // cross-document View Transitions
 
 export function initPageTransitions() {
   const root = document.documentElement;
@@ -27,7 +30,7 @@ export function initPageTransitions() {
     }, ARRIVE_MS + 300);
   }
 
-  if (prefersReducedMotion) return;
+  if (prefersReducedMotion || NATIVE) return;
 
   document.addEventListener('click', (event) => {
     if (event.defaultPrevented || event.button !== 0) return;
