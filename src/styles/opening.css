@@ -16,14 +16,13 @@
 */
 
 .opening {
-  /* Below the day line's bar on phones (44px), near the top from 48rem. */
-  --window-top: calc(3.6rem + env(safe-area-inset-top, 0px));
+  --window-top: calc(var(--bar-h) + 0.85rem + env(safe-area-inset-top, 0px)); /* below the top bar */
   --window-w: min(40vw, 15rem);
   position: relative;
   align-items: flex-end;
   min-height: 100vh;
   min-height: 100svh;
-  /* Room above for the window, and below for the Talk pill. */
+  /* Room above for the window, and below for the garden. */
   padding-top: calc(var(--window-top) + var(--window-w) * 4 / 3 + 1.5rem);
   padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
 }
@@ -308,7 +307,7 @@
 
 @media (min-width: 48rem) {
   .opening {
-    --window-top: calc(1.25rem + env(safe-area-inset-top, 0px));
+    --window-top: calc(var(--bar-h) + 1rem + env(safe-area-inset-top, 0px));
   }
 }
 
@@ -317,7 +316,7 @@
 @media (min-width: 64rem) {
   .opening {
     --align: end;
-    --window-top: 13vh;
+    --window-top: max(13vh, calc(var(--bar-h) + 1rem));
     --window-w: clamp(15rem, 24vw, 22rem);
     padding-block: 18vh 12vh;
   }

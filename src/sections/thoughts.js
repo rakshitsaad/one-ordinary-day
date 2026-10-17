@@ -23,7 +23,7 @@ const WORD_FADE = 900; // ms each word takes to appear
 
 const REPLIES = {
   little: 'Small shifts count. A thought that feels a little lighter is a real change, even if it’s still there.',
-  'not-really': 'That’s okay. Some thoughts take more than one try, and some are too heavy to sort out alone. Talking to someone can help. <a href="talk.html">Talk to someone</a>',
+  'not-really': 'That’s okay. Some thoughts take more than one try, and some are too heavy to sort out alone. Talking to someone can help. <a href="talk.html">Talk to someone</a> or see <a href="talk.html#start-the-conversation">how to start the conversation</a>.',
   unsure: 'That’s okay too. You can come back to this whenever you like.',
 };
 
@@ -230,7 +230,7 @@ export function initThoughts(root) {
     // Keep the open moment on screen, without ever taking the scroll away.
     requestAnimationFrame(() => {
       const box = t.li.getBoundingClientRect();
-      const room = window.innerHeight - 96; // clear of the Talk pill and garden
+      const room = window.innerHeight - 96; // clear of the garden (the top stays below the top bar)
       if (box.bottom > room) {
         scrollToY(window.scrollY + Math.min(box.bottom - room, Math.max(0, box.top - 80)));
       }
@@ -451,14 +451,18 @@ export function initThoughts(root) {
     else closeMoment(open);
   });
 
-  // On a phone, keep the box being written in above the on-screen keyboard.
+  // Keep the box being written in visible: above the on-screen keyboard on a
+  // phone, and below the fixed top bar (with "Talk to someone") everywhere.
   root.addEventListener('focusin', (event) => {
-    if (!event.target.matches('[data-field]') || !window.visualViewport) return;
+    if (!event.target.matches('[data-field]')) return;
     setTimeout(() => {
       const box = event.target.getBoundingClientRect();
+      const bar = document.querySelector('.site-header')?.getBoundingClientRect().bottom ?? 0;
       const vv = window.visualViewport;
-      const bottom = vv.offsetTop + vv.height - 24;
-      if (box.bottom > bottom) window.scrollBy({ top: box.bottom - bottom, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+      const bottom = vv ? vv.offsetTop + vv.height - 24 : window.innerHeight - 24;
+      const behavior = prefersReducedMotion ? 'auto' : 'smooth';
+      if (box.top < bar + 16) window.scrollBy({ top: box.top - bar - 16, behavior });
+      else if (box.bottom > bottom) window.scrollBy({ top: Math.min(box.bottom - bottom, box.top - bar - 16), behavior });
     }, 350);
   });
 

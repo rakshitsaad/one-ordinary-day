@@ -506,32 +506,92 @@ a.note {
   color: var(--fg);
 }
 
-/* "Talk to someone": always on screen. */
-.talk {
+/* ---- The top bar: help first --------------------------------------------------
+   "Talk to someone" lives in a slim bar fixed to the top of every page, the
+   first thing after "Skip to help". It used to float in the bottom-left corner,
+   where it sat over story text and next to the on-screen keyboard; up here it
+   has its own band and covers nothing. On the story page the day line shares
+   the bar on phones and hangs from its right end from 48rem. The bar reads the
+   --ui-* colours (base.css), which stay readable through the sunset→dusk flip. */
+:root {
+  --bar-h: 56px;
+}
+
+.site-header {
   position: fixed;
   z-index: 10;
-  left: calc(14px + env(safe-area-inset-left, 0px));
-  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-  padding: 0.6rem 1.1rem;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: calc(var(--bar-h) + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 0px) var(--gutter-right) 0 var(--gutter-left);
+  background: var(--ui-bg);
+}
+
+/* The bar fades into the page below it instead of ending in a hard line. */
+.site-header::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 14px;
+  background: linear-gradient(var(--ui-bg), color-mix(in srgb, var(--ui-bg) 0%, transparent));
+  pointer-events: none;
+}
+
+/* Solid and high-contrast on purpose: the one thing you can always find. No
+   pulsing or attention-grabbing motion; it's just always there. */
+.talk {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.55rem 1.05rem;
   border-radius: 999px;
   background: var(--fg);
   color: var(--bg);
   font-size: 0.9rem;
   font-weight: 600;
+  white-space: nowrap;
   text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
 }
 
 .talk:focus-visible {
-  outline-offset: 4px;
+  outline-offset: 3px;
+}
+
+/* "Skip to help": the very first Tab stop, out of sight until it's focused. */
+.skip-link {
+  position: fixed;
+  z-index: 30;
+  top: calc(6px + env(safe-area-inset-top, 0px));
+  left: var(--gutter-left);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 1.1rem;
+  border-radius: 8px;
+  background: var(--ui-fg);
+  color: var(--ui-bg);
+  font-weight: 600;
+  text-decoration: none;
+  translate: 0 calc(-100% - 12px);
+}
+
+.skip-link:focus {
+  translate: none;
+  outline: 2px solid var(--ui-accent-text);
+  outline-offset: 3px;
 }
 
 @media (min-width: 48rem) {
-  .talk {
-    left: calc(24px + env(safe-area-inset-left, 0px));
-    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  :root {
+    --bar-h: 64px;
   }
 }
 

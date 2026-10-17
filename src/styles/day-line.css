@@ -1,50 +1,39 @@
 /*
   The day line (src/scripts/day-line.js): the clock and the seven chapter times.
-  Phones: a thin bar across the top. 48rem and up: a slim rail on the right,
-  hanging from the clock where the old sky dial used to be.
+  Phones: seven dots in the top bar, beside "Talk to someone". 48rem and up: the
+  clock at the right end of the top bar, with a slim rail hanging below it.
 
-  It reads the --ui-* colours and sits on its own --ui-bg, so it stays readable
-  through the sunset→dusk flip like the other fixed controls. Dots and the
+  It reads the --ui-* colours and sits on --ui-bg (the bar's, or its own on the
+  rail), so it stays readable through the sunset→dusk flip like the other fixed
+  controls. Dots and the
   travelled line use --ui-accent-text (3:1 or better); the track is a faint
   dotted line. --progress (0–1, set by JS) places the sun and the travelled line.
 */
 
+/* Phones: the dots share the top bar with "Talk to someone" (sections.css).
+   The clock is left to screen readers here: the bar has room for the help link
+   and seven tappable dots, not a clock as well, and each chapter shows its time. */
 .day-line {
   --dot: 9px;
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  left: 0;
-  right: 0;
+  position: relative;
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
-  gap: 0.9rem;
-  height: calc(44px + env(safe-area-inset-top, 0px));
-  padding: env(safe-area-inset-top, 0px) var(--gutter-right) 0 var(--gutter-left);
-  background: var(--ui-bg);
+  height: 44px;
   color: var(--ui-fg);
 }
 
-/* The bar fades into the page below it instead of ending in a hard line. */
-.day-line::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  height: 14px;
-  background: linear-gradient(var(--ui-bg), color-mix(in srgb, var(--ui-bg) 0%, transparent));
-  pointer-events: none;
-}
-
 .day-line__clock {
-  order: 2;
-  flex: none;
-  min-width: 4.1em;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
   font-family: var(--font-hand);
   font-size: 1.3rem;
   line-height: 1;
-  text-align: right;
 }
 
 .day-line__rail {
@@ -90,12 +79,13 @@
   left: calc(var(--at) * 100%);
 }
 
-/* A 28 × 44px target around a 9px dot. */
+/* A 26 × 44px target around a 9px dot (the dots sit about 27px apart on a
+   360px phone, beside "Talk to someone"). */
 .day-line__dot {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 28px;
+  width: 26px;
   height: 44px;
   translate: -50% -50%;
   display: grid;
@@ -201,25 +191,27 @@
     --gutter-right: max(3.5rem, env(safe-area-inset-right, 0px));
   }
 
+  /* The clock sits at the right end of the top bar; the rail hangs below it in
+     the right gutter, clear of the text. */
   .day-line {
-    top: calc(12px + env(safe-area-inset-top, 0px));
-    left: auto;
+    position: fixed;
+    z-index: 10;
+    top: calc(10px + env(safe-area-inset-top, 0px));
     right: calc(12px + env(safe-area-inset-right, 0px));
+    flex: none;
     flex-direction: column;
     align-items: flex-end;
     gap: 0.6rem;
     height: auto;
-    padding: 0;
-    background: none;
-  }
-
-  .day-line::after {
-    content: none;
   }
 
   /* The clock keeps the old dial's pill. */
   .day-line__clock {
-    order: 0;
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
     min-height: 44px;
     display: flex;
     align-items: center;

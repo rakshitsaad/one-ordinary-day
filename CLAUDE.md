@@ -24,11 +24,11 @@ The site follows a 17-year-old student through one day, from **6:40 am to 11:45 
   - `--particle`: particle colour. Canvas code reads `dayColors` from `day-colors.js` instead of the CSS variable.
 - Text colours can't blend smoothly across the sunset→dusk flip (dark text on light turning into light text on dark): halfway through, text and background would be the same colour. So the text swaps at the point where both colours read equally, and the background blend is squeezed into the middle 40% of that segment. No palette colours can hold 4.5:1 at the exact midpoint (text drops below 4.5:1 from about 50% to 58% of the segment, at worst 3.63:1), so: (1) an empty `.interlude` (`aria-hidden`) sits between sunset and dusk, so the flip happens while no body text is on screen (the 9:30 pm time and heading can be, and pass 3:1 as large text). It's a full screen of evening sky (100svh) at every size. 70svh used to be enough on roomy screens, but the day line's rail narrows the text column from 48rem, so the 9:30 pm paragraph grew taller and reached the dip at 1280×800 (3.76:1). On phones, 70svh had already left the 7:10 pm and 9:30 pm paragraphs 0–40px from the screen edge; (2) fixed controls in `.site-header` read `--ui-*` colours, which day-colors.js holds at the nearest stop across the flip (they never blend through it). Measured on 17 Oct 2026 at 360×640 and 1280×800, against the background and every sky tone each piece of text overlapped (horizon glow, sun, moon): no failures, with every lowest value at its floor (4.5:1, and 3:1 for the large 9:30 pm time during the flip). Earlier runs at 360×780 and 768×1024 also passed. Fixed controls stay at 6.89:1 or better through the flip. When re-measuring after a resize, no reload is needed, but wait about a second for the refresh (the Browser pane can render at ~5 fps), and do reload when emulation crosses 768px wide: switching mobile emulation on or off can leave a stale page-scale `innerHeight` that skews the anchors. Keep the interlude empty, and keep both behaviours if you touch the blend code.
 - **Day line** ([day-line.js](src/scripts/day-line.js), [day-line.css](src/styles/day-line.css)): the one clock on screen, which replaced the old sky dial and its jump menu, so there's never a second progress indicator.
-  - On phones it's a thin bar across the top (44px, on `--ui-bg`, fading into the page). From 48rem it's a slim 30px rail on the right, hanging from the clock pill where the dial used to be. From 48rem, `--gutter-right` grows to 3.5rem so text never runs under the rail.
+  - On phones its seven dots sit in the fixed top bar, beside "Talk to someone" (see Help is always one tap away). The clock is visually hidden there (screen readers still get it): the bar has room for the help link and seven 26 × 44px dots, not a clock as well, and each chapter shows its own time. From 48rem the clock is a pill at the right end of the top bar, with a slim 30px rail hanging below it. From 48rem, `--gutter-right` grows to 3.5rem so text never runs under the rail.
   - It has seven dots, evenly spaced (proportional spacing put 6:40 and 8:15 too close to tap). The travelled line runs up to a small sun that rides the line and, after 8 pm, slowly becomes a crescent moon (a mask circle slides over it, fully formed by 11 pm). Past dots stay softly filled, and the current one fills in over 1.2s.
   - The clock shows the story time rounded to 5 minutes, or the opening clock's exact minute while that's later, so it never runs backwards.
   - It reads `--ui-*` on its own solid `--ui-bg`, so it stays readable through the sunset→dusk flip. Dots and the travelled line use `--ui-accent-text` (3:1 or better).
-  - Accessibility: it's a `<nav aria-label="Through the day">` with an ordered list of links, one per chapter. Each link's name is its label ("4:50 pm · the noise"), which shows as a small tag on hover or keyboard focus and is always read by screen readers. The current chapter has `aria-current="time"`. The links are one tab stop (roving tabindex that follows the current chapter): arrow keys, Home and End move between them, and Enter goes there. Tap targets are 44px tall on phones and 30px on the rail.
+  - Accessibility: it's a `<nav aria-label="Through the day">` with an ordered list of links, one per chapter. Each link's name is its label ("4:50 pm · the noise"), which shows as a small tag on hover or keyboard focus and is always read by screen readers. The current chapter has `aria-current="time"`. The links are one tab stop (roving tabindex that follows the current chapter): arrow keys, Home and End move between them, and Enter goes there. Tap targets are 44px tall on phones and 30px on the rail. Measured at 360×740: the bar is 56px, the Talk link spans 16–156px, and the dots sit 27px apart with no overflow.
 - **One sky** ([sky.js](src/scripts/sky.js), [sky.css](src/styles/sky.css)): the page background is the sky. A fixed layer behind the particles and grain adds:
   - A glow along the horizon (peach at dawn, gold in the afternoon, deep orange at sunset, the last light at dusk; `HORIZON` in day-colors.js).
   - A soft sun that rises after the opening (whose window already has a low sun, so there are never two suns on the first screen), crosses the sky and sets just after 7:10 pm.
@@ -74,6 +74,7 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 - No bouncy springs, no fast parallax, no scroll-jacking, no autoplay sound, no flashing.
 - Every curve is an ease-out that never overshoots: `--ease-out` (cubic-bezier(0.22, 1, 0.36, 1)), GSAP `power2.out` / `power3.out`, Lenis easeOutCubic. Never use back, elastic, bounce or spring eases, or any cubic-bezier with a y value above 1.
 - **Micro-interactions** ([interactions.css](src/styles/interactions.css), imported last; [interactions.js](src/scripts/interactions.js); [page-transition.js](src/scripts/page-transition.js)):
+  - On talk.html all of this is switched off except the page fade (talk.css, `body.talk-page`): the help page is still on purpose. No ripple, lift, press, drawn underline or link transitions.
   - Buttons (`.talk`, `.thought__open`, `.moment__btn`, `.moment__choice`, `.breath__go`, `.page__btn`, `.myths__arrow`, `.garden__button`, `.talk-end__home`) lift 2px on hover (fine pointers, motion allowed; only the solid pills `.talk` and `.garden__button` also get a soft shadow, and the hand-drawn buttons swell their highlighter instead) and compress to `scale: 0.97` on press. Pills only compress; myth notes rise 4px on hover. These use the individual `translate` / `scale` properties so they compose with existing transforms. interactions.css replaces each component's `transition` list, so add a component's own transitioned properties there too.
   - Exceptions to the 0.8–1.4s rule, on purpose: the press compresses in 0.25s so it registers under the finger, and leaving a page fades out in 0.5s so getting to help never feels delayed.
   - Text links (`a:not([class])`, `a.note`, `.talk-top__back`, `.talk-end__breathe`, `.myth__again`, `.garden__clear`) keep a faint resting underline (so they read as links without hover); on hover or keyboard focus a solid 1.5px line draws in from the left.
@@ -85,7 +86,7 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 
 - Contrast is AA at every stop *and* every blend position. Re-check with a scroll scan after any colour, layout or spacing change near sunset→dusk.
 - Never transition `background-color` or `color` on anything whose colours follow the day (the header pills, buttons with `var(--fg)`/`var(--bg)` backgrounds): text changes instantly on scroll, so a lagging background drops contrast mid-blend.
-- `html` has `scroll-padding-top: 5rem` and `scroll-padding-bottom: 6rem`, so focused elements never hide under the fixed day line, Talk pill or garden (WCAG 2.4.11).
+- `html` has `scroll-padding-top: 5rem` and `scroll-padding-bottom: 6rem`, so focused elements never hide under the fixed top bar (56px on phones, 64px from 48rem) or the garden (WCAG 2.4.11).
 - Tap targets: at least 44px tall for every button, call link and standalone link (`a.note`, helpline numbers included). Inline links inside paragraphs are exempt.
 - Full-width strips: measure from a size container (`container-type: inline-size`, `100cqw`), never `100vw`, which includes the desktop scrollbar and overflows the page.
 - A button's accessible name must contain its visible text (voice control). Put extra hints in a `.visually-hidden` span, not an `aria-label` that rewords the visible words.
@@ -134,15 +135,19 @@ Don't add colours outside this palette except tints made by mixing these (for ex
   - Ink paths use `pathLength="1000"`, not 1: GSAP tweens `stroke-dashoffset` in whole pixels, so 0–1 would jump straight to drawn.
 
 - Warm, conversational copy, written like a friend talking. Plain words, short sentences, no clinical or preachy tone.
-- A **"Talk to someone"** button visible on every page: fixed bottom-left, high-contrast, at least 44px tall, clear of the safe-area insets. On the story it opens `talk.html`; on `talk.html` it jumps to `#helplines`.
+- **Help is always one tap away** (sections.css `.site-header`, `.talk`, `.skip-link`):
+  - **"Skip to help"** is the very first focusable item on both pages (`.skip-link`, off screen until focused, then a solid 44px pill at the top left). It goes to `talk.html#right-now` from the story, and to `#right-now` on talk.html.
+  - **"Talk to someone"** (`.talk`) sits at the left of a fixed top bar on every page, visible on load, solid `--fg` on `--bg`, 44px tall, never behind a menu. It's the only help button: the old floating bottom-left pill became this, so there are never two. On the story it opens `talk.html`; on `talk.html` it jumps to `#right-now`.
+  - The story's bar (`--bar-h`: 56px, 64px from 48rem, plus the top safe-area inset) is solid `--ui-bg` with a 14px fade below, and reads `--ui-*` colours, so the Talk link holds 6.89:1 or better at every scroll position (scanned through the whole day, sunset→dusk flip included). It sits at the top, so it never covers story text, the garden, the 4:50 pm writing box (thoughts.js scrolls a focused field 16px below the bar and above the on-screen keyboard) or the keyboard itself. No pulse, bounce or attention animation, ever.
+  - Help links in the story: the top bar, the skip link, the night chapter (talk.html and `#start-the-conversation`), the "Not really" reply at 4:50 pm, the safety line under every writing box, and the footer.
 
 ## Sections and features
 
 ### Opening screen ([opening.js](src/scripts/opening.js), [opening.css](src/styles/opening.css))
 
-- The 6:40 am chapter (`#dawn.opening`) is the first screen, 100svh tall. It holds only the time marker, the headline (the biggest thing on the page: up to 7rem on phones and tablets, 9.5rem on desktop, with "ordinary" in italic `--accent-text`, and a `<br>` after it so it’s two lines in every font: without it, the fallback font fitted the title on one line at 412px, and the real font’s swap pushed the bottom-aligned opening up by 60px, CLS 0.11), one short line about Aarav, and "Scroll through his day" with a hand-drawn arrow. No other buttons or links; the fixed "Talk to someone" pill stays. The longer intro lives at the end of the 8:15 am chapter.
+- The 6:40 am chapter (`#dawn.opening`) is the first screen, 100svh tall. It holds only the time marker, the headline (the biggest thing on the page: up to 7rem on phones and tablets, 9.5rem on desktop, with "ordinary" in italic `--accent-text`, and a `<br>` after it so it’s two lines in every font: without it, the fallback font fitted the title on one line at 412px, and the real font’s swap pushed the bottom-aligned opening up by 60px, CLS 0.11), one short line about Aarav, and "Scroll through his day" with a hand-drawn arrow. No other buttons or links; the top bar with "Talk to someone" stays. The longer intro lives at the end of the 8:15 am chapter.
 - **Scene: soft window light** (`.opening__scene`, `aria-hidden`, no pointer events). It's drawn in SVG and CSS from the palette:
-  - A window with an Indian-style grill, rooftops with a water tank, and a low sun outside, all following the day's colour variables. It sits top left on phones (below the day line’s bar) and tablets, and top right from 64rem.
+  - A window with an Indian-style grill, rooftops with a water tank, and a low sun outside, all following the day's colour variables. It sits top left on phones and tablets, and top right from 64rem, always below the top bar (`--window-top` in opening.css is built from `--bar-h`).
   - A sheer curtain swaying from the rod (11s).
   - The snoozed alarm: a phone on the sill, its screen glow breathing on an 8s loop.
   - Sunlight thrown on the wall: a blurred SVG mask shaped like the two panes and the grill's shadows. It drifts (26s) and brightens and dims (14s).
@@ -153,7 +158,7 @@ Don't add colours outside this palette except tints made by mixing these (for ex
   - `openingClock` feeds the day line (and the sky), which shows `max(scroll time rounded to 5 min, opening clock)`. Leaving the top hands over without going backwards (6:46 → 6:50 → …), and coming back shows the morning where it stopped.
   - With reduced motion the clock stays at 6:40.
 - **The cue** fades out (0.9s) once the reader scrolls about 30px (progress over 0.04) and stays gone. The arrow drifts 7px down and back on an 8s loop.
-- On short screens the section grows rather than overlapping: its top padding reserves the window's height, and its bottom padding clears the Talk pill. Everything fits on a 360×640 screen.
+- On short screens the section grows rather than overlapping: its top padding reserves the window's height, and its bottom padding clears the garden. Everything fits on a 360×640 screen.
 
 ### Ambient details ([scenes.js](src/scripts/scenes.js), [scenes.css](src/styles/scenes.css))
 
@@ -196,7 +201,7 @@ Don't add colours outside this palette except tints made by mixing these (for ex
   - Every storage call is in try/catch. If storage is blocked, "keep" un-ticks itself and says notes will go when they leave.
   - Each writing area always shows the privacy note ("What you write stays on this device…") and the safety line ("If what you're feeling is about hurting yourself, please talk to someone right now", linking talk.html).
 - Accessibility: the calmer version is announced through a polite live region ("Another way to put it: …" / "In your words: …"). The text box and fields have real labels. Every target is at least 44px tall (the checkbox's whole label row toggles it). Text inside the card uses `--fg`, because the card's 6% tint would take `--soft` below 4.5:1; measured at 7:1 or better across the 4:50 pm blend.
-- Opening a card changes the chapter's height. day-timeline.js re-measures when `<main>` resizes, so the colours settle again after a moment. If a card's bottom lands under the Talk pill, it is gently scrolled up with `scrollToY` (never locked). On phones, a focused field is scrolled above the on-screen keyboard (`visualViewport`).
+- Opening a card changes the chapter's height. day-timeline.js re-measures when `<main>` resizes, so the colours settle again after a moment. If a card's bottom lands under the garden, it is gently scrolled up with `scrollToY` (never locked). On phones, a focused field is scrolled above the on-screen keyboard (`visualViewport`).
 - Reduced motion: the calmer version and the question appear at once, and cards open without moving.
 
 ### Take a minute ([breathing.js](src/sections/breathing.js), [breathing.css](src/styles/breathing.css), [ambient-sound.js](src/scripts/ambient-sound.js))
@@ -236,8 +241,17 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 
 ### Talk to someone page ([talk.html](talk.html), [talk.js](src/talk.js), [talk.css](src/styles/talk.css))
 
-- A separate, deliberately still page in the static dawn palette: no Lenis, GSAP, reveals, particles, sky, day line or garden. talk.js only imports CSS, so in the production build the page needs no JavaScript at all. A solid sticky top bar always shows "← back to the story", and the page ends with a big "Back to One Ordinary Day" button and a link to `./#take-a-minute`.
-- Sections: hero (with "in danger right now? call 112"), **Free helplines in India** (`#helplines`), "Telling someone you know" (a parent / a friend / a teacher or counsellor, each with something you could actually say in a speech bubble), "If a friend is struggling" (five steps; the fourth covers taking talk of not wanting to be alive seriously and not keeping it secret, per safe messaging), **"Your privacy"** (`#privacy`), then the way back.
+- The one help page. A separate, deliberately still page in the static dawn palette: no Lenis, GSAP, reveals, particles, sky, day line, garden, ripple or hover motion, only the fade between pages. It works fully without JavaScript; talk.js adds only the Copy buttons ([copy.js](src/scripts/copy.js)) and the page fade. A solid sticky top bar always shows "← back to the story" and "Talk to someone" (→ `#right-now`), and the page ends with a big "Back to One Ordinary Day" button and a link to `./#take-a-minute`. No analytics or tracking of help clicks, ever.
+- Sections, in this order:
+  - **Right now** (`#right-now`, `tabindex="-1"`, the skip link's target): a framed box (2px `--fg` border, 8% `--accent` tint). First 112 ("If you’re in immediate danger, or you might hurt yourself, call 112"), then Tele-MANAS with 14416 huge and 1-800-891-4416 below, a "How to call" block ("Open your phone app, dial 14416, and press call. It’s free. You can say: …") and a sources line.
+  - An intro and an on-this-page list.
+  - **What happens when I call?** (`#what-happens`): only what the Tele-MANAS About and FAQ pages say (language menu, trained counsellor, call-backs, referrals, confidential and not recorded, and the immediate-danger exception).
+  - **Other ways to get support** (`#other-support`): talk now (→ `#helplines`), someone you know (→ `#start-the-conversation`), and ongoing support (counsellor, clinical psychologist, psychiatrist, one line each).
+  - **Free helplines in India** (`#helplines`), ending with "Last checked: [date]" (`.talk-checked`).
+  - **How do I start the conversation?** (`#start-the-conversation`): a friend, a parent, a teacher, a school counsellor (`article.guide#talk-…`). Each has when they're a good choice, three or four messages in Aarav's voice (one "short version", one "in Hinglish" with `lang="hi-Latn"`), each with a Copy message button, and three tips.
+  - **How to help a friend who’s struggling** (`#helping-a-friend`): what to say, what to avoid, and a framed "When to tell a trusted adult" (straight away, even if asked to keep it secret; 112 for immediate danger).
+  - **"Your privacy"** (`#privacy`), then the way back.
+- **Numbers and copying:** each number in the Right now box is a `.dial`: big selectable digits (`user-select: all`) whose visible text is `aria-hidden`, with a visually hidden spaced copy ("1 4 4 1 6") so screen readers read digits, not "fourteen thousand…". Then a 48px Call link (`tel:`; its name "Call 1 4 4 1 6" contains the visible word) and a Copy number button. Copy buttons are `hidden` in the HTML and shown by copy.js, so without JS the page is plain text and `tel:` links. A copy shows "Copied" on the button and says "Number copied." / "Message copied." in a polite status (`#copy-status`); if the clipboard refuses, the text is selected instead, the button says "Selected", and the status explains how to copy it. Nothing is sent or counted.
 - "Your privacy" says in plain words: no accounts, ads, analytics or tracking code; anything written stays on the device and is never sent; nothing is saved unless "Keep my notes on this device" is chosen (and "Delete my notes" removes it); the notebook never saves; reflection answers aren’t kept; the garden only remembers that an exercise was finished, and when; don’t save on a shared or school computer. Keep it true whenever storage changes anywhere on the site.
 - `#helplines` is laid out as a printed directory, not a stack of cards: no tints, no rounded boxes. A heavy `--fg` rule opens the list. Tele-MANAS leads (`.line--main`): a bigger name, its 14416 set huge in Instrument Serif, and a Caveat `.note.line__pick` ("not sure which one to call? start here."), which hangs to the right of the name from 48rem. The other lines are hairline-ruled rows; from 48rem each row is name ····· number on one baseline (a dotted leader, `.line__name::after`), with the description, hours and source full width below. "Not in India?" sits after the list without a box.
 - Every helpline has a `tel:` link (48px tall), when it's open, what it costs, and a **source link**. Only describe a line as confidential or anonymous if its own site says so. Toll-free numbers are labelled toll-free; for the rest, the page notes that normal call or data charges may apply. People outside India are pointed to Find A Helpline (findahelpline.com, ThroughLine, 175+ countries).
@@ -256,14 +270,15 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 - Follow safe-messaging guidelines for suicide and self-harm: no graphic detail, no methods, never present suicide as a solution or as inevitable. Use "died by suicide", never "committed suicide".
 - Focus on hope, recovery and getting help. Any heavy moment in the story should be followed by a way to reach support.
 - Never present quizzes or self-checks as a diagnosis. Frame them as reflection and point people toward talking to someone they trust or a professional.
-- Never invent a helpline number. All numbers were checked on **16 Oct 2026** against official sources (each one is linked next to the number). Re-check them before launch and after any long gap:
-  - Tele-MANAS 14416 / 1-800-891-4416, toll-free, 24×7, choose your language: telemanas.mohfw.gov.in (updated May 2026), PIB 2022 launch and PIB May 2024.
+- Never invent a helpline number. All numbers were checked on **17 Oct 2026** against official sources (each one is linked next to the number), and talk.html says "Last checked: 17 October 2026". Re-check them before launch and after any long gap, and update that line:
+  - Tele-MANAS 14416 / 1-800-891-4416, toll-free, 24×7, choose your language: telemanas.mohfw.gov.in (updated 13 May 2026), PIB 2022 launch and PIB May 2024. The 2022 PIB release prints the long number as "1-800-91-4416", a typo; the official site and the 2024 release both say 1-800-891-4416. The site doesn't list which languages, so the page says only "choose your language".
+  - What a Tele-MANAS call is like (telemanas About and FAQ): a recorded menu to pick a language, then a trained counsellor; it may call you back; it can refer you to a clinical psychologist, a psychiatrist or nearby services; calls are confidential and not audio-recorded, except that if someone might be in immediate danger they may involve family or others who can help.
   - Vandrevala Foundation +91 9999 666 555, call or WhatsApp, free, 24×7, private and confidential: vandrevalafoundation.com/free-counseling.
   - iCALL (TISS) 9152987821, free, Mon–Sat 10 am–8 pm, anonymous, icall@tiss.edu: TISS iCALL project page.
   - AASRA 022 2754 6669, free, 24×7, English and Hindi, calls not recorded: aasra.info/helpline.html.
   - Child Helpline 1098, toll-free, 24×7, for children in difficult circumstances, integrated with 112: PIB, Ministry of Women and Child Development, 6 Aug 2025.
-  - 112, India's emergency number: PIB (ERSS launch).
-- The night section shows Tele-MANAS and 112 and links to talk.html for the rest.
+  - 112, India's emergency number for police, fire and health, from any phone: PIB (ERSS launch, 19 Feb 2019).
+- The night section shows Tele-MANAS and 112 and links to talk.html (and its conversation guide) for the rest.
 
 ## Story and copy
 
@@ -315,7 +330,9 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 ```
 index.html            the story (entry page): head tags, font preloads
 talk.html             "Talk to someone" page (second entry; see vite.config.js build.rollupOptions.input)
-src/talk.js           its entry: CSS only (fonts, tokens, reset, base, sections, talk.css)
+src/talk.js           its entry: CSS (fonts, tokens, reset, base, sections, talk.css, buttons,
+                      interactions), copy.js and the page fade
+src/scripts/copy.js   "Copy number" / "Copy message" buttons on talk.html (select-text fallback)
 src/styles/fonts.css  self-hosted @font-face + size-matched fallbacks
 src/assets/fonts/     latin woff2 files + OFL licences
 src/scripts/lazy.js   whenNear(): load a section's code as the reader nears it
@@ -329,10 +346,11 @@ public/               favicon.svg/.ico, apple-touch-icon.png, og-image.jpg, robo
 design/og-image.html  source for the link-preview image (not built)
 .env.production       SITE_URL for link previews (leave empty on Vercel)
 vercel.json           Vercel build settings + headers; .vercelignore trims the upload
-src/styles/talk.css   talk page: top bar, helpline directory, speech bubbles, circled steps
+src/styles/talk.css   talk page: top bar, Right now box, helpline directory, conversation guide
+                      (message bubbles, copy buttons), helping a friend; no motion
 src/main.js           JS entry, imports styles and scripts
 src/styles/           tokens.css (palette + live colour vars), reset.css, base.css (body, grain)
-src/styles/sections.css  chapter layout, type, helpline, "Talk to someone" button
+src/styles/sections.css  chapter layout, type, helpline, top bar with "Talk to someone", skip link
 src/styles/ink.css    .mark / .circle: no-JS fallback strokes + SVG ink styles
 src/scripts/          color.js (maths + WCAG contrast), smooth-scroll.js (Lenis + scrollToY),
                       day-timeline.js (scroll position → chapter + progress),
