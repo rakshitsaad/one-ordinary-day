@@ -7,8 +7,13 @@
   in between. They fade in one after another as the page opens, in under a
   second. On phones they stack.
 
-  The chips mark the tiles that might help (.is-match) and let the others fade
-  a little (.is-quiet, still 4.5:1). Nothing is hidden or moved.
+  The chips rearrange the tiles (library.js): the ones that might help move up
+  into a first group (.tiles--top, "These might help right now", .is-match),
+  the rest move down under "Everything else" (.is-quiet: softer text and a
+  fainter card, still 4.5:1, back to full on hover or focus). While filtered,
+  every tile is the same size so the groups line up. The move is a 0.6s
+  ease-out glide (a View Transition, or FLIP), then the "might help" notes fade
+  in. Nothing is hidden.
 */
 
 .library {
@@ -80,13 +85,44 @@
 
 /* ---- Tiles ------------------------------------------------------------------------ */
 
-.tiles {
+.tiles-wrap {
   display: grid;
   gap: 1.1rem;
   width: min(68rem, 100%);
+}
+
+.tiles {
+  display: grid;
+  gap: 1.1rem;
+  width: 100%;
   margin: 0;
   padding: 0.5rem 0 0;
   list-style: none;
+}
+
+/* A quiet divider above each group, with its name in the middle. */
+.tiles__label {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0.75rem 0 0;
+  font-family: var(--font-hand);
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0;
+  color: var(--fg);
+}
+
+.tiles__label::before,
+.tiles__label::after {
+  content: "";
+  flex: 1;
+  border-top: 1.5px dashed color-mix(in srgb, var(--fg) 30%, transparent);
+}
+
+.tiles__label--rest {
+  margin-top: 1.5rem;
 }
 
 .tile-slot {
@@ -97,15 +133,32 @@
   animation-delay: calc(var(--i, 0) * 50ms);
 }
 
-.tile-slot:nth-child(1) { --i: 0; --tilt: -0.5deg; }
-.tile-slot:nth-child(2) { --i: 1; --tilt: 0.6deg; }
-.tile-slot:nth-child(3) { --i: 2; --tilt: -0.4deg; }
-.tile-slot:nth-child(4) { --i: 3; --tilt: 0.5deg; }
-.tile-slot:nth-child(5) { --i: 4; --tilt: -0.6deg; }
-.tile-slot:nth-child(6) { --i: 5; --tilt: 0.3deg; }
-.tile-slot:nth-child(7) { --i: 6; --tilt: -0.3deg; }
-.tile-slot:nth-child(8) { --i: 7; --tilt: 0.5deg; }
-.tile-slot:nth-child(9) { --i: 8; --tilt: -0.5deg; }
+/* The fade-in order on arrival. */
+.tile-slot:nth-child(1) { --i: 0; }
+.tile-slot:nth-child(2) { --i: 1; }
+.tile-slot:nth-child(3) { --i: 2; }
+.tile-slot:nth-child(4) { --i: 3; }
+.tile-slot:nth-child(5) { --i: 4; }
+.tile-slot:nth-child(6) { --i: 5; }
+.tile-slot:nth-child(7) { --i: 6; }
+.tile-slot:nth-child(8) { --i: 7; }
+.tile-slot:nth-child(9) { --i: 8; }
+
+/* Each tile keeps its own small tilt wherever it moves to. */
+.tile-slot[data-page="story"] { --tilt: -0.5deg; }
+.tile-slot[data-page="talk"] { --tilt: 0.6deg; }
+.tile-slot[data-page="breathe"] { --tilt: -0.4deg; }
+.tile-slot[data-page="ground"] { --tilt: 0.5deg; }
+.tile-slot[data-page="thoughts"] { --tilt: -0.6deg; }
+.tile-slot[data-page="conversation"] { --tilt: 0.3deg; }
+.tile-slot[data-page="myths"] { --tilt: -0.3deg; }
+.tile-slot[data-page="tonight"] { --tilt: 0.5deg; }
+.tile-slot[data-page="about"] { --tilt: -0.5deg; }
+
+/* Once the tiles have been rearranged, moving them never replays the fade-in. */
+.has-arranged .tile-slot {
+  animation: none;
+}
 
 @keyframes tile-in {
   from {
@@ -170,7 +223,7 @@
   line-height: 1;
 }
 
-.tile-slot--story .tile__name {
+.library:not(.is-filtered) .tile-slot--story .tile__name {
   font-size: 2.3rem;
 }
 
@@ -199,29 +252,97 @@
 
 /* ---- Filtered -------------------------------------------------------------------- */
 
+/* "Everything else": a fainter card and icon, and softer text. Plain 60%
+   opacity would take the words below 4.5:1, so the words switch to --soft
+   instead. Back to full on hover or keyboard focus. */
 .is-quiet .tile {
-  opacity: 0.72;
+  border-color: color-mix(in srgb, var(--fg) 12%, transparent);
+  background: color-mix(in srgb, var(--fg) 1%, var(--bg));
+  color: var(--soft);
+}
+
+.is-quiet .tile__icon {
+  opacity: 0.45;
+}
+
+.is-quiet .tile:is(:hover, :focus-visible) {
+  border-color: color-mix(in srgb, var(--fg) 45%, transparent);
+  background: color-mix(in srgb, var(--fg) 3%, var(--bg));
+  color: var(--fg);
+}
+
+.is-quiet .tile:is(:hover, :focus-visible) .tile__icon {
+  opacity: 1;
+}
+
+.is-quiet .tile--talk {
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
 }
 
 .is-match .tile {
   border-color: color-mix(in srgb, var(--fg) 60%, transparent);
 }
 
-/* A small handwritten tag on the tiles that might help (the status line tells
-   screen readers the same, so the tag itself is left out of the link's name). */
+/* A small handwritten note on the tiles that might help. It fades in once the
+   tiles have settled (.labels-in). The group's heading says the same to screen
+   readers, so the note is left out of the link's name. */
 .is-match .tile::after {
   content: "might help";
   content: "might help" / "";
   position: absolute;
-  top: -0.8rem;
-  right: 1.1rem;
-  padding: 0 0.45rem;
+  top: -0.85rem;
+  right: 1rem;
+  padding: 0.05rem 0.5rem;
+  border-radius: 4px 10px 4px 10px;
   background: var(--bg);
   font-family: var(--font-hand);
-  font-size: 1.15rem;
-  line-height: 1.3;
+  font-size: 1.25rem;
+  line-height: 1.25;
   color: var(--fg);
+  opacity: 0;
+  rotate: 6deg;
+  transition:
+    opacity 0.5s var(--ease-out),
+    rotate 0.5s var(--ease-out);
+}
+
+.labels-in .is-match .tile::after {
+  opacity: 1;
   rotate: 3deg;
+}
+
+/* ---- The glide (library.js) ------------------------------------------------------
+   While the tiles rearrange, each has its own view-transition-name, so the
+   browser slides it from its old place to its new one (0.6s, ease-out, no
+   bounce). Snapshots keep their size instead of stretching when a tile changes
+   shape (the story tile narrows, for one). Without View Transitions,
+   library.js slides them itself (FLIP). */
+:root.is-arranging .tile-slot[data-page="story"] { view-transition-name: tile-story; }
+:root.is-arranging .tile-slot[data-page="talk"] { view-transition-name: tile-talk; }
+:root.is-arranging .tile-slot[data-page="breathe"] { view-transition-name: tile-breathe; }
+:root.is-arranging .tile-slot[data-page="ground"] { view-transition-name: tile-ground; }
+:root.is-arranging .tile-slot[data-page="thoughts"] { view-transition-name: tile-thoughts; }
+:root.is-arranging .tile-slot[data-page="conversation"] { view-transition-name: tile-conversation; }
+:root.is-arranging .tile-slot[data-page="myths"] { view-transition-name: tile-myths; }
+:root.is-arranging .tile-slot[data-page="tonight"] { view-transition-name: tile-tonight; }
+:root.is-arranging .tile-slot[data-page="about"] { view-transition-name: tile-about; }
+:root.is-arranging .tiles__label--top { view-transition-name: tiles-label-top; }
+:root.is-arranging .tiles__label--rest { view-transition-name: tiles-label-rest; }
+
+:root.is-arranging::view-transition-group(*) {
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root.is-arranging::view-transition-image-pair(*) {
+  overflow: clip;
+}
+
+:root.is-arranging::view-transition-old(*),
+:root.is-arranging::view-transition-new(*) {
+  height: 100%;
+  object-fit: none;
+  object-position: 50% 0;
 }
 
 .library__start a {
@@ -239,7 +360,7 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .tile-slot--story {
+  .library:not(.is-filtered) .tile-slot--story {
     grid-column: span 2;
   }
 }
@@ -253,20 +374,24 @@
     gap: 1.3rem;
   }
 
-  .tile-slot--talk {
+  .library:not(.is-filtered) .tile-slot--talk {
     grid-row: span 2;
   }
 
-  .tile-slot--tonight {
+  .library:not(.is-filtered) .tile-slot--tonight {
     grid-column: span 2;
   }
 
-  .tile-slot--talk .tile {
+  .library:not(.is-filtered) .tile-slot--talk .tile {
     align-content: center;
   }
 
-  .tile-slot--story .tile,
-  .tile-slot--talk .tile {
+  .library:not(.is-filtered) :is(.tile-slot--story, .tile-slot--talk) .tile {
     padding-block: 1.8rem;
+  }
+
+  /* Filtered: the four that might help sit in one row. */
+  .is-filtered .tiles--top {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }

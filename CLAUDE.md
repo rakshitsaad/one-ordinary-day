@@ -13,7 +13,7 @@ Separate pages, each with its own address (Vite multi-page build; see Tech › P
 | URL | Page | Colours | Files |
 |---|---|---|---|
 | `/` | Intro: why the site exists, three feeling cards, two facts, what's here | dawn | index.html, home.css, pages/home.js |
-| `/library` | The dashboard: every page as a tile, with gentle filters | morning | library/, library.css, scripts/library.js |
+| `/library` | The dashboard: every page as a tile; chips bring the ones that might help to the top | morning | library/, library.css, scripts/library.js |
 | `/story` | "One ordinary day": Aarav's day, 6:40 am to 11:45 pm (scroll-driven sky, day line, colours) | live | story/, pages/story.js |
 | `/breathe` | Take a minute | midday (sea-glass) | breathe/, sections/breathing.js |
 | `/ground` | 5-4-3-2-1 grounding | morning | ground/, sections/grounding.js |
@@ -183,7 +183,14 @@ Don't add colours outside this palette except tints made by mixing these (for ex
 
 - Centred, morning palette: "Where would you like to go?", one line, filter chips, then a tile for every page (icon, name, one line, a rough time in Caveat), and "New here? Start with the intro".
 - **Tiles** are paper cards, cut and tilted by hand, in varied sizes: from 64rem a 3-column grid where the story runs wide, "Talk to someone" stands two rows tall (warmer tint, firmer border: stands out, never louder) and "A note for tonight" spans two; 2 columns from 40rem; stacked on phones. They fade in one after another (50ms apart, under 1s), lift 3px with a soft shadow on hover, and press to 0.98.
-- **Chips** (`aria-pressed` buttons in a labelled group, hidden without JS): "I feel anxious", "I feel low", "I feel stressed", "I want to help a friend", "Show everything". A chip marks the matching tiles (`.is-match`, a firmer border and a small "might help" tag) and fades the rest a little (`.is-quiet`, opacity 0.72, text still 4.97:1). Nothing is hidden or moved, a polite status lists the marked tiles, and the choice isn't stored. Pressing the active chip again shows everything. Which tile answers which chip: `data-for` on each `.tile-slot`.
+- **Chips** (`aria-pressed` buttons in a labelled group, hidden without JS): "I feel anxious", "I feel low", "I feel stressed", "I want to help a friend", "Show everything". Only one is pressed; pressing the active chip again shows everything. The choice is never stored or sent.
+- **A chip rearranges the tiles.** The ones that might help move up into a first list under "These might help right now" (`.tiles--top`, `.is-match`), most helpful first; the rest move down, in their usual order, under "Everything else" (`.is-quiet`). "Show everything" puts every tile back in the usual order and hides both dividers. The tiles really move in the DOM (`replaceChildren`), so Tab order matches the screen.
+  - Which tiles, in order: `ORDER` in library.js, keyed by each `.tile-slot`'s `data-page`. "Talk to someone" is in every group. Anxious: breathe, ground, thoughts, talk. Low: talk, thoughts, conversation, tonight. Stressed: breathe, thoughts, ground, talk. Friend: conversation, talk, myths, story.
+  - While filtered, every tile is the same size (the story, Talk and tonight spans apply only to `.library:not(.is-filtered)`), and from 64rem the four sit in one row.
+  - "Everything else" tiles get a fainter card and icon and `--soft` text (5.59:1 measured), not opacity, which would take the words under 4.5:1. They come back to full on hover or keyboard focus, and stay clickable.
+  - The move: a same-document View Transition (each tile has its own `view-transition-name` only while `html.is-arranging`; tiles moving up pass over the others), or a FLIP slide with the `translate` property where there's no View Transition. 0.6s, `--ease-out`, no bounce, zoom or spin: shorter than the usual 0.8–1.4s on purpose, so a tap feels answered. After it, the "might help" notes fade in (0.5s), and if the top of the tiles is off screen (above the bar, or below 75% of the screen) the page scrolls there gently; otherwise it doesn't move.
+  - A polite status says, for example, "4 pages might help when you feel anxious: Breathe, Ground yourself, Untangle a thought, Talk to someone. Everything else comes after them." The dividers are real `h2`s that label each list.
+  - Reduced motion: the tiles reorder at once and the notes just appear. A skipped View Transition (a hidden tab, another chip mid-glide) still reorders, without the glide.
 
 ### Opening screen ([opening.js](src/scripts/opening.js), [opening.css](src/styles/opening.css))
 
